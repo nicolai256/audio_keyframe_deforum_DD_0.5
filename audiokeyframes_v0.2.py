@@ -205,5 +205,7 @@ if __name__ == "__main__":
     service = AudioKeyframeService(fps=args.fps)
     final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
 
-    with open("keyframes_test.json", "w") as fp:
+    with open("keyframes.json", "w") as fp:
         json.dump(final_dict, fp, indent=2)
+        print("")
+        print("processing of the keyframes succeeded and exported to keyframes.json")
