@@ -25,7 +25,7 @@ python audiokeyframes_v0.2.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.
 
 support this and other projects 
 
-https://paypal.me/nicolaivernieuwe?country.x=BE&locale.x=en_US
+[PayPal](https://paypal.me/nicolaivernieuwe?country.x=BE&locale.x=en_US)<br/>
 
 #
 
