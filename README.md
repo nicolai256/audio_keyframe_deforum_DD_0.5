@@ -29,4 +29,4 @@ support this and other projects
 
 #
 
-special thanks to [Zippy](https://github.com/aredden)<br/> for cleaning up this script 
+special thanks to [Zippy](https://github.com/aredden) for cleaning up this script 
