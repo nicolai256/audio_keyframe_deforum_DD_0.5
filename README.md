@@ -14,7 +14,7 @@ pip install pydub
 make keyframes
 
 ```
-python audiokeyframes_v0.2.py --file praise.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5
+python audiokeyframes_v0.2.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5
 ```
 
 special thanks to Zippy for cleaning this script up 
