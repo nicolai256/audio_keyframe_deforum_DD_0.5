@@ -1,5 +1,7 @@
 # audio_keyframe_deforum_DD
-a script that can convert audio to keyframes for Deforum Stable Diffusion and Disco Diffusion
+a script that can convert audio to animation keyframes for Deforum Stable Diffusion and Disco Diffusion
+
+the script splits up the audio into different files and makes keyframes from all those files
 
 **dependencies**
 
