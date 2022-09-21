@@ -1,4 +1,4 @@
-# audio_keyframe_deforum_DD
+# audio to animation keyframes deforum DD
 a script that can convert audio to animation keyframes for Deforum Stable Diffusion and Disco Diffusion
 
 the script splits up the audio into different files and makes keyframes from all those files
