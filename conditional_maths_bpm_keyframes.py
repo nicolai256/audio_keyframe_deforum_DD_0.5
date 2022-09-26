@@ -44,9 +44,9 @@ from os import path
 import os
 
 i = 0
-flnm = "conditional_maths_bpm" + str(i) + ".json"
+flnm = "conditional_maths_bpm_" + str(i) + ".json"
 while path.exists(flnm) :
-    flnm = "conditional_maths_bpm" + str(i) + ".json"
+    flnm = "conditional_maths_bpm_" + str(i) + ".json"
     i += 1
 
 with open(flnm , "w") as fp:
@@ -54,4 +54,4 @@ with open(flnm , "w") as fp:
         json.dump(export, fp)
         
         print(export)
-        print("processing of the keyframes succeeded and exported to " "conditional_maths_bpm" + str(i) + ".json")
+        print("processing of the keyframes succeeded and exported to " "conditional_maths_bpm_" + str(i) + ".json")
