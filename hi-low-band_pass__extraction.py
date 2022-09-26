@@ -9,20 +9,25 @@ import librosa
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import signal
+import csv
 
 import argparse
 
 parser = argparse.ArgumentParser(description='Feature Extraction From MP3')
-parser.add_argument('--bpm', default=150, type=int, help='Input dir for videos')
 parser.add_argument('--path', type=str, help='Output dir for image')
 arguments = parser.parse_args()
+with open('names.csv', newline='') as csvfile:
+     reader = csv.DictReader(csvfile)
+     for row in reader:
+         print(row['tempo'])
+bpm = row
 
 out_dir = "./features/"
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
 y, sr = librosa.load(arguments.path)
-set_frame_track = 1/(arguments.bpm*16/60)
+set_frame_track = 1/(bpm*16/60)
 frame_length = sr * set_frame_track
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
