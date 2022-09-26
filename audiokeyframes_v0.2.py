@@ -11,6 +11,7 @@ import json, argparse, subprocess, os
 # keyframes
 import numpy as np
 import librosa
+import csv
 
 from pydub import AudioSegment
 
@@ -34,6 +35,10 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
+
+#
+    
 class AudioKeyframeMeta:
     def __init__(self, duration, length_of_file) -> None:
         self.duration = duration
@@ -60,17 +65,7 @@ class AudioKeyframeService:
         )
 
     def _spleet(self, stems_dir, file, nstem):
-        subprocess.run(
-                [
-                    "spleeter",
-                    "separate",
-                    "-p",
-                    f"spleeter:{nstem}stems",
-                    "-o",
-                    f"{stems_dir}/",
-                    file,
-                ]
-        )
+        subprocess.run(["spleeter", "separate", "-p", f"spleeter:{nstem}stems", "-o", f"{stems_dir}/", file,])
 
     def process(
         self,
@@ -198,14 +193,32 @@ class AudioKeyframeService:
             frames_change_post_beat,
             frames_change_pre_beat,
         )
+        
+    def bpmdetection():
+        filename = args.file
+    
+        y, sr = librosa.load(filename)
+    
+        tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
+    
+        print ('bpm: {:.2f}'.format(tempo))
+        data = tempo
+        with open("bpm.json", "w") as fp2:
+            json.dump(tempo, fp2)
+            print("processing of the bpm succeeded and exported to bpm.json")
 
 
 if __name__ == "__main__":
     args = parse_args()
     service = AudioKeyframeService(fps=args.fps)
     final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
-
+    
     with open("keyframes.json", "w") as fp:
         json.dump(final_dict, fp, indent=2)
         print("")
         print("processing of the keyframes succeeded and exported to keyframes.json")
+    
+
+    AudioKeyframeService.bpmdetection()
+    
+    
