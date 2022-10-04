@@ -13,17 +13,19 @@ pip install librosa
 pip install pydub
 ```
 
-**make keyframes**
+# audio splitter keyframes
+
+**splits the audio and makes keyframes of the splitted files**
 
 ```
-python audiokeyframes_v0.2.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5 --audiostart 1,10 --audioend 2,50
+python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5 --audiostart 1,10 --audioend 2,50
 ```
 
 ```--file``` = the audio file
  
 ```--fps``` = the fps has to match the fps of the animation you will make
 
-```--stems``` = the amount of splitting is done to the audio file
+```--stems``` = the amount of splitting to the audio file (--stems 5 = splits your audio file into 5 audio files)
 
 ```--speed , --zoomspeed``` = the amplitude / strength / intensity of your animation **keyframes will be exported to keyframes.json**
 
