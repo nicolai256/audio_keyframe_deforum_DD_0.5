@@ -29,9 +29,11 @@ python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --stems 5 --spe
 
 ```--speed , --zoomspeed``` = the amplitude / strength / intensity of your animation **keyframes will be exported to keyframes.json**
 
-```--musicstart``` = the start of the audio (use 1,10 for 1 minute 10 seconds)
+```--music_cut``` = enable music cutting
 
-```--musicend``` = the end of the audio (use 2,50 for 2 minutes 50 seconds)
+```--musicstart``` = the start of the audio (use 1,17 for 1 minute 17 seconds)
+
+```--musicend``` = the end of the audio (use 2,53 for 2 minutes 53 seconds)
 
 ```--use_vocals``` = only use this if you want to keyframe the vocals too (not recommended)
 
