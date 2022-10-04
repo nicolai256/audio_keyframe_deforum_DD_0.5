@@ -57,9 +57,9 @@ it will look something like this ```0:(2*sin(2*3.14*t/7.17948717948718))```
 
 #
 
-# audio splitter keyframes
+# audio keyframes
 
-**splits the audio and makes keyframes of the splitted files**
+**makes keyframes of the audio, good if have your own splitted sounds**
 
 ```
 python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --speed 0.4 --music_cut true --musicstart 1,10 --musicend 2,50
