@@ -5,7 +5,8 @@
 
 #split audio
 import spleeter
-
+from pydub import AudioSegment
+import wave
 
 #keyframes
 import numpy as np
@@ -17,6 +18,7 @@ import sys
 import subprocess
 import os
 from pathlib import Path
+from os import path
 import json
 sys.stdout.write("Parsing arguments ...\n")
 sys.stdout.flush()
@@ -27,6 +29,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", type=str, help="input audio")
     parser.add_argument("--fps", type=int, help="frames per second")
+    parser.add_argument("--music_cut", type=str, help="option to cut the music")
     parser.add_argument("--musicstart", type=str, help="start of the music in seconds")
     parser.add_argument("--musicend", type=str, help="length of the music in seconds")
     parser.add_argument("--speed", type=float, default='0.4', help="reactive impact of the audio on the animation")
@@ -37,23 +40,142 @@ def parse_args():
 
 args=parse_args();
 
-if args.musicstart and not args.musicend:
+"""if args.musicstart and not args.musicend:
         subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart])#, "--musicend",args.musicend])
 elif args.musicstart and args.musicend:
         subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart, "--musicend",args.musicend])
 elif args.musicend and not args.musicstart:
         subprocess.run(["python", "length.py", "--file", args.file, "--musicend",args.musicend])
 else:
-        print('audio not cropped')
+        print('audio not cropped')"""
     
 
 #get the length of the audio
 
-file = args.file
+#file = args.file
+#def music_cut():
+args = parse_args()
+if args.music_cut:
+        
+        print('')
+        print('')
+        import shutil
+        #filename = args.file
+        
+        #backup the file
+        
+        src = args.file
+        filee, _ = os.path.splitext(src)
+        i = 0
+        flnm = filee + str(i) + "_cut.wav"
+        while path.exists(flnm) :
+            flnm = filee + str(i) + ".wav"
+            i += 1
+            
+        shutil.copyfile(src, flnm)    
+        result = []
+        filename = flnm
+        result.append(flnm)
+        
+        """if ":" in args.musicstart:
+            txt = args.musicstart
+            minute, second = txt.split(":")
+            minutes_60 = int(minute) * 60
+            time = minutes_60 + second"""
+        if args.musicstart:
+            if "," in args.musicstart:
+                txt = args.musicstart
+                a_minute = 60
+                a_minute = int(a_minute)
+                minute, second = txt.split(",")
+                minute = int(minute)
+                second = int(second)
+                minutes_60 = minute * a_minute
+                time = minutes_60 + second
+                print('converting minutes to seconds')
+                #print('music starts at ', args.musicstart ,' = second', time)
+        if args.musicend: 
+            if "," in args.musicend:
+                txt = args.musicend
+                a_minute = 60
+                a_minute = int(a_minute)
+                minute, second = txt.split(",")
+                minute = int(minute)
+                second = int(second)
+                minutes_60 = minute * a_minute
+                time2 = minutes_60 + second
+                #print('music ends at ', args.musicend ,' = second', time2)
+            
+            
+        # predict the length of the song
+        length_of_file = librosa.get_duration(filename=filename)
+        audio: AudioSegment = AudioSegment.from_file(filename)
+        audio.duration_seconds == (len(audio) / 1000.0)
+        minutes_duartion = int(audio.duration_seconds // 60)
+        minutes_duration = minutes_duartion * 60
+        seconds_duration = round(audio.duration_seconds % 60)
+        duration = minutes_duration + seconds_duration
+        
+        # times between which to extract the wave from
+        if args.musicstart:
+            if "," in args.musicstart:
+                start = int(time)
+                 
+            elif "," not in args.musicstart:
+                start = int(args.musicstart)
+                
+        else:
+            start = "0" 
+            
+        print('music starts at second', start)
+        
+        if args.musicend:    
+            if "," in args.musicend:
+                end = int(time2)
+            elif "," not in args.musicend:
+                end = int(args.musicend)
+        else:
+            end = int(duration) # seconds
+        print('music ends at second', end)  
+        
+              
+        # file to extract the snippet from
+        with wave.open(filename, "rb") as infile:
+            # get file data
+            nchannels = infile.getnchannels()
+            sampwidth = infile.getsampwidth()
+            framerate = infile.getframerate()
+            # set position in wave to start of segment
+            infile.setpos(int(start * framerate))
+            # extract data
+            data = infile.readframes(int((end - start) * framerate))
+        
+        # write the extracted data to a new file
+        with wave.open(filename, 'w') as outfile:
+            outfile.setnchannels(nchannels)
+            outfile.setsampwidth(sampwidth)
+            outfile.setframerate(framerate)
+            outfile.setnframes(int(len(data) / sampwidth))
+            outfile.writeframes(data)
+        
+        length = int(end - start)
+        print('')
+        print('')    
+        print('your new cropped file is' , length, 'seconds')
+        print('')
+        print('') 
+        print('the name of your new cropped file is', flnm, 'and your original non cropped file is', args.file)
+        print('') 
+        print('') 
+        #return result
+else:
+        print('audio not cropped')    
+        
 
 
 def keyframe_maker():
-            file = args.file
+            #music_cut()
+            file = flnm
             c = Path(file)
             filedir = c.stem
             file_path = file
@@ -92,7 +214,7 @@ def keyframe_maker():
 
             beat_factor_scale = 2.5
             beat_factor_mask = ((vals+.5)/2)*beat_factor_scale
-            print(beat_factor_mask)           
+            #print(beat_factor_mask)           
 
             beat_ind = np.argwhere(vals) # indices in terms of frames in vid of where beat occurs
             beat_ind            
@@ -127,7 +249,7 @@ def keyframe_maker():
               key_frame_value.append((beat,  beat_transition_value))
               post_beat = (beat_ind[i] + (frames_change_post_beat))[0]
               
-            print(key_frame_value) 
+            #print(key_frame_value) 
             
          
 
