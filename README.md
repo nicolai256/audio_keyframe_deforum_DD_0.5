@@ -16,10 +16,22 @@ pip install pydub
 **make keyframes**
 
 ```
-python audiokeyframes_v0.2.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5
+python audiokeyframes_v0.2.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5 --audiostart 1,10 --audioend 2,50
 ```
 
-**keyframes will be exported to keyframes.json**
+```--file``` = the audio file
+ 
+```--fps``` = the fps has to match the fps of the animation you will make
+
+```--stems``` = the amount of splitting is done to the audio file
+
+```--speed , --zoomspeed``` = the amplitude / strength / intensity of your animation **keyframes will be exported to keyframes.json**
+
+```--audiostart``` = the start of the audio (use 1,10 for 1 minute 10 seconds)
+
+```--audioend``` = the end of the audio (use 2,50 for 2 minutes 50 seconds)
+
+```--use_vocals``` = only use this if you want to keyframe the vocals too (not recommended)
 
 #
 
