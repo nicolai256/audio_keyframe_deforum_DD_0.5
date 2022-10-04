@@ -22,6 +22,9 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", type=str, help="input audio")
     
+    parser.add_argument("--musicstart", type=str, help="start of the music in seconds")
+    parser.add_argument("--musicend", type=str, help="length of the music in seconds")
+    
     parser.add_argument("-s", "--fps", type=int, help="frames per second")
     
     parser.add_argument("-t","--stems",type=str,default="5",help="the amount of exported audio files, 3, 4, 5",)
@@ -200,7 +203,9 @@ class AudioKeyframeService:
         y, sr = librosa.load(filename)
     
         tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
-    
+        
+        print("")
+        print("")
         print ('bpm: {:.2f}'.format(tempo))
         data = tempo
         with open("bpm.json", "w") as fp2:
@@ -210,15 +215,25 @@ class AudioKeyframeService:
 
 if __name__ == "__main__":
     args = parse_args()
+    if args.musicstart and not args.musicend:
+        subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart])#, "--musicend",args.musicend])
+    elif args.musicstart and args.musicend:
+        subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart, "--musicend",args.musicend])
+    elif args.musicend and not args.musicstart:
+        subprocess.run(["python", "length.py", "--file", args.file, "--musicend",args.musicend])
+    else:
+        print('audio not cropped')
+    
     service = AudioKeyframeService(fps=args.fps)
     final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
     
     with open("keyframes.json", "w") as fp:
         json.dump(final_dict, fp, indent=2)
         print("")
+        print("")
         print("processing of the keyframes succeeded and exported to keyframes.json")
     
 
-    AudioKeyframeService.bpmdetection()
+    #AudioKeyframeService.bpmdetection()
     
     
