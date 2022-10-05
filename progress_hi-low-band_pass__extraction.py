@@ -1,3 +1,8 @@
+#this script doesn't work with current versions
+#scavenge from here 
+#https://github.com/pytti-tools/pytti-core/blob/main/src/pytti/AudioParse.py
+
+
 #Feature Extraction From MP3 File
 import cv2
 import numpy as np
