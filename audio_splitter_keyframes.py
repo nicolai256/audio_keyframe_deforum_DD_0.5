@@ -5,6 +5,8 @@
 #pip install librosa
 #pip install pydub
 
+#strength schedule and noise schedule linked to zoom
+
 from loguru import logger
 import json, argparse, subprocess, os
 
@@ -158,8 +160,11 @@ if args.music_cut:
         print('') 
         print('') 
 else:
+        flnm = args.file
+        filename = flnm
         print('audio not cropped')    
         
+
 #music_cut()
 class AudioKeyframeMeta:
     def __init__(self, duration, length_of_file) -> None:
@@ -216,6 +221,12 @@ class AudioKeyframeService:
         final_dict["zoom"] = self._process_zoom(
             f"{stems_dir}/" + filedircalc + "/bass.wav", zoomspeed=zoomspeed
         )
+        final_dict["strength"] = self._process_strength(
+            f"{stems_dir}/" + filedircalc + "/bass.wav", zoomspeed=zoomspeed
+        )
+        final_dict["noise"] = self._process_noise(
+            f"{stems_dir}/" + filedircalc + "/bass.wav", zoomspeed=zoomspeed
+        )
         return final_dict
 
     def _get_prep_values(self, filename, duration)-> np.ndarray:
@@ -238,9 +249,9 @@ class AudioKeyframeService:
         frames_change_pre_beat = 0
         frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
         #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = zoomspeed
-        beat_transition_value = zoomspeed * 1.4
-        pre_beat_transition__value = zoomspeed / 8
+        post_beat_transition__value = zoomspeed / 1.4
+        beat_transition_value = zoomspeed
+        pre_beat_transition__value = zoomspeed / 1.4 / 8
         key_frame_value = []
         post_beat = 1
         return self._build_string(
@@ -253,7 +264,50 @@ class AudioKeyframeService:
             frames_change_post_beat,
             frames_change_pre_beat,
         )
-
+    def _process_strength(self, filename, zoomspeed=4):
+        logger.info(f"Processing file: {filename} with strength schedule: 0.75")
+        meta: AudioKeyframeMeta = self._get_metadata(filename)
+        beat_ind = self._get_prep_values(filename, duration=meta.duration)
+        frames_change_pre_beat = 0
+        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
+        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
+        post_beat_transition__value = 0.65
+        beat_transition_value = 0.55
+        pre_beat_transition__value = 0.75 
+        key_frame_value = []
+        post_beat = 1
+        return self._build_string(
+            beat_ind,
+            key_frame_value,
+            post_beat,
+            post_beat_transition__value,
+            pre_beat_transition__value,
+            beat_transition_value,
+            frames_change_post_beat,
+            frames_change_pre_beat,
+        )
+    def _process_noise(self, filename, zoomspeed=4):
+        logger.info(f"Processing file: {filename} with noise schedule: 0.02")
+        meta: AudioKeyframeMeta = self._get_metadata(filename)
+        beat_ind = self._get_prep_values(filename, duration=meta.duration)
+        frames_change_pre_beat = 0
+        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
+        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
+        post_beat_transition__value = 0.03
+        beat_transition_value = 0.04
+        pre_beat_transition__value = 0.02
+        key_frame_value = []
+        post_beat = 1
+        return self._build_string(
+            beat_ind,
+            key_frame_value,
+            post_beat,
+            post_beat_transition__value,
+            pre_beat_transition__value,
+            beat_transition_value,
+            frames_change_post_beat,
+            frames_change_pre_beat,
+        )
     def _build_string(
         self,
         beat_ind,
@@ -344,8 +398,10 @@ if __name__ == "__main__":
         print('audio not cropped')"""
     
     service = AudioKeyframeService(fps=args.fps)
-    final_dict = service.process(args.stems,flnm, zoomspeed=args.zoomspeed, speed=args.speed)
-    
+    if args.music_cut:
+        final_dict = service.process(args.stems,flnm, zoomspeed=args.zoomspeed, speed=args.speed)
+    else:
+        final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
     with open("audio_splitter_keyframes.json", "w") as fp:
         json.dump(final_dict, fp, indent=2)
         print("")
