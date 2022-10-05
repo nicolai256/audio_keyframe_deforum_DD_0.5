@@ -47,7 +47,7 @@ def parse_args():
 
 #def music_cut():
 args = parse_args()
-if args.music_cut:
+if args.music_cut == true:
         print('')
         print('')
         import shutil
@@ -218,6 +218,9 @@ class AudioKeyframeService:
             final_dict[filepath.split("/")[-1].split(".")[0]] = self._process_file(
                  f"{stems_dir}/" + filedircalc+"/"+filepath, speed=speed
             )
+        final_dict["extradrums"] = self._process_extradrums(
+            f"{stems_dir}/" + filedircalc + "/drums.wav", zoomspeed=zoomspeed
+        )
         final_dict["zoom"] = self._process_zoom(
             f"{stems_dir}/" + filedircalc + "/bass.wav", zoomspeed=zoomspeed
         )
@@ -227,6 +230,10 @@ class AudioKeyframeService:
         final_dict["noise"] = self._process_noise(
             f"{stems_dir}/" + filedircalc + "/bass.wav", zoomspeed=zoomspeed
         )
+        final_dict["contrast"] = self._process_contrast(
+            f"{stems_dir}/" + filedircalc + "/bass.wav", zoomspeed=zoomspeed
+        )
+        
         return final_dict
 
     def _get_prep_values(self, filename, duration)-> np.ndarray:
@@ -241,7 +248,30 @@ class AudioKeyframeService:
         )
         beat_ind = np.argwhere(vals)
         return beat_ind
-
+        
+    def _process_extradrums(self, filename, zoomspeed=4):
+        logger.info(f"Processing file: {filename} for smaller drums animation with speed: 0.2")
+        meta: AudioKeyframeMeta = self._get_metadata(filename)
+        beat_ind = self._get_prep_values(filename, duration=meta.duration)
+        frames_change_pre_beat = 0
+        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
+        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
+        post_beat_transition__value = 0.2 / 2
+        beat_transition_value = 0.2
+        pre_beat_transition__value = -0.2
+        key_frame_value = []
+        post_beat = 1
+        return self._build_string(
+            beat_ind,
+            key_frame_value,
+            post_beat,
+            post_beat_transition__value,
+            pre_beat_transition__value,
+            beat_transition_value,
+            frames_change_post_beat,
+            frames_change_pre_beat,
+        )
+        
     def _process_zoom(self, filename, zoomspeed=4):
         logger.info(f"Processing file: {filename} with speed: {zoomspeed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
@@ -265,15 +295,15 @@ class AudioKeyframeService:
             frames_change_pre_beat,
         )
     def _process_strength(self, filename, zoomspeed=4):
-        logger.info(f"Processing file: {filename} with strength schedule: 0.75")
+        logger.info(f"Processing file: {filename} with strength schedule: 0.70")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
         frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
         #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = 0.65
-        beat_transition_value = 0.55
-        pre_beat_transition__value = 0.75 
+        post_beat_transition__value = 0.60
+        beat_transition_value = 0.50
+        pre_beat_transition__value = 0.70 
         key_frame_value = []
         post_beat = 1
         return self._build_string(
@@ -293,9 +323,31 @@ class AudioKeyframeService:
         frames_change_pre_beat = 0
         frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
         #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = 0.03
-        beat_transition_value = 0.04
-        pre_beat_transition__value = 0.02
+        post_beat_transition__value = 0.01
+        beat_transition_value = 0.02
+        pre_beat_transition__value = 0.00
+        key_frame_value = []
+        post_beat = 1
+        return self._build_string(
+            beat_ind,
+            key_frame_value,
+            post_beat,
+            post_beat_transition__value,
+            pre_beat_transition__value,
+            beat_transition_value,
+            frames_change_post_beat,
+            frames_change_pre_beat,
+        )
+    def _process_contrast(self, filename, zoomspeed=4):
+        logger.info(f"Processing file: {filename} with contrast schedule: 0.95")
+        meta: AudioKeyframeMeta = self._get_metadata(filename)
+        beat_ind = self._get_prep_values(filename, duration=meta.duration)
+        frames_change_pre_beat = 0
+        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
+        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
+        post_beat_transition__value = 0.95
+        beat_transition_value = 1.01
+        pre_beat_transition__value = 0.95
         key_frame_value = []
         post_beat = 1
         return self._build_string(
