@@ -1,5 +1,5 @@
 #this script doesn't work with current versions
-#scavenge from here 
+#reminder to scavenge from here 
 #https://github.com/pytti-tools/pytti-core/blob/main/src/pytti/AudioParse.py
 
 
