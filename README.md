@@ -18,7 +18,7 @@ pip install pydub
 **splits the audio and makes keyframes of the splitted files**
 
 ```
-python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5 --music_cut true --musicstart 1,10 --musicend 2,50
+python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5 --music_cut 1 --musicstart 1,10 --musicend 2,50
 ```
 **keyframes will be exported to audio_splitter_keyframes.json**
 
@@ -30,7 +30,7 @@ python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --stems 5 --spe
 
 ```--speed , --zoomspeed``` = the amplitude / strength / intensity of your animation
 
-```--music_cut``` = enable music cutting
+```--music_cut 1``` = enable music cutting
 
 ```--musicstart``` = the start of the audio (use 1,17 for 1 minute 17 seconds)
 
