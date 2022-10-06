@@ -5,7 +5,7 @@ a script that can convert audio to animation keyframes for Deforum Stable Diffus
 
 the script splits up the audio into different files and makes keyframes from all those files
 
-u can import these generated keyframes into [this blender DSD keyframe plugin](https://www.youtube.com/watch?v=rzGINC9m4FM&ab_channel=Purz) if you want for easy easing them or editing them
+u can import these generated keyframes into [this blender DSD keyframe plugin](https://www.youtube.com/watch?v=rzGINC9m4FM&ab_channel=Purz) if you want for changing the curves or editing the values visually
 
 **dependencies**
 
