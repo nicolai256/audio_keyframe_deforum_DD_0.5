@@ -48,37 +48,37 @@ def parse_args():
     
     
     #advanced keyframes
-    parser.add_argument("--drums_drop_speed",type=float,default="0.2",help="reactive impact of the audio on the animation",)
-    parser.add_argument("--drums_begin_speed",type=float,default="0.0",help="reactive impact of the audio on the animation",)
-    parser.add_argument("--drums_predrop_speed",type=float,default="-0.2",help="reactive impact of the audio on the animation",)
+    parser.add_argument("--drums_drop_speed",type=float,default="0.2",help="reactive impact of the audio on the animation when the audio makes a sound",)
+    parser.add_argument("--drums_begin_speed",type=float,default="0.0",help="reactive impact of the audio on the animation (starting value on keyframe 1)",)
+    parser.add_argument("--drums_predrop_speed",type=float,default="-0.2",help="reactive impact of the audio on the animation right before the audio makes a sound",)
     
-    parser.add_argument("--other_drop_speed",type=float,default="0.4",help="reactive impact of the audio on the animation",)
-    parser.add_argument("--other_begin_speed",type=float,default="0.0",help="reactive impact of the audio on the animation",)
-    parser.add_argument("--other_predrop_speed",type=float,default="-0.4",help="reactive impact of the audio on the animation",)
+    parser.add_argument("--other_drop_speed",type=float,default="0.4",help="reactive impact of the audio on the animation when the audio makes a sound",)
+    parser.add_argument("--other_begin_speed",type=float,default="0.0",help="reactive impact of the audio on the animation (starting value on keyframe 1)",)
+    parser.add_argument("--other_predrop_speed",type=float,default="-0.4",help="reactive impact of the audio on the animation right before the audio makes a sound",)
     
-    parser.add_argument("--piano_drop_speed",type=float,default="0.4",help="reactive impact of the audio on the animation",)
-    parser.add_argument("--piano_begin_speed",type=float,default="0.0",help="reactive impact of the audio on the animation",)
-    parser.add_argument("--piano_predrop_speed",type=float,default="-0.4",help="reactive impact of the audio on the animation",)
+    parser.add_argument("--piano_drop_speed",type=float,default="0.4",help="reactive impact of the audio on the animation when the audio makes a sound",)
+    parser.add_argument("--piano_begin_speed",type=float,default="0.0",help="reactive impact of the audio on the animation (starting value on keyframe 1)",)
+    parser.add_argument("--piano_predrop_speed",type=float,default="-0.4",help="reactive impact of the audio on the animation right before the audio makes a sound",)
     
-    parser.add_argument("--bass_drop_speed",type=float,default="0.4",help="reactive impact of the audio on the animation",)
-    parser.add_argument("--bass_begin_speed",type=float,default="0.0",help="reactive impact of the audio on the animation",)
-    parser.add_argument("--bass_predrop_speed",type=float,default="-0.4",help="reactive impact of the audio on the animation",)
+    parser.add_argument("--bass_drop_speed",type=float,default="0.4",help="reactive impact of the audio on the animation when the audio makes a sound",)
+    parser.add_argument("--bass_begin_speed",type=float,default="0.0",help="reactive impact of the audio on the animation (starting value on keyframe 1)",)
+    parser.add_argument("--bass_predrop_speed",type=float,default="-0.4",help="reactive impact of the audio on the animation right before the audio makes a sound",)
     
-    parser.add_argument("--zoom_drop_speed",type=float,default="5",help="reactive zoom impact of the audio on the animation",)
-    parser.add_argument("--zoom_begin_speed",type=float,default="0",help="reactive zoom impact of the audio on the animation",)
-    parser.add_argument("--zoom_predrop_speed",type=float,default="0.5",help="reactive zoom impact of the audio on the animation",)
+    parser.add_argument("--zoom_drop_speed",type=float,default="5",help="reactive zoom impact of the audio on the animation when the audio makes a sound",)
+    parser.add_argument("--zoom_begin_speed",type=float,default="0",help="reactive zoom impact of the audio on the animation (starting value on keyframe 1)",)
+    parser.add_argument("--zoom_predrop_speed",type=float,default="0.5",help="reactive zoom impact of the audio on the animation right before the audio makes a sound",)
     
-    parser.add_argument("--noise_drop_speed",type=float,default="0.02",help="reactive zoom impact of the audio on the animation",)
-    parser.add_argument("--noise_begin_speed",type=float,default="0.01",help="reactive zoom impact of the audio on the animation",)
-    parser.add_argument("--noise_predrop_speed",type=float,default="0.00",help="reactive zoom impact of the audio on the animation",)
+    parser.add_argument("--noise_drop_speed",type=float,default="0.02",help="reactive noise impact of the audio on the animation when the audio makes a sound",)
+    parser.add_argument("--noise_begin_speed",type=float,default="0.01",help="reactive noise impact of the audio on the animation (starting value on keyframe 1)",)
+    parser.add_argument("--noise_predrop_speed",type=float,default="0.00",help="reactive noise impact of the audio on the animation right before the audio makes a sound",)
     
-    parser.add_argument("--contrast_drop_speed",type=float,default="1.01",help="reactive zoom impact of the audio on the animation",)
-    parser.add_argument("--contrast_begin_speed",type=float,default="0.95",help="reactive zoom impact of the audio on the animation",)
-    parser.add_argument("--contrast_predrop_speed",type=float,default="0.95",help="reactive zoom impact of the audio on the animation",)
+    parser.add_argument("--contrast_drop_speed",type=float,default="1.01",help="reactive contrast impact of the audio on the animation when the audio makes a sound",)
+    parser.add_argument("--contrast_begin_speed",type=float,default="0.95",help="reactive contrast impact of the audio on the animation (starting value on keyframe 1)",)
+    parser.add_argument("--contrast_predrop_speed",type=float,default="0.95",help="reactive contrast impact of the audio on the animation right before the audio makes a sound",)
     
-    parser.add_argument("--strength_drop_speed",type=float,default="0.50",help="reactive zoom impact of the audio on the animation",)
-    parser.add_argument("--strength_begin_speed",type=float,default="0.60",help="reactive zoom impact of the audio on the animation",)
-    parser.add_argument("--strength_predrop_speed",type=float,default="0.70",help="reactive zoom impact of the audio on the animation",)
+    parser.add_argument("--strength_drop_speed",type=float,default="0.50",help="reactive image strength impact of the audio on the animation when the audio makes a sound",)
+    parser.add_argument("--strength_begin_speed",type=float,default="0.60",help="reactive image strength impact of the audio on the animation (starting value on keyframe 1)",)
+    parser.add_argument("--strength_predrop_speed",type=float,default="0.70",help="reactive image strength impact of the audio on the animation right before the audio makes a sound",)
     
     
     
@@ -90,14 +90,14 @@ def parse_args():
     parser.add_argument("--contrast_sound", type=str, default='bass', choices=['drums', 'other', 'piano','bass'])
     
     #if not using spleeter and input external audio files
-    parser.add_argument("--drums_audio_path", type=str,)
-    parser.add_argument("--other_audio_path", type=str,)
-    parser.add_argument("--piano_audio_path", type=str,)
-    parser.add_argument("--bass_audio_path", type=str,)
-    parser.add_argument("--zoom_audio_path", type=str,)
-    parser.add_argument("--strength_audio_path", type=str,)
-    parser.add_argument("--noise_audio_path", type=str,)
-    parser.add_argument("--contrast_audio_path", type=str,)
+    parser.add_argument("--drums_audio_path", type=str,help="path to your .wav file")
+    parser.add_argument("--other_audio_path", type=str,help="path to your .wav file")
+    parser.add_argument("--piano_audio_path", type=str,help="path to your .wav file")
+    parser.add_argument("--bass_audio_path", type=str,help="path to your .wav file")
+    parser.add_argument("--zoom_audio_path", type=str,help="path to your .wav file")
+    parser.add_argument("--strength_audio_path", type=str,help="path to your .wav file")
+    parser.add_argument("--noise_audio_path", type=str,help="path to your .wav file")
+    parser.add_argument("--contrast_audio_path", type=str,help="path to your .wav file")
     
     
 
