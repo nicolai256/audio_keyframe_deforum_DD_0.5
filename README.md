@@ -57,7 +57,7 @@ basic command example
 spleeter is the best available one that i can easily put in the script 
 
 but if you want higher quality split files i reccomend this program (easy install and free)
-https://github.com/Anjok07/ultimatevocalremovergui([https://github.com/Anjok07/ultimatevocalremovergui])
+[https://github.com/Anjok07/ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)
 
 command example
 
