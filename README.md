@@ -23,6 +23,11 @@ can split, cut or just use files from external splitters
 
 ### if using spleeter (built in audio splitter)
 
+basic command example
+
+```python advanced_audio_splitter_keyframes.py -f audio.mp3 --fps 14 --spleeter 1 ```
+#
+
 ```--spleeter 1``` = use spleeter
 
 ```--file audio.mp3/wav``` = the audio file
@@ -52,6 +57,10 @@ spleeter is the best available one that i can easily put in the script
 but if you want higher quality split files i reccomend this program (easy install and free)
 https://github.com/Anjok07/ultimatevocalremovergui([https://github.com/Anjok07/ultimatevocalremovergui])
 
+command example
+
+```python advanced_audio_splitter_keyframes.py --fps 14 --drums_audio_path drums.wav --zoom_audio_path bass.wav```
+
 #
 
 ```--drums_audio_path drums.wav``` = path to your drums .wav file 
@@ -70,7 +79,7 @@ https://github.com/Anjok07/ultimatevocalremovergui([https://github.com/Anjok07/u
 
 ```--contrast_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
 
-### keyframe values commands, they work in both spleeter and non spleeter 
+### keyframe values commands, they work in both spleeter and non spleeter
 
 (these values are default in the script, change them if u want to)
 
