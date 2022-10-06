@@ -50,6 +50,8 @@ basic command example
 
 ```--contrast_sound bass``` = the sound for your contrast schedule, recommended to be the same as zoom sound, choices=['drums', 'other', 'piano','bass']
 
+#
+
 ### if not using spleeter
 
 spleeter is the best available one that i can easily put in the script 
@@ -78,6 +80,7 @@ command example
 ```--noise_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
 
 ```--contrast_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
+#
 
 ### keyframe values commands, they work in both spleeter and non spleeter
 
