@@ -5,6 +5,7 @@
 #pip install librosa
 #pip install pydub
 
+#strength schedule and noise schedule linked to zoom
 
 from loguru import logger
 import json, argparse, subprocess, os
@@ -106,7 +107,8 @@ def parse_args():
 
 #def music_cut():
 args = parse_args()
-if args.music_cut:
+if args.spleeter:
+    if args.music_cut:
         print('')
         print('')
         import shutil
@@ -234,7 +236,7 @@ if args.music_cut:
         print('the name of your new cropped file is', flnm, 'and your original non cropped file is', args.file)
         print('') 
         print('') 
-else:
+    else:
         flnm = args.file
         filename = flnm
         print('') 
@@ -291,22 +293,24 @@ class AudioKeyframeService:
         zoomspeed=4,
         speed=4,
     ):
-        if stems_dir.endswith("/"):
-            stems_dir = stems_dir[:-1]
+        args = parse_args()
+        if args.spleeter:
+            if stems_dir.endswith("/"):
+                stems_dir = stems_dir[:-1]
 
-        self._spleet(stems_dir, file, n_stems)
-        if not use_vocals:
-            filedircalc, _ = os.path.splitext(file)
-            vocals = f"{stems_dir}/" + filedircalc + "/vocals.wav"
-            if os.path.exists(vocals):
-                os.remove(vocals)
-        dirs = os.listdir(f"{stems_dir}/" + filedircalc)
+            self._spleet(stems_dir, file, n_stems)
+            if not use_vocals:
+                filedircalc, _ = os.path.splitext(file)
+                vocals = f"{stems_dir}/" + filedircalc + "/vocals.wav"
+                if os.path.exists(vocals):
+                    os.remove(vocals)
+            dirs = os.listdir(f"{stems_dir}/" + filedircalc)
         final_dict = {}
         #for filepath in dirs:
         #    final_dict[filepath.split("/")[-1].split(".")[0]] = self._process_file(
         #         f"{stems_dir}/" + filedircalc+"/"+filepath, speed=speed
         #    )
-        args = parse_args()
+        
         print('') 
         print('')
         print('starting audio keyframe maker')
@@ -664,10 +668,20 @@ if __name__ == "__main__":
         print('audio not cropped')"""
     
     service = AudioKeyframeService(fps=args.fps)
-    if args.music_cut:
-        final_dict = service.process(args.stems,flnm, zoomspeed=args.zoomspeed, speed=args.speed)
+    if args.spleeter:
+        if args.music_cut:
+            final_dict = service.process(args.stems,flnm, zoomspeed=args.zoomspeed, speed=args.speed)
+        else:
+            final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
     else:
-        final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
+        #not important, just to dodge an error
+        print("")
+        print("")
+        print('put your original audio in the source folder and always pass --file original_file.wav/mp3 , gives bugs otherwise, will fix later')
+        print("")
+        print("")
+        #important
+        final_dict = service.process(args.stems,file="do_not_delete.wav", zoomspeed=args.zoomspeed, speed=args.speed)
     with open("audio_splitter_keyframes.json", "w") as fp:
         json.dump(final_dict, fp, indent=2)
         print("")
