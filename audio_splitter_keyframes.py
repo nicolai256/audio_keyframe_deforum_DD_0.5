@@ -13,6 +13,7 @@ import json, argparse, subprocess, os
 from pydub import AudioSegment
 import wave
 from os import path
+import soundfile
 
 # keyframes
 import numpy as np
@@ -47,7 +48,7 @@ def parse_args():
 
 #def music_cut():
 args = parse_args()
-if args.music_cut == true:
+if args.music_cut:
         print('')
         print('')
         import shutil
@@ -56,18 +57,31 @@ if args.music_cut == true:
         #backup the file
         
         src = args.file
+        if src.endswith('.wav'):
+            filee, _ = os.path.splitext(src)
+            i = 0
+            flnm = filee + str(i) + "_cut.wav"
+            while path.exists(flnm) :
+                flnm = filee + str(i) + "_cut.wav"
+                i += 1
+        elif src.endswith('.mp3'):
+            filee, _ = os.path.splitext(src)
+            i = 0
+            flnm = filee + str(i) + "_cut.wav"
+            while path.exists(flnm) :
+                flnm = filee + str(i) + "_cut.wav"
+                i += 1
+                
+            src = args.file
+            dst = flnm
+
+            # convert wav to mp3                                                            
+            sound = AudioSegment.from_mp3(src)
+            sound.export(dst, format="wav")   
         
-        filee, _ = os.path.splitext(src)
-        i = 0
-        flnm = filee + str(i) + "_cut.wav"
-        while path.exists(flnm) :
-            flnm = filee + str(i) + ".wav"
-            i += 1
-            
-        shutil.copyfile(src, flnm)    
         result = []
         filename = flnm
-        result.append(flnm)
+        #result.append(flnm)
         file = flnm
         """if ":" in args.musicstart:
             txt = args.musicstart
@@ -130,6 +144,9 @@ if args.music_cut == true:
             end = int(duration) # seconds
         print('music ends at second', end)  
         
+        #fix wave.Error: file does not start with RIFF id
+        """data, samplerate = soundfile.read(filename)
+        soundfile.write(filename, data, samplerate)"""
               
         # file to extract the snippet from
         with wave.open(filename, "rb") as infile:
@@ -140,17 +157,17 @@ if args.music_cut == true:
             # set position in wave to start of segment
             infile.setpos(int(start * framerate))
             # extract data
-            data = infile.readframes(int((end - start) * framerate))
+            data = infile.readframes(int((int(end) - int(start)) * int(framerate)))
         
         # write the extracted data to a new file
-        with wave.open(filename, 'w') as outfile:
+        with wave.open(flnm, 'w') as outfile:
             outfile.setnchannels(nchannels)
             outfile.setsampwidth(sampwidth)
             outfile.setframerate(framerate)
             outfile.setnframes(int(len(data) / sampwidth))
             outfile.writeframes(data)
         
-        length = int(end - start)
+        length = int(int(end) - int(start))
         print('')
         print('')    
         print('your new cropped file is' , length, 'seconds')
