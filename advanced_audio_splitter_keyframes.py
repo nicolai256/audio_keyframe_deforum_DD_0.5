@@ -5,7 +5,6 @@
 #pip install librosa
 #pip install pydub
 
-#strength schedule and noise schedule linked to zoom
 
 from loguru import logger
 import json, argparse, subprocess, os
