@@ -1,29 +1,17 @@
-# dependencies
-#pip install numpy
-#pip install loguru
-#pip install spleeter
-#pip install librosa
-#pip install pydub
-
-#strength schedule and noise schedule linked to zoom
-
 from loguru import logger
-import json, argparse, subprocess, os
-
-from pydub import AudioSegment
+import json
+import os
+import subprocess
 import wave
-from os import path
 import soundfile
-
-# keyframes
 import numpy as np
 import librosa
-import csv
-
 from pydub import AudioSegment
+import argparse
+from os import path
 
 def parse_args():
-    logger.info(f"Parsing arguments...")
+    logger.info("Parsing arguments...")
     desc = "Blah"
 
     parser = argparse.ArgumentParser(description=desc)
@@ -45,6 +33,20 @@ def parse_args():
     
     args = parser.parse_args()
     return args
+
+def convert_time_to_seconds(time_str: str) -> int:
+    if "," in time_str:
+        minute, second = map(int, time_str.split(","))
+        return minute * 60 + second
+    return int(time_str)
+
+def get_audio_metadata(filename: str) -> dict:
+    length_of_file = librosa.get_duration(filename=filename)
+    audio = AudioSegment.from_file(filename)
+    minutes_duration = int(audio.duration_seconds // 60) * 60
+    seconds_duration = round(audio.duration_seconds % 60)
+    duration = minutes_duration + seconds_duration
+    return {'duration': duration, 'length_of_file': length_of_file}
 
 #def music_cut():
 args = parse_args()
@@ -190,9 +192,7 @@ class AudioKeyframeMeta:
 
 
 class AudioKeyframeService:
-    def __init__(
-        self, key_names=["bass", "drums", "other", "piano", "vocals"], fps: float = 24
-    ) -> None:
+    def __init__(self, key_names=["bass", "drums", "other", "piano", "vocals"], fps: float = 24) -> None:
         self.key_names = key_names
         self.fps = fps
 
@@ -204,9 +204,7 @@ class AudioKeyframeService:
         minutes_duration = minutes_duartion * 60
         seconds_duration = round(audio.duration_seconds % 60)
         duration = minutes_duration + seconds_duration
-        return AudioKeyframeMeta(
-            **{"duration": duration, "length_of_file": length_of_file}
-        )
+        return AudioKeyframeMeta(**{"duration": duration, "length_of_file": length_of_file})
 
     def _spleet(self, stems_dir, file, nstem):
         subprocess.run(["spleeter", "separate", "-p", f"spleeter:{nstem}stems", "-o", f"{stems_dir}/", file,])
@@ -454,30 +452,25 @@ class AudioKeyframeService:
             json.dump(tempo, fp2)
             print("processing of the bpm succeeded and exported to bpm.json")
 
-
 if __name__ == "__main__":
     args = parse_args()
-    """if args.musicstart and not args.musicend:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart])#, "--musicend",args.musicend])
-    elif args.musicstart and args.musicend:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart, "--musicend",args.musicend])
-    elif args.musicend and not args.musicstart:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicend",args.musicend])
-    else:
-        print('audio not cropped')"""
     
-    service = AudioKeyframeService(fps=args.fps)
+    # Music cut handling
     if args.music_cut:
-        final_dict = service.process(args.stems,flnm, zoomspeed=args.zoomspeed, speed=args.speed)
+        filename = handle_music_cut(args)
     else:
-        final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
+        filename = args.file
+
+    # Initialize service and process
+    service = AudioKeyframeService(fps=args.fps)
+    final_dict = service.process(
+        n_stems=args.stems,
+        file=filename,
+        zoomspeed=args.zoomspeed,
+        speed=args.speed
+    )
+
+    # Export to JSON
     with open("audio_splitter_keyframes.json", "w") as fp:
         json.dump(final_dict, fp, indent=2)
-        print("")
-        print("")
-        print("processing of the keyframes succeeded and exported to audio_splitter_keyframes.json")
-    
-
-    #AudioKeyframeService.bpmdetection()
-    
-    
+        logger.info("Processing of the keyframes succeeded and exported to audio_splitter_keyframes.json")

@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -6,14 +7,26 @@ import subprocess
 def select_audio_file():
     file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.mp3 *.wav")])
     if file_path:
+        if not os.path.exists(file_path):
+            print("Selected file does not exist. Please select a valid file.")
+            return
         audio_file_entry.delete(0, tk.END)
         audio_file_entry.insert(0, file_path)
 
 def execute_command():
-    python_venv_path = "venv\\Scripts\\python.exe"  # Pour Windows
-
+    # Check if venv exists and is activated
+    python_venv_path = "venv\\Scripts\\python.exe"  # For Windows
+    if not os.path.exists(python_venv_path):
+        print("Python virtual environment is not set up correctly. Please check.")
+        return
+        
     # Collect the options
     audio_file = audio_file_entry.get()
+    # Check if the audio file path exists
+    if not os.path.exists(audio_file):
+        print("Specified audio file does not exist. Please select a valid file.")
+        return
+
     fps = fps_entry.get()
     spleeter = spleeter_var.get()
     stems = stems_entry.get()
@@ -63,7 +76,7 @@ def execute_command():
 
 # Initialize Tkinter window
 root = tk.Tk()
-root.title("AASK GUI")
+root.title("AKD GUI")
 
 # Widgets for general settings
 ttk.Label(root, text="Audio File:").grid(row=0, column=0)

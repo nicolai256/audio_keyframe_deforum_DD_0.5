@@ -1,12 +1,3 @@
-# dependencies
-#pip install numpy
-#pip install loguru
-#pip install spleeter
-#pip install librosa
-#pip install pydub
-
-#strength schedule and noise schedule linked to zoom
-
 from loguru import logger
 import json, argparse, subprocess, os
 
@@ -245,13 +236,11 @@ if args.spleeter:
         print('') 
         print('')        
         
-
 #music_cut()
 class AudioKeyframeMeta:
     def __init__(self, duration, length_of_file) -> None:
         self.duration = duration
         self.length_of_file = length_of_file
-
 
 class AudioKeyframeService:
     def __init__(
@@ -261,7 +250,7 @@ class AudioKeyframeService:
         self.fps = fps
 
     def _get_metadata(self, filename):
-        length_of_file = librosa.get_duration(filename=filename)
+        length_of_file = librosa.get_duration(path=filename)
         audio: AudioSegment = AudioSegment.from_file(filename)
         audio.duration_seconds == (len(audio) / 1000.0)
         minutes_duartion = int(audio.duration_seconds // 60)
@@ -658,15 +647,6 @@ class AudioKeyframeService:
 
 if __name__ == "__main__":
     args = parse_args()
-    """if args.musicstart and not args.musicend:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart])#, "--musicend",args.musicend])
-    elif args.musicstart and args.musicend:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart, "--musicend",args.musicend])
-    elif args.musicend and not args.musicstart:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicend",args.musicend])
-    else:
-        print('audio not cropped')"""
-    
     service = AudioKeyframeService(fps=args.fps)
     if args.spleeter:
         if args.music_cut:
@@ -687,8 +667,3 @@ if __name__ == "__main__":
         print("")
         print("")
         print("processing of the keyframes succeeded and exported to audio_splitter_keyframes.json")
-    
-
-    #AudioKeyframeService.bpmdetection()
-    
-    
