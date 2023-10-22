@@ -30,7 +30,6 @@ def execute_command():
     fps = fps_entry.get()
     spleeter = spleeter_var.get()
     stems = stems_entry.get()
-    music_cut = music_cut_var.get()
     music_start = music_start_entry.get()
     music_end = music_end_entry.get()
     zoom_sound = zoom_sound_combo.get()
@@ -41,7 +40,7 @@ def execute_command():
     drums_audio_path = drums_audio_path_entry.get()
 
     # Initialize the command list with the python path and script name
-    cmd = [python_venv_path, "advanced_audio_splitter_keyframes.py"]
+    cmd = [python_venv_path if os.path.exists(python_venv_path) else "python", "advanced_audio_splitter_keyframes.py"]
 
     # Append arguments conditionally
     if audio_file:
@@ -52,8 +51,6 @@ def execute_command():
         cmd.extend(["--spleeter", str(spleeter)])
     if stems:
         cmd.extend(["--stems", stems])
-    if music_cut is not None:
-        cmd.extend(["--music_cut", str(music_cut)])
     if music_start:
         cmd.extend(["--musicstart", music_start])
     if music_end:
@@ -71,8 +68,14 @@ def execute_command():
     if drums_audio_path:
         cmd.extend(["--drums_audio_path", drums_audio_path])
 
-    # Execute the command
-    subprocess.run(cmd)
+    # Execute the command and capture output
+    process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Check if the process has completed successfully
+    if process.returncode != 0:
+        print(f"An error occurred: {process.stderr.decode('utf-8')}")
+    else:
+        print(f"Success: {process.stdout.decode('utf-8')}")
 
 # Initialize Tkinter window
 root = tk.Tk()
@@ -97,10 +100,6 @@ ttk.Checkbutton(root, variable=spleeter_var).grid(row=2, column=1)
 ttk.Label(root, text="Stems:").grid(row=3, column=0)
 stems_entry = ttk.Entry(root)
 stems_entry.grid(row=3, column=1)
-
-ttk.Label(root, text="Enable Music Cut:").grid(row=4, column=0)
-music_cut_var = tk.IntVar()
-ttk.Checkbutton(root, variable=music_cut_var).grid(row=4, column=1)
 
 # Widgets for music start and end in minute, second format
 ttk.Label(root, text="Music Start (m,s):").grid(row=5, column=0)
