@@ -283,87 +283,42 @@ class AudioKeyframeService:
         speed=4,
     ):
         args = parse_args()
+
         if args.spleeter:
-            if stems_dir.endswith("/"):
-                stems_dir = stems_dir[:-1]
+            stems_dir = os.path.abspath(stems_dir)  # Convert to absolute path
+            stems_dir = stems_dir.rstrip('/')
 
             self._spleet(stems_dir, file, n_stems)
-            if not use_vocals:
-                filedircalc, _ = os.path.splitext(file)
-                vocals = f"{stems_dir}/" + filedircalc + "/vocals.wav"
-                if os.path.exists(vocals):
-                    os.remove(vocals)
-            dirs = os.listdir(f"{stems_dir}/" + filedircalc)
-        final_dict = {}
-        #for filepath in dirs:
-        #    final_dict[filepath.split("/")[-1].split(".")[0]] = self._process_file(
-        #         f"{stems_dir}/" + filedircalc+"/"+filepath, speed=speed
-        #    )
-        
-        print('') 
-        print('')
-        print('starting audio keyframe maker')
-        print('') 
-        print('')
-        if args.spleeter:
-            final_dict["other"] = self._process_other(
-                f"{stems_dir}/" + filedircalc + "/other.wav", zoomspeed=zoomspeed
-            )
-            final_dict["piano"] = self._process_piano(
-                f"{stems_dir}/" + filedircalc + "/piano.wav", zoomspeed=zoomspeed
-            )    
-            final_dict["drums"] = self._process_drums(
-                f"{stems_dir}/" + filedircalc + "/drums.wav", zoomspeed=zoomspeed
-            )
-            final_dict["bass"] = self._process_bass(
-                f"{stems_dir}/" + filedircalc + "/bass.wav", zoomspeed=zoomspeed
-            )
 
-            final_dict["zoom"] = self._process_zoom(
-                f"{stems_dir}/" + filedircalc + "/" + args.zoom_sound + ".wav", zoomspeed=zoomspeed
-            )
-            final_dict["strength"] = self._process_strength(
-                f"{stems_dir}/" + filedircalc + "/" + args.strength_sound + ".wav", zoomspeed=zoomspeed
-            )
-            final_dict["noise"] = self._process_noise(
-                f"{stems_dir}/" + filedircalc + "/" + args.noise_sound + ".wav", zoomspeed=zoomspeed
-            )
-            final_dict["contrast"] = self._process_contrast(
-                f"{stems_dir}/" + filedircalc + "/" + args.contrast_sound + ".wav", zoomspeed=zoomspeed
-            )
-        else:
-            if args.other_audio_path:
-                final_dict["other"] = self._process_other(
-                    args.other_audio_path, zoomspeed=zoomspeed
-                )
-            if args.piano_audio_path:
-                final_dict["piano"] = self._process_piano(
-                    args.piano_audio_path, zoomspeed=zoomspeed
-                )
-            if args.drums_audio_path:            
-                final_dict["drums"] = self._process_drums(
-                    args.drums_audio_path, zoomspeed=zoomspeed
-                )
-            if args.bass_audio_path:
-                final_dict["bass"] = self._process_bass(
-                    args.bass_audio_path, zoomspeed=zoomspeed
-                )
-            if args.zoom_audio_path:
-                final_dict["zoom"] = self._process_zoom(
-                    args.zoom_audio_path, zoomspeed=zoomspeed
-                )
-            if args.strength_audio_path:
-                final_dict["strength"] = self._process_strength(
-                    args.strength_audio_path, zoomspeed=zoomspeed
-                )
-            if args.noise_audio_path:
-                final_dict["noise"] = self._process_noise(
-                    args.noise_audio_path, zoomspeed=zoomspeed
-                )
-            if args.contrast_audio_path:
-                final_dict["contrast"] = self._process_contrast(
-                    args.contrast_audio_path, zoomspeed=zoomspeed
-                )
+            file_basename = os.path.basename(file)
+            filedircalc, _ = os.path.splitext(file_basename)
+
+            if not use_vocals:
+                vocals_path = os.path.join(stems_dir, filedircalc, "vocals.wav")
+                if os.path.exists(vocals_path):
+                    os.remove(vocals_path)
+
+            dirs_path = os.path.join(stems_dir, filedircalc)
+
+            if not os.path.exists(dirs_path):  # Check if the directory exists
+                print(f"Error: Directory {dirs_path} does not exist.")
+                return
+
+            dirs = os.listdir(dirs_path)
+
+        final_dict = {}
+        audio_types = ['other', 'piano', 'drums', 'bass', 'zoom', 'strength', 'noise', 'contrast']
+
+        print('\n' * 2 + 'Starting audio keyframe maker' + '\n' * 2)
+
+        for audio_type in audio_types:
+            audio_path_key = f"{audio_type}_audio_path"
+            audio_file = os.path.join(stems_dir, filedircalc, f"{audio_type}.wav") if args.spleeter else args.get(audio_path_key, None)
+
+            if audio_file and os.path.exists(audio_file):
+                processing_func = getattr(self, f"_process_{audio_type}")
+                final_dict[audio_type] = processing_func(audio_file, zoomspeed=zoomspeed)
+
         return final_dict
 
     def _get_prep_values(self, filename, duration)-> np.ndarray:

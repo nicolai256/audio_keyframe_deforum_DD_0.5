@@ -4,7 +4,7 @@ from tkinter import ttk
 from tkinter import filedialog
 import subprocess
 
-def select_audio_file():
+def select_audio_file(audio_file_entry):
     file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.mp3 *.wav")])
     if file_path:
         if not os.path.exists(file_path):
@@ -73,7 +73,7 @@ def execute_command():
 
     # Check if the process has completed successfully
     if process.returncode != 0:
-        print(f"An error occurred: {process.stderr.decode('utf-8')}")
+        print(f"An error occurred: {process.stderr.decode('utf-8', errors='replace')}")
     else:
         print(f"Success: {process.stdout.decode('utf-8')}")
 
@@ -82,10 +82,16 @@ root = tk.Tk()
 root.title("AKD GUI")
 
 # Widgets for general settings
-ttk.Label(root, text="Audio File:").grid(row=0, column=0)
-audio_file_entry = ttk.Entry(root)
-audio_file_entry.grid(row=0, column=1)
-audio_file_button = ttk.Button(root, text="Browse", command=select_audio_file)
+frame = ttk.Frame(root, padding="10")
+frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+audio_file_label = ttk.Label(frame, text="Audio File:")
+audio_file_label.grid(row=0, column=0, sticky=tk.W)
+
+audio_file_entry = ttk.Entry(frame, width=40)
+audio_file_entry.grid(row=0, column=1, sticky=(tk.W, tk.E))
+
+audio_file_button = ttk.Button(frame, text="Browse", command=lambda: select_audio_file(audio_file_entry))
 audio_file_button.grid(row=0, column=2)
 
 ttk.Label(root, text="FPS:").grid(row=1, column=0)
