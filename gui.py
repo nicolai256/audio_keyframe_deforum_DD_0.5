@@ -9,17 +9,13 @@ import sys
 import io
 import logging
 
-error_log = logging.FileHandler('error.log')
-error_log.setLevel(logging.ERROR)
+# Configure Logging
 logging.basicConfig(
-    level=logging.DEBUG,
+    filename='app.log',
+    level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler('app.log'),
-        logging.StreamHandler(),
-        error_log  # Add this line
-    ]
 )
+logging.getLogger().addHandler(logging.StreamHandler())
 
 logging.info("Starting program...")
 
@@ -78,13 +74,20 @@ class AdvancedAudioSplitterUI:
             
     def create_widgets(self):
         # Create main frame
-        self.frame = ttk.Frame(self.master, padding="2")
+        self.frame = ttk.Frame(self.master, padding="1")
         self.frame.grid(row=0, column=0, sticky=(tk.W, tk.E))  # Ajouté sticky=(tk.W, tk.E)
 
         # Create sub-frames for each group of widgets
-        self.audio_frame = self.create_labeled_frame("Audio Settings", row=0, col=0)
-        self.spleeter_frame = self.create_labeled_frame("Spleeter Settings", row=1, col=0)
-        self.script_frame = self.create_labeled_frame("Script Settings", row=2, col=0)
+        self.audio_frame = self.create_labeled_frame("Audio Settings", row=1, col=0)
+
+        self.add_file_chooser(self.audio_frame, "Drums Audio Path:", row=4, col=0)
+        self.add_file_chooser(self.audio_frame, "Piano Audio Path:", row=5, col=0)
+        self.add_file_chooser(self.audio_frame, "Bass Audio Path:", row=6, col=0)
+        self.add_file_chooser(self.audio_frame, "Other Audio Path:", row=7, col=0)
+        self.add_file_chooser(self.audio_frame, "BPM File:", row=8, col=0)
+      
+        self.spleeter_frame = self.create_labeled_frame("Spleeter Settings", row=2, col=0)
+        self.script_frame = self.create_labeled_frame("Script Settings", row=9, col=0)
         self.advanced_frame = self.create_labeled_frame("Advanced Settings", row=3, col=0)
 
         # Audio Settings Widgets
@@ -101,7 +104,7 @@ class AdvancedAudioSplitterUI:
 
         # Adding a Text widget to serve as a console
         self.console = tk.Text(self.master, wrap=tk.WORD, height=10)
-        self.console.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=2)  # Changé row de 4 à 1
+        self.console.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=1)  # Changé row de 4 à 1
         self.console.config(state=tk.DISABLED)
         
         # Redirect stdout and stderr
@@ -110,7 +113,7 @@ class AdvancedAudioSplitterUI:
         
         # Execute button with distinct visibility
         self.execute_button = ttk.Button(self.master, text="Execute", style='TButton', command=self.execute_command_threaded)
-        self.execute_button.grid(row=5, columnspan=3, pady=2)
+        self.execute_button.grid(row=5, columnspan=3, pady=1)
 
         ToolTip(self.audio_file_entry, "Path to the audio file you want to process.")
         ToolTip(self.fps_entry, "Frames Per Second for the target animation.")
@@ -145,10 +148,22 @@ class AdvancedAudioSplitterUI:
         self.intensity_entry.insert(0, "1.0")
 
     def create_labeled_frame(self, label, row, col):
-        frame = ttk.LabelFrame(self.frame, text=label, padding="2")
+        frame = ttk.LabelFrame(self.frame, text=label, padding="1")
         frame.grid(row=row, column=col, sticky=(tk.W, tk.E), pady=1)
         return frame
 
+    def add_file_chooser(self, frame, label, row, col):
+        ttk.Label(frame, text=label).grid(row=row, column=col, sticky=(tk.W))
+        entry = ttk.Entry(frame)
+        entry.grid(row=row, column=col + 1, sticky=(tk.W))
+        ttk.Button(frame, text="Browse", command=lambda: self.select_file(entry)).grid(row=row, column=col + 2, sticky=(tk.W))
+
+    def select_file(self, entry):
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            entry.delete(0, tk.END)
+            entry.insert(0, file_path)
+            
     def create_audio_widgets(self, frame):
         ttk.Label(frame, text="Audio File:").grid(row=0, column=0, sticky=(tk.W))
         self.audio_file_entry = ttk.Entry(frame)
@@ -178,12 +193,13 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="BPM File:").grid(row=8, column=0, sticky=(tk.W))
         self.bpm_file_entry = ttk.Entry(frame)
         self.bpm_file_entry.grid(row=8, column=1, sticky=(tk.W))
-
-    def create_spleeter_widgets(self, frame):
-        ttk.Label(frame, text="Use Spleeter:").grid(row=0, column=0, sticky=(tk.W))
-        self.spleeter_var = tk.IntVar()
-        ttk.Checkbutton(frame, variable=self.spleeter_var).grid(row=0, column=1, sticky=(tk.W))
         
+        ttk.Label(frame, text="Use Spleeter:").grid(row=9, column=0, sticky=(tk.W))
+        self.spleeter_var = tk.IntVar()
+        ttk.Checkbutton(frame, variable=self.spleeter_var).grid(row=9, column=1, sticky=(tk.W))
+        
+    def create_spleeter_widgets(self, frame):
+
         ttk.Label(self.audio_frame, text="Music Cut:").grid(row=11, column=0, sticky=(tk.W))
         self.music_cut_entry = ttk.Entry(self.audio_frame)
         self.music_cut_entry.grid(row=11, column=1, sticky=(tk.W))
@@ -343,7 +359,12 @@ class AdvancedAudioSplitterUI:
             contrast_sound = self.contrast_sound_combo.get()
             drums_drop_speed = self.drums_drop_speed_entry.get()
             drums_audio_path = self.drums_audio_path_entry.get()
-
+            zoom_drop_speed = self.zoom_drop_speed_entry.get()
+            strength_drop_speed = self.strength_drop_speed_entry.get()
+            noise_drop_speed = self.noise_drop_speed_entry.get()
+            contrast_drop_speed = self.contrast_drop_speed_entry.get()
+            intensity = self.intensity_entry.get()
+            
             # Initialize the command list with the python path and script name
             cmd = [python_venv_path if os.path.exists(python_venv_path) else "python", "advanced_audio_splitter_keyframes.py"]
 
@@ -399,6 +420,16 @@ class AdvancedAudioSplitterUI:
                 cmd.extend(["--zoom_drop_speed", self.zoom_drop_speed_entry.get()])
             if self.strength_drop_speed_entry.get():
                 cmd.extend(["--strength_drop_speed", self.strength_drop_speed_entry.get()])
+            if zoom_drop_speed:
+                cmd.extend(["--zoom_drop_speed", zoom_drop_speed])            
+            if strength_drop_speed:
+                cmd.extend(["--strength_drop_speed", strength_drop_speed])               
+            if noise_drop_speed:
+                cmd.extend(["--noise_drop_speed", noise_drop_speed])           
+            if contrast_drop_speed:
+                cmd.extend(["--contrast_drop_speed", contrast_drop_speed])          
+            if intensity:
+                cmd.extend(["--intensity", intensity])
             
             logging.info(f"Executing command: {' '.join(cmd)}")
 
@@ -437,8 +468,8 @@ class AdvancedAudioSplitterUI:
 if __name__ == "__main__":
     try:
         logging.info("Inside main...")
-        print("Inside main...")
         root = ThemedTk(theme="arc")
+        root.iconbitmap('./favicon.ico')
         app = AdvancedAudioSplitterUI(root)
         root.mainloop()
     except Exception as e:
