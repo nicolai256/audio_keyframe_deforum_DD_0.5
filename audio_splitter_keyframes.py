@@ -26,8 +26,8 @@ def parse_args():
     logger.info(f"Parsing arguments...")
     desc = "Blah"
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--file", type=str, help="input audio")
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument("-f", "--file", type=str, required=True, help="Input audio file.")
     
     parser.add_argument("--music_cut", type=str, help="option to cut the music")
     parser.add_argument("--musicstart", type=str, help="start of the music in seconds")
@@ -114,7 +114,7 @@ if args.music_cut:
             
             
         # predict the length of the song
-        length_of_file = librosa.get_duration(filename=filename)
+        length_of_file = librosa.get_duration(path=filename)
         audio: AudioSegment = AudioSegment.from_file(filename)
         audio.duration_seconds == (len(audio) / 1000.0)
         minutes_duartion = int(audio.duration_seconds // 60)
@@ -256,7 +256,7 @@ class AudioKeyframeService:
     def _get_prep_values(self, filename, duration)-> np.ndarray:
         x, sr = librosa.load(filename)
         onset_frames = librosa.onset.onset_detect(
-            x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1
+            y=x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1
         )
         onset_times = librosa.frames_to_time(onset_frames)
         total_lin_step = duration * self.fps

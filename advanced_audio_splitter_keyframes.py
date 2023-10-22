@@ -174,7 +174,7 @@ if args.spleeter:
             
             
         # predict the length of the song
-        length_of_file = librosa.get_duration(filename=filename)
+        length_of_file = librosa.get_duration(path=filename)
         audio: AudioSegment = AudioSegment.from_file(filename)
         audio.duration_seconds == (len(audio) / 1000.0)
         minutes_duartion = int(audio.duration_seconds // 60)
@@ -380,7 +380,7 @@ class AudioKeyframeService:
     def _get_prep_values(self, filename, duration)-> np.ndarray:
         x, sr = librosa.load(filename)
         onset_frames = librosa.onset.onset_detect(
-            x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1
+            y=x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1
         )
         onset_times = librosa.frames_to_time(onset_frames)
         total_lin_step = duration * self.fps
