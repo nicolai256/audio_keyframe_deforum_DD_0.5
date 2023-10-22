@@ -9,13 +9,12 @@ import sys
 import io
 import logging
 
-# Configure Logging
-logging.basicConfig(
-    filename='app.log',
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
-logging.getLogger().addHandler(logging.StreamHandler())
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+handler = logging.FileHandler("app.log")
+handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+logger.addHandler(handler)
+logger.addHandler(logging.StreamHandler())
 
 logging.info("Starting program...")
 
@@ -80,12 +79,6 @@ class AdvancedAudioSplitterUI:
         # Create sub-frames for each group of widgets
         self.audio_frame = self.create_labeled_frame("Audio Settings", row=1, col=0)
 
-        self.add_file_chooser(self.audio_frame, "Drums Audio Path:", row=4, col=0)
-        self.add_file_chooser(self.audio_frame, "Piano Audio Path:", row=5, col=0)
-        self.add_file_chooser(self.audio_frame, "Bass Audio Path:", row=6, col=0)
-        self.add_file_chooser(self.audio_frame, "Other Audio Path:", row=7, col=0)
-        self.add_file_chooser(self.audio_frame, "BPM File:", row=8, col=0)
-      
         self.spleeter_frame = self.create_labeled_frame("Spleeter Settings", row=2, col=0)
         self.script_frame = self.create_labeled_frame("Script Settings", row=9, col=0)
         self.advanced_frame = self.create_labeled_frame("Advanced Settings", row=3, col=0)
@@ -110,10 +103,6 @@ class AdvancedAudioSplitterUI:
         # Redirect stdout and stderr
         sys.stdout = TextRedirector(self.console)
         sys.stderr = TextRedirector(self.console)   
-        
-        # Execute button with distinct visibility
-        self.execute_button = ttk.Button(self.master, text="Execute", style='TButton', command=self.execute_command_threaded)
-        self.execute_button.grid(row=5, columnspan=3, pady=1)
 
         ToolTip(self.audio_file_entry, "Path to the audio file you want to process.")
         ToolTip(self.fps_entry, "Frames Per Second for the target animation.")
@@ -135,7 +124,6 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.piano_drop_speed_entry, "Reactive impact of the piano audio on the animation when the audio makes a sound.")
         ToolTip(self.bass_drop_speed_entry, "Reactive impact of the bass audio on the animation when the audio makes a sound.")
         ToolTip(self.bpm_file_entry, "Path to the audio file for BPM calculations.")
-        ToolTip(self.intensity_entry, "The amplitude/strength/intensity of your BPM-based animation.")
 
         self.fps_entry.insert(0, "30")
         self.stems_entry.insert(0, "4")
@@ -145,7 +133,9 @@ class AdvancedAudioSplitterUI:
         self.drums_begin_speed_entry.insert(0, "0.1")
         self.piano_drop_speed_entry.insert(0, "0.25")
         self.bass_drop_speed_entry.insert(0, "0.4")
-        self.intensity_entry.insert(0, "1.0")
+
+        self.execute_button = ttk.Button(self.master, text="Execute", command=self.execute_command_threaded)
+        self.execute_button.grid(row=0, column=3, sticky=(tk.E), pady=1, padx=5)
 
     def create_labeled_frame(self, label, row, col):
         frame = ttk.LabelFrame(self.frame, text=label, padding="1")
@@ -165,6 +155,7 @@ class AdvancedAudioSplitterUI:
             entry.insert(0, file_path)
             
     def create_audio_widgets(self, frame):
+    
         ttk.Label(frame, text="Audio File:").grid(row=0, column=0, sticky=(tk.W))
         self.audio_file_entry = ttk.Entry(frame)
         self.audio_file_entry.grid(row=0, column=1, sticky=(tk.W))
@@ -253,10 +244,6 @@ class AdvancedAudioSplitterUI:
 
     def create_advanced_widgets(self, frame):
                 
-        ttk.Label(frame, text="Intensity:").grid(row=6, column=0, sticky=(tk.W))
-        self.intensity_entry = ttk.Entry(frame)
-        self.intensity_entry.grid(row=6, column=1, sticky=(tk.W))
-                       
         ttk.Label(frame, text="Strength Drop Speed:").grid(row=12, column=0, sticky=(tk.W))
         self.strength_drop_speed_entry = ttk.Entry(frame)
         self.strength_drop_speed_entry.grid(row=12, column=1, sticky=(tk.W))
@@ -294,7 +281,15 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="Bass Drop Speed:").grid(row=6, column=0, sticky=(tk.W))
         self.bass_drop_speed_entry = ttk.Entry(frame)
         self.bass_drop_speed_entry.grid(row=6, column=1, sticky=(tk.W))
+            
+        ttk.Label(frame, text="Noise Drop Speed:").grid(row=13, column=0, sticky=(tk.W))
+        self.noise_drop_speed_entry = ttk.Entry(frame)
+        self.noise_drop_speed_entry.grid(row=13, column=1, sticky=(tk.W))
 
+        ttk.Label(frame, text="Contrast Drop Speed:").grid(row=14, column=0, sticky=(tk.W))
+        self.contrast_drop_speed_entry = ttk.Entry(frame)
+        self.contrast_drop_speed_entry.grid(row=14, column=1, sticky=(tk.W))
+        
     def select_audio_file(self, audio_file_entry):
         file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.mp3 *.wav")])
         if file_path:
@@ -317,21 +312,19 @@ class AdvancedAudioSplitterUI:
         return True
 
     def execute_command_threaded(self):
-        logging.info("Starting threaded execution...")
-        print("Starting threaded execution...")
         try:
             thread = threading.Thread(target=self.execute_command)
             thread.daemon = True
             thread.start()
         except Exception as e:
-            logging.critical(f"Failed to start thread: {e}")
+            logger.critical(f"Failed to start thread: {e}")
             print(f"Failed to start thread: {e}")
 
     def execute_command(self):
-        logging.info("Executing command...")
         try:
             if not self.validate_input():
-                logging.warning("Invalid input. Please correct.")
+                logger.warning("Invalid input. Please correct.")
+                print("Invalid input. Please correct.")
                 return
 
             # Check if venv exists and is activated
@@ -357,13 +350,13 @@ class AdvancedAudioSplitterUI:
             strength_sound = self.strength_sound_combo.get()
             noise_sound = self.noise_sound_combo.get()
             contrast_sound = self.contrast_sound_combo.get()
+            contrast_drop_speed = self.contrast_drop_speed_entry.get()
             drums_drop_speed = self.drums_drop_speed_entry.get()
             drums_audio_path = self.drums_audio_path_entry.get()
             zoom_drop_speed = self.zoom_drop_speed_entry.get()
             strength_drop_speed = self.strength_drop_speed_entry.get()
             noise_drop_speed = self.noise_drop_speed_entry.get()
             contrast_drop_speed = self.contrast_drop_speed_entry.get()
-            intensity = self.intensity_entry.get()
             
             # Initialize the command list with the python path and script name
             cmd = [python_venv_path if os.path.exists(python_venv_path) else "python", "advanced_audio_splitter_keyframes.py"]
@@ -428,10 +421,9 @@ class AdvancedAudioSplitterUI:
                 cmd.extend(["--noise_drop_speed", noise_drop_speed])           
             if contrast_drop_speed:
                 cmd.extend(["--contrast_drop_speed", contrast_drop_speed])          
-            if intensity:
-                cmd.extend(["--intensity", intensity])
             
             logging.info(f"Executing command: {' '.join(cmd)}")
+            print(f"Executing command: {' '.join(cmd)}")
 
             # Execute the command and capture output
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -455,15 +447,17 @@ class AdvancedAudioSplitterUI:
             else:
                 logging.info("Command executed successfully.")
 
+
         except FileNotFoundError as e:
-            logging.error(f"File not found: {e}")
+            logger.error(f"File not found: {e}")
             print(f"File not found: {e}")
         except subprocess.CalledProcessError as e:
-            logging.error(f"Subprocess failed: {e}")
+            logger.error(f"Subprocess failed: {e}")
             print(f"Subprocess failed: {e}")
         except Exception as e:
-            logging.critical(f"An unhandled exception occurred: {e}")
+            logger.critical(f"An unhandled exception occurred: {e}")
             print(f"An unhandled exception occurred: {e}")
+
             
 if __name__ == "__main__":
     try:
