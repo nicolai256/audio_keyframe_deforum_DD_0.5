@@ -1,224 +1,151 @@
-#### forked from nicolai256/audio_keyframe_deforum_DD_0.5 audio to animation keyframes deforum DD [BETA]
+#
 
-**WIP**
+## 🎵 Advanced Audio Splitter Keyframes 🎵
 
-The script splits up the audio into different files and makes keyframes from all those files
+Elevate your Deforum projects with pinpoint accuracy. This script allows you to dissect audio files into multiple stems and generate keyframes for intricate animations. Forked from: [Audio Keyframe Deforum](https://github.com/nicolai256/audio_keyframe_deforum_DD_0.5).
 
-You can import these generated keyframes into [this blender DSD keyframe plugin](https://www.youtube.com/watch?v=rzGINC9m4FM&ab_channel=Purz) if you want for changing the curves or editing the values visually
+---
 
-### Just run launch.bat
+## 🚀 Quick Start 🚀
 
-**dependencies**
+To get started, simply run:
 
 ```
-pip install numpy
-pip install loguru
-pip install spleeter
-pip install librosa
-pip install pydub
+launch.bat
 ```
 
-# advanced audio splitter keyframes
-
-can split, cut or just use files from external splitters
-
-### if using spleeter (built in audio splitter)
-
-basic command example
-
-```python advanced_audio_splitter_keyframes.py -f audio.mp3 --fps 14 --spleeter 1 ```
-
-#
-
-```--spleeter 1``` = use spleeter
-
-```--file audio.mp3/wav``` = the audio file
- 
-```--fps 14``` = the fps has to match the fps of the animation you will make
-
-```--stems 5``` = the amount of splitting to the audio file (--stems 5 = splits your audio file into 5 audio files)
-
-```--music_cut 1``` = enable music cutting
-
-```--musicstart 1,17``` = the start of the audio (use 1,17 for 1 minute 17 seconds)
-
-```--musicend 2,53``` = the end of the audio (use 2,53 for 2 minutes 53 seconds)
-
-```--zoom_sound bass``` = the sound u want to use for your zoom, choices=['drums', 'other', 'piano','bass']
-
-```--strength_sound bass``` = the sound for your strength schedule, recommended to be the same as zoom sound, choices=['drums', 'other', 'piano','bass']
-
-```--noise_sound bass``` = the sound for your noise schedule, recommended to be the same as zoom sound, choices=['drums', 'other', 'piano','bass']
-
-```--contrast_sound bass``` = the sound for your contrast schedule, recommended to be the same as zoom sound, choices=['drums', 'other', 'piano','bass']
-
-#
-
-### if not using spleeter
-
-spleeter is the best available one that i can easily put in the script 
-
-but if you want higher quality split files i reccomend this program (easy install and free)
-[https://github.com/Anjok07/ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)
-
-command example
-
-```python advanced_audio_splitter_keyframes.py --fps 14 --drums_audio_path drums.wav --zoom_audio_path bass.wav```
-
-#
-
-```--drums_audio_path drums.wav``` = path to your drums .wav file 
-
-```--piano_audio_path piano.wav``` = path to your piano .wav file 
-
-```--bass_audio_path bass.wav``` = path to your bass .wav file 
-
-```--other_audio_path other.wav``` = path to your other .wav file 
-
-```--zoom_audio_path bass.wav``` = path to your preferred .wav file 
-
-```--strength_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
-
-```--noise_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
-
-```--contrast_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
-#
-
-### keyframe values commands, they work in both spleeter and non spleeter
-
-(these values are default in the script, change them if u want to)
-
-#
-
-```--drums_drop_speed 0.2``` = reactive impact of the drums audio on the animation when the audio makes a sound
-
-```--drums_begin_speed 0.0``` = reactive impact of the drums audio on the animation (starting value on keyframe 1)
-
-```--drums_predrop_speed -0.2``` = reactive impact of the drums audio on the animation right before the audio makes a sound
-#
-
-```--other_drop_speed 0.4``` = reactive impact of the other audio on the animation when the audio makes a sound
-
-```--other_begin_speed 0.0``` = reactive impact of the other audio on the animation (starting value on keyframe 1)
-
-```--other_predrop_speed -0.4``` = reactive impact of the other audio on the animation right before the audio makes a sound
-#
-
-```--piano_drop_speed 0.4``` = reactive impact of the piano audio on the animation when the audio makes a sound
-
-```--piano_begin_speed 0.0``` = reactive impact of the piano audio on the animation (starting value on keyframe 1)
-
-```--piano_predrop_speed -0.4``` = reactive impact of the piano audio on the animation right before the audio makes a sound
-#
-
-```--bass_drop_speed 0.4``` = reactive impact of the bass audio on the animation when the audio makes a sound
-
-```--bass_begin_speed 0.0``` = reactive impact of the bass audio on the animation (starting value on keyframe 1)
-
-```--bass_predrop_speed -0.4``` = reactive impact of the bass audio on the animation right before the audio makes a sound
-#
-
-```--zoom_drop_speed 5``` = reactive zoom impact of the audio on the animation when the audio makes a sound
-
-```--zoom_begin_speed 0``` = reactive zoom impact of the audio on the animation (starting value on keyframe 1)
-
-```--zoom_predrop_speed 0.5``` = reactive zoom impact of the audio on the animation right before the audio makes a sound
-#
-
-```--noise_drop_speed 0.02``` = reactive noise impact of the audio on the animation when the audio makes a sound
-
-```--noise_begin_speed 0.01``` = reactive noise impact of the audio on the animation (starting value on keyframe 1)
-
-```--noise_predrop_speed 0.00``` = reactive noise impact of the audio on the animation right before the audio makes a sound
-#
-
-```--contrast_drop_speed 1.01``` = reactive contrast impact of the audio on the animation when the audio makes a sound
-
-```--contrast_begin_speed 0.95``` = reactive contrast impact of the audio on the animation (starting value on keyframe 1)
-
-```--contrast_predrop_speed 0.95``` = reactive contrast impact of the audio on the animation right before the audio makes a sound
-#
-
-```--strength_drop_speed 0.50``` = reactive strength impact of the audio on the animation when the audio makes a sound
-
-```--strength_begin_speed 0.60``` = reactive strength impact of the audio on the animation (starting value on keyframe 1)
-
-```--strength_predrop_speed 0.70``` = reactive strength impact of the audio on the animation right before the audio makes a sound
-
-###
-#
+This will automatically set up a virtual environment and launch the GUI.
 
 
-#
+## 🛠 Dependencies 🛠
 
-# conditional math synced to BPM
+- numpy
+- loguru
+- spleeter
+- librosa
+- pydub
 
+
+## 🎚 Features 🎚
+
+### 📦 Spleeter (Built-in Audio Splitter)
+
+Easily split audio files into multiple stems using the integrated Spleeter tool.
+
+🔧 **Example Command**
+
+```bash
+python advanced_audio_splitter_keyframes.py -f audio.mp3 --fps 14 --spleeter 1
 ```
+
+#### 🎛 Parameters
+
+- `--spleeter 1`: Enables Spleeter for audio splitting.
+- `--file audio.mp3/wav`: Specifies the audio file to process.
+- `--fps 14`: Sets the frame rate to match your target animation.
+- `--stems 5`: Sets the number of audio stems to create.
+- `--music_cut 1`: Enables audio trimming.
+- `--musicstart 1,17`: Sets the start time (1 minute 17 seconds).
+- `--musicend 2,53`: Sets the end time (2 minutes 53 seconds).
+- `--zoom_sound bass`: Sets the sound type for zoom effects.
+- `--strength_sound bass`: Sets the sound type for strength effects.
+- `--noise_sound bass`: Sets the sound type for noise effects.
+- `--contrast_sound bass`: Sets the sound type for contrast effects.
+  
+
+### 🎶 Non-Spleeter Option 🎶
+
+For even higher quality, consider using [Ultimate Vocal Remover](https://github.com/Anjok07/ultimatevocalremovergui).
+
+🔧 **Example Command**
+
+```bash
+python advanced_audio_splitter_keyframes.py --fps 14 --drums_audio_path drums.wav --zoom_audio_path bass.wav
+```
+
+#### 🎛 Parameters
+
+- `--drums_audio_path drums.wav`: Specifies the path to your drums audio file.
+- `--piano_audio_path piano.wav`: Specifies the path to your piano audio file.
+- `--bass_audio_path bass.wav`: Specifies the path to your bass audio file.
+- `--other_audio_path other.wav`: Specifies the path to your other audio file.
+- `--zoom_audio_path bass.wav`: Specifies the path to your preferred zoom audio file.
+
+
+### 📈 Keyframe Values 📈
+
+#### 🔧 Example Values
+
+- `--drums_drop_speed 0.2`: Reactive impact of drums when the audio makes a sound.
+- `--drums_begin_speed 0.0`: Starting value on keyframe 1 for drums.
+- `--drums_predrop_speed -0.2`: Reactive impact right before the audio makes a sound for drums.
+- `--other_drop_speed 0.4`: Reactive impact of other audio when it makes a sound.
+- `--other_begin_speed 0.0`: Starting value on keyframe 1 for other audio.
+- `--other_predrop_speed -0.4`: Reactive impact right before the audio makes a sound for other audio.
+- `--piano_drop_speed 0.4`: Reactive impact of piano audio when it makes a sound.
+- `--piano_begin_speed 0.0`: Starting value on keyframe 1 for piano audio.
+- `--piano_predrop_speed -0.4`: Reactive impact right before the audio makes a sound for piano audio.
+
+
+### ➕ More Features ➕
+
+- 🔣 Conditional Maths Synced to BPM
+- 🎧 Simple Audio Splitter Keyframes
+- 🎤 Simple Audio Keyframes
+
+#### 🔣 Conditional Maths Synced to BPM
+
+Generate keyframes that are perfectly synced to the beat per minute (BPM) of your audio file.
+
+🔧 **Example Command**
+
+```bash
 python conditional_maths_bpm_keyframes.py --file audiofile.mp3 --fps 14 --intensity 2
 ```
 
-**keyframes will be exported to conditional_maths_bpm_0.json**
+🎛 **Parameters**
 
-it will look something like this ```0:(2*sin(2*3.14*t/7.17948717948718))```
+- `--file`: Specifies the audio file for BPM calculations.
+- `--fps`: Frame rate to match your target animation.
+- `--intensity`: Amplitude/strength/intensity of your BPM-based animation.
 
-```--file``` = the audio file
- 
-```--fps``` = the fps has to match the fps of the animation you will make
+#### 🎧 Simple Audio Splitter Keyframes
 
-```--intensity``` = the amplitude / strength / intensity of your animation
+A simplified script for splitting audio and generating keyframes.
 
-#
+🔧 **Example Command**
 
-# simple audio splitter keyframes
-
-**splits the audio and makes keyframes of the splitted files**
-
-```
+```bash
 python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5 --music_cut 1 --musicstart 1,10 --musicend 2,50
 ```
-**keyframes will be exported to audio_splitter_keyframes.json**
 
-```--file``` = the audio file
- 
-```--fps``` = the fps has to match the fps of the animation you will make
+🎛 **Parameters**
 
-```--stems``` = the amount of splitting to the audio file (--stems 5 = splits your audio file into 5 audio files)
+- `--file`: Specifies the audio file to process.
+- `--fps`: Frame rate to match your target animation.
+- `--stems`: The number of audio stems to create.
+- `--speed, --zoomspeed`: Amplitude/strength/intensity of your animation.
+- `--music_cut 1`: Enables audio trimming.
+- `--musicstart`: Sets the start time for the audio.
+- `--musicend`: Sets the end time for the audio.
 
-```--speed , --zoomspeed``` = the amplitude / strength / intensity of your animation
+#### 🎤 Simple Audio Keyframes
 
-```--music_cut 1``` = enable music cutting
+Ideal if you already have your own split audio files and want a quick and simple keyframe generation.
 
-```--musicstart``` = the start of the audio (use 1,17 for 1 minute 17 seconds)
+🔧 **Example Command**
 
-```--musicend``` = the end of the audio (use 2,53 for 2 minutes 53 seconds)
-
-```--use_vocals``` = only use this if you want to keyframe the vocals too (not recommended)
-
-#
-
-# simple audio keyframes
-
-**makes keyframes of the audio fast, good if have your own splitted sounds and don't want to use the advanced version**
-
-```
+```bash
 python audio_keyframes.py --file audiofile.mp3 --fps 15 --speed 0.4 --music_cut true --musicstart 1,10 --musicend 2,50
 ```
-**keyframes will be exported to audio_keyframes.json**
 
-```--file``` = the audio file
- 
-```--fps``` = the fps has to match the fps of the animation you will make
+🎛 **Parameters**
 
-```--speed``` = the amplitude / strength / intensity of your animation
-
-```--music_cut``` = enable music cutting
-
-```--musicstart``` = the start of the audio (use 1,17 for 1 minute 17 seconds)
-
-```--musicend``` = the end of the audio (use 2,53 for 2 minutes 53 seconds)
+- `--file`: Specifies the audio file to process.
+- `--fps`: Frame rate to match your target animation.
+- `--speed`: Amplitude/strength/intensity of your animation.
+- `--music_cut`: Enables audio trimming.
+- `--musicstart`: Sets the start time for the audio.
+- `--musicend`: Sets the end time for the audio.
 
 #
-
-#
-
-special thanks to [Zippy](https://github.com/aredden) for cleaning up this script 
