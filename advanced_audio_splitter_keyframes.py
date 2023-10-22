@@ -1,12 +1,9 @@
 from loguru import logger
 import json, argparse, subprocess, os
-
 from pydub import AudioSegment
 import wave
 from os import path
 import soundfile
-
-# keyframes
 import numpy as np
 import librosa
 import csv
@@ -14,7 +11,6 @@ import csv
 from pydub import AudioSegment
 
 def parse_args():
-    #logger.info(f"Parsing arguments...")
     desc = "Blah"
 
     parser = argparse.ArgumentParser()
@@ -30,13 +26,10 @@ def parse_args():
     
     parser.add_argument("-t","--stems",type=str,default="5",help="the amount of exported audio files, 3, 4, 5",)
     
-    #not important in this script, will fix soon
     parser.add_argument("--speed",type=float,default="0.4",help="reactive impact of the audio on the animation",)
     parser.add_argument("-z","--zoomspeed",type=float,default="5",help="reactive zoom impact of the audio on the animation",)
-    
-    
+       
     parser.add_argument("--use_vocals",type=float,help="vocals seem to have a negative effect on the animation so it's disabled by default",)
-    
     
     #advanced keyframes
     parser.add_argument("--drums_drop_speed",type=float,default="0.2",help="reactive impact of the audio on the animation when the audio makes a sound",)
@@ -70,10 +63,7 @@ def parse_args():
     parser.add_argument("--strength_drop_speed",type=float,default="0.50",help="reactive image strength impact of the audio on the animation when the audio makes a sound",)
     parser.add_argument("--strength_begin_speed",type=float,default="0.60",help="reactive image strength impact of the audio on the animation (starting value on keyframe 1)",)
     parser.add_argument("--strength_predrop_speed",type=float,default="0.70",help="reactive image strength impact of the audio on the animation right before the audio makes a sound",)
-    
-    
-    
-    
+        
     #if using --spleeter
     parser.add_argument("--zoom_sound", type=str, default='bass', choices=['drums', 'other', 'piano','bass'])
     parser.add_argument("--strength_sound", type=str, default='bass', choices=['drums', 'other', 'piano','bass'])
@@ -89,23 +79,16 @@ def parse_args():
     parser.add_argument("--strength_audio_path", type=str,help="path to your .wav file")
     parser.add_argument("--noise_audio_path", type=str,help="path to your .wav file")
     parser.add_argument("--contrast_audio_path", type=str,help="path to your .wav file")
-    
-    
-
-    
+   
     args = parser.parse_args()
     return args
 
-#def music_cut():
 args = parse_args()
 if args.spleeter:
     if args.music_cut:
         print('')
         print('')
         import shutil
-        #filename = args.file
-        
-        #backup the file
         
         src = args.file
         if src.endswith('.wav'):
@@ -132,13 +115,8 @@ if args.spleeter:
         
         result = []
         filename = flnm
-        #result.append(flnm)
         file = flnm
-        """if ":" in args.musicstart:
-            txt = args.musicstart
-            minute, second = txt.split(":")
-            minutes_60 = int(minute) * 60
-            time = minutes_60 + second"""
+
         if args.musicstart:
             if "," in args.musicstart:
                 txt = args.musicstart
@@ -150,7 +128,6 @@ if args.spleeter:
                 minutes_60 = minute * a_minute
                 time = minutes_60 + second
                 print('converting minutes to seconds')
-                #print('music starts at ', args.musicstart ,' = second', time)
         if args.musicend: 
             if "," in args.musicend:
                 txt = args.musicend
@@ -160,9 +137,7 @@ if args.spleeter:
                 minute = int(minute)
                 second = int(second)
                 minutes_60 = minute * a_minute
-                time2 = minutes_60 + second
-                #print('music ends at ', args.musicend ,' = second', time2)
-            
+                time2 = minutes_60 + second           
             
         # predict the length of the song
         length_of_file = librosa.get_duration(path=filename)
@@ -194,12 +169,7 @@ if args.spleeter:
         else:
             end = int(duration) # seconds
         print('music ends at second', end)  
-        
-        #fix wave.Error: file does not start with RIFF id
-        """data, samplerate = soundfile.read(filename)
-        soundfile.write(filename, data, samplerate)"""
-              
-        # file to extract the snippet from
+
         with wave.open(filename, "rb") as infile:
             # get file data
             nchannels = infile.getnchannels()
@@ -209,8 +179,7 @@ if args.spleeter:
             infile.setpos(int(start * framerate))
             # extract data
             data = infile.readframes(int((int(end) - int(start)) * int(framerate)))
-        
-        # write the extracted data to a new file
+
         with wave.open(flnm, 'w') as outfile:
             outfile.setnchannels(nchannels)
             outfile.setsampwidth(sampwidth)
@@ -236,7 +205,6 @@ if args.spleeter:
         print('') 
         print('')        
         
-#music_cut()
 class AudioKeyframeMeta:
     def __init__(self, duration, length_of_file) -> None:
         self.duration = duration
@@ -313,7 +281,7 @@ class AudioKeyframeService:
 
         for audio_type in audio_types:
             audio_path_key = f"{audio_type}_audio_path"
-            audio_file = os.path.join(stems_dir, filedircalc, f"{audio_type}.wav") if args.spleeter else args.get(audio_path_key, None)
+            audio_file = os.path.join(stems_dir, filedircalc, f"{audio_type}.wav") if args.spleeter else getattr(args, audio_path_key, None)
 
             if audio_file and os.path.exists(audio_file):
                 processing_func = getattr(self, f"_process_{audio_type}")
@@ -598,7 +566,6 @@ class AudioKeyframeService:
         with open("bpm.json", "w") as fp2:
             json.dump(tempo, fp2)
             print("processing of the bpm succeeded and exported to bpm.json")
-
 
 if __name__ == "__main__":
     args = parse_args()
