@@ -74,17 +74,19 @@ class AdvancedAudioSplitterUI:
     def create_widgets(self):
         # Create main frame
         self.frame = ttk.Frame(self.master, padding="1")
-        self.frame.grid(row=0, column=0, sticky=(tk.W, tk.E))  # Ajouté sticky=(tk.W, tk.E)
+        self.frame.grid(row=0, column=0, sticky=(tk.W, tk.E))
 
         # Create sub-frames for each group of widgets
-        self.audio_frame = self.create_labeled_frame("Audio Settings", row=1, col=0)
-
-        self.spleeter_frame = self.create_labeled_frame("Spleeter Settings", row=2, col=0)
-        self.script_frame = self.create_labeled_frame("Script Settings", row=9, col=0)
+        self.audio_frame = self.create_labeled_frame("Audio Settings", row=0, col=0)
+        self.spleeter_frame = self.create_labeled_frame("Spleeter Settings", row=1, col=0)
+        self.script_frame = self.create_labeled_frame("Script Settings", row=2, col=0)
         self.advanced_frame = self.create_labeled_frame("Advanced Settings", row=3, col=0)
-
-        # Audio Settings Widgets
+        
+        # Create Widgets for Each Frame
         self.create_audio_widgets(self.audio_frame)
+        self.create_spleeter_widgets(self.spleeter_frame)
+        self.create_script_widgets(self.script_frame)
+        self.create_advanced_widgets(self.advanced_frame)
 
         # Spleeter Settings Widgets
         self.create_spleeter_widgets(self.spleeter_frame)
@@ -124,7 +126,14 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.piano_drop_speed_entry, "Reactive impact of the piano audio on the animation when the audio makes a sound.")
         ToolTip(self.bass_drop_speed_entry, "Reactive impact of the bass audio on the animation when the audio makes a sound.")
         ToolTip(self.bpm_file_entry, "Path to the audio file for BPM calculations.")
-
+        ToolTip(self.piano_begin_speed_entry, "Starting value on keyframe 1 for piano.")
+        ToolTip(self.piano_predrop_speed_entry, "Value just before a drop for piano.")
+        ToolTip(self.strength_drop_speed_entry, "Reactive impact of the strength schedule when the audio makes a sound.")
+        ToolTip(self.noise_drop_speed_entry, "Reactive impact of the noise schedule when the audio makes a sound.")
+        ToolTip(self.contrast_drop_speed_entry, "Reactive impact of the contrast schedule when the audio makes a sound.")
+        ToolTip(self.zoom_drop_speed_entry, "Reactive zoom drop speed for the audio.")
+        ToolTip(self.music_cut_entry, "Cut in X splits")
+        
         self.fps_entry.insert(0, "30")
         self.stems_entry.insert(0, "4")
         self.speed_entry.insert(0, "1.5")
@@ -139,7 +148,7 @@ class AdvancedAudioSplitterUI:
 
     def create_labeled_frame(self, label, row, col):
         frame = ttk.LabelFrame(self.frame, text=label, padding="1")
-        frame.grid(row=row, column=col, sticky=(tk.W, tk.E), pady=1)
+        frame.grid(row=row, column=col, sticky=(tk.W, tk.E), pady=5, padx=5)
         return frame
 
     def add_file_chooser(self, frame, label, row, col):
