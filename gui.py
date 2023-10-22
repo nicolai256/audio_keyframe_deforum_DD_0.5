@@ -4,6 +4,31 @@ from tkinter import ttk
 from tkinter import filedialog
 import subprocess
 
+class ToolTip:
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tooltip_window = None
+        self.widget.bind("<Enter>", self.show_tooltip)
+        self.widget.bind("<Leave>", self.hide_tooltip)
+
+    def show_tooltip(self, event=None):
+        x, y, _, _ = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + 25
+        y += self.widget.winfo_rooty() + 25
+
+        self.tooltip_window = tk.Toplevel(self.widget)
+        self.tooltip_window.wm_overrideredirect(True)
+        self.tooltip_window.wm_geometry(f"+{x}+{y}")
+
+        label = tk.Label(self.tooltip_window, text=self.text, justify=tk.LEFT, background="#ffffff", relief=tk.SOLID, borderwidth=1)
+        label.pack(ipadx=1)
+
+    def hide_tooltip(self, event=None):
+        if self.tooltip_window:
+            self.tooltip_window.destroy()
+        self.tooltip_window = None
+
 def select_audio_file(audio_file_entry):
     file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.mp3 *.wav")])
     if file_path:
@@ -192,6 +217,40 @@ intensity_entry.grid(row=22, column=1)
 
 # Add Execute Button
 ttk.Button(root, text="Execute", command=execute_command).grid(row=23, columnspan=2)
+
+ToolTip(audio_file_entry, "Path to the audio file you want to process.")
+ToolTip(fps_entry, "Frames Per Second for the target animation.")
+ToolTip(stems_entry, "The number of audio stems to split the original audio into.")
+ToolTip(music_start_entry, "Start time for the audio in minute,second format.")
+ToolTip(music_end_entry, "End time for the audio in minute,second format.")
+ToolTip(speed_entry, "The amplitude/strength/intensity of your animation.")
+ToolTip(zoom_speed_entry, "Reactive zoom impact speed for the audio.")
+ToolTip(zoom_sound_combo, "Sound for zoom effect. Choose from 'drums', 'other', 'piano', 'bass'.")
+ToolTip(strength_sound_combo, "Sound for strength schedule. Recommended to be the same as zoom sound.")
+ToolTip(noise_sound_combo, "Sound for noise schedule. Recommended to be the same as zoom sound.")
+ToolTip(contrast_sound_combo, "Sound for contrast schedule. Recommended to be the same as zoom sound.")
+ToolTip(drums_drop_speed_entry, "Reactive impact of the drums audio on the animation when the audio makes a sound.")
+ToolTip(drums_begin_speed_entry, "Starting value on keyframe 1 for drums.")
+ToolTip(drums_audio_path_entry, "Path to your drums .wav file if not using Spleeter.")
+ToolTip(piano_audio_path_entry, "Path to your piano .wav file if not using Spleeter.")
+ToolTip(bass_audio_path_entry, "Path to your bass .wav file if not using Spleeter.")
+ToolTip(other_audio_path_entry, "Path to your other .wav file if not using Spleeter.")
+ToolTip(piano_drop_speed_entry, "Reactive impact of the piano audio on the animation when the audio makes a sound.")
+ToolTip(bass_drop_speed_entry, "Reactive impact of the bass audio on the animation when the audio makes a sound.")
+ToolTip(bpm_file_entry, "Path to the audio file for BPM calculations.")
+ToolTip(intensity_entry, "The amplitude/strength/intensity of your BPM-based animation.")
+
+fps_entry.insert(0, "30")
+stems_entry.insert(0, "5")
+music_start_entry.insert(0, "1,30")
+music_end_entry.insert(0, "3,20")
+speed_entry.insert(0, "1.5")
+zoom_speed_entry.insert(0, "0.8")
+drums_drop_speed_entry.insert(0, "0.3")
+drums_begin_speed_entry.insert(0, "0.1")
+piano_drop_speed_entry.insert(0, "0.25")
+bass_drop_speed_entry.insert(0, "0.4")
+intensity_entry.insert(0, "1.0")
 
 # Run the Tkinter event loop
 root.mainloop()
