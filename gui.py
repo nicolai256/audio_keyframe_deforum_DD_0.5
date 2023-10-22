@@ -85,16 +85,6 @@ class AdvancedAudioSplitterUI:
         # Create Widgets for Each Frame
         self.create_audio_widgets(self.audio_frame)
         self.create_spleeter_widgets(self.spleeter_frame)
-        self.create_script_widgets(self.script_frame)
-        self.create_advanced_widgets(self.advanced_frame)
-
-        # Spleeter Settings Widgets
-        self.create_spleeter_widgets(self.spleeter_frame)
-
-        # Script Settings Widgets
-        self.create_script_widgets(self.script_frame)
-
-        # Advanced Settings Widgets
         self.create_advanced_widgets(self.advanced_frame)
 
         # Adding a Text widget to serve as a console
@@ -129,8 +119,8 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.piano_begin_speed_entry, "Starting value on keyframe 1 for piano.")
         ToolTip(self.piano_predrop_speed_entry, "Value just before a drop for piano.")
         ToolTip(self.strength_drop_speed_entry, "Reactive impact of the strength schedule when the audio makes a sound.")
-        ToolTip(self.noise_drop_speed_entry, "Reactive impact of the noise schedule when the audio makes a sound.")
-        ToolTip(self.contrast_drop_speed_entry, "Reactive impact of the contrast schedule when the audio makes a sound.")
+        # ToolTip(self.noise_drop_speed_entry, "Reactive impact of the noise schedule when the audio makes a sound.")
+        # ToolTip(self.contrast_drop_speed_entry, "Reactive impact of the contrast schedule when the audio makes a sound.")
         ToolTip(self.zoom_drop_speed_entry, "Reactive zoom drop speed for the audio.")
         ToolTip(self.music_cut_entry, "Cut in X splits")
         
@@ -144,11 +134,11 @@ class AdvancedAudioSplitterUI:
         self.bass_drop_speed_entry.insert(0, "0.4")
 
         self.execute_button = ttk.Button(self.master, text="Execute", command=self.execute_command_threaded)
-        self.execute_button.grid(row=0, column=3, sticky=(tk.E), pady=1, padx=5)
+        self.execute_button.grid(row=0, column=3, sticky=(tk.E), pady=1, padx=1)
 
     def create_labeled_frame(self, label, row, col):
         frame = ttk.LabelFrame(self.frame, text=label, padding="1")
-        frame.grid(row=row, column=col, sticky=(tk.W, tk.E), pady=5, padx=5)
+        frame.grid(row=row, column=col, sticky=(tk.W, tk.E), pady=1, padx=1)
         return frame
 
     def add_file_chooser(self, frame, label, row, col):
@@ -164,7 +154,6 @@ class AdvancedAudioSplitterUI:
             entry.insert(0, file_path)
             
     def create_audio_widgets(self, frame):
-    
         ttk.Label(frame, text="Audio File:").grid(row=0, column=0, sticky=(tk.W))
         self.audio_file_entry = ttk.Entry(frame)
         self.audio_file_entry.grid(row=0, column=1, sticky=(tk.W))
@@ -173,30 +162,30 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="FPS:").grid(row=1, column=0, sticky=(tk.W))
         self.fps_entry = ttk.Entry(frame)
         self.fps_entry.grid(row=1, column=1, sticky=(tk.W))
-        
-        ttk.Label(frame, text="Drums Audio Path:").grid(row=4, column=0, sticky=(tk.W))
-        self.drums_audio_path_entry = ttk.Entry(frame)
-        self.drums_audio_path_entry.grid(row=4, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Piano Audio Path:").grid(row=5, column=0, sticky=(tk.W))
-        self.piano_audio_path_entry = ttk.Entry(frame)
-        self.piano_audio_path_entry.grid(row=5, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Bass Audio Path:").grid(row=6, column=0, sticky=(tk.W))
-        self.bass_audio_path_entry = ttk.Entry(frame)
-        self.bass_audio_path_entry.grid(row=6, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Other Audio Path:").grid(row=7, column=0, sticky=(tk.W))
-        self.other_audio_path_entry = ttk.Entry(frame)
-        self.other_audio_path_entry.grid(row=7, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="BPM File:").grid(row=8, column=0, sticky=(tk.W))
-        self.bpm_file_entry = ttk.Entry(frame)
-        self.bpm_file_entry.grid(row=8, column=1, sticky=(tk.W))
-        
-        ttk.Label(frame, text="Use Spleeter:").grid(row=9, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Use Spleeter:").grid(row=2, column=0, sticky=(tk.W))
         self.spleeter_var = tk.IntVar()
-        ttk.Checkbutton(frame, variable=self.spleeter_var).grid(row=9, column=1, sticky=(tk.W))
+        ttk.Checkbutton(frame, variable=self.spleeter_var).grid(row=2, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Drums Audio Path:").grid(row=3, column=0, sticky=(tk.W))
+        self.drums_audio_path_entry = ttk.Entry(frame)
+        self.drums_audio_path_entry.grid(row=3, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Piano Audio Path:").grid(row=4, column=0, sticky=(tk.W))
+        self.piano_audio_path_entry = ttk.Entry(frame)
+        self.piano_audio_path_entry.grid(row=4, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Bass Audio Path:").grid(row=5, column=0, sticky=(tk.W))
+        self.bass_audio_path_entry = ttk.Entry(frame)
+        self.bass_audio_path_entry.grid(row=5, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Other Audio Path:").grid(row=6, column=0, sticky=(tk.W))
+        self.other_audio_path_entry = ttk.Entry(frame)
+        self.other_audio_path_entry.grid(row=6, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="BPM File:").grid(row=7, column=0, sticky=(tk.W))
+        self.bpm_file_entry = ttk.Entry(frame)
+        self.bpm_file_entry.grid(row=7, column=1, sticky=(tk.W))
         
     def create_spleeter_widgets(self, frame):
 
@@ -232,7 +221,8 @@ class AdvancedAudioSplitterUI:
         self.contrast_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
         self.contrast_sound_combo.grid(row=5, column=1, sticky=(tk.W))
 
-    def create_script_widgets(self, frame):
+    def create_advanced_widgets(self, frame):
+
         ttk.Label(frame, text="Speed:").grid(row=0, column=0, sticky=(tk.W))
         self.speed_entry = ttk.Entry(frame)
         self.speed_entry.grid(row=0, column=1, sticky=(tk.W))
@@ -244,15 +234,7 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="Zoom Drop Speed:").grid(row=2, column=0, sticky=(tk.W))
         self.zoom_drop_speed_entry = ttk.Entry(frame)
         self.zoom_drop_speed_entry.grid(row=2, column=1, sticky=(tk.W))
-        
-        self.zoom_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
-        self.zoom_sound_combo.grid(row=2, column=1, sticky=(tk.W))
-        
-        self.strength_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
-        self.strength_sound_combo.grid(row=3, column=1, sticky=(tk.W))
-
-    def create_advanced_widgets(self, frame):
-                
+  
         ttk.Label(frame, text="Strength Drop Speed:").grid(row=12, column=0, sticky=(tk.W))
         self.strength_drop_speed_entry = ttk.Entry(frame)
         self.strength_drop_speed_entry.grid(row=12, column=1, sticky=(tk.W))
@@ -261,19 +243,13 @@ class AdvancedAudioSplitterUI:
         self.drums_drop_speed_entry = ttk.Entry(frame)
         self.drums_drop_speed_entry.grid(row=0, column=1, sticky=(tk.W))
 
+        ttk.Label(frame, text="Drums Pre-drop Speed:").grid(row=4, column=0, sticky=(tk.W))
+        self.drums_predrop_speed_entry = ttk.Entry(frame)
+        self.drums_predrop_speed_entry.grid(row=4, column=1, sticky=(tk.W))
+
         ttk.Label(frame, text="Drums Begin Speed:").grid(row=1, column=0, sticky=(tk.W))
         self.drums_begin_speed_entry = ttk.Entry(frame)
         self.drums_begin_speed_entry.grid(row=1, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Zoom Drop Speed:").grid(row=2, column=0, sticky=(tk.W))
-        self.zoom_drop_speed_entry = ttk.Entry(frame)
-        self.zoom_drop_speed_entry.grid(row=2, column=1, sticky=(tk.W))
-        
-        self.noise_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
-        self.noise_sound_combo.grid(row=3, column=1, sticky=(tk.W))
-        
-        self.contrast_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
-        self.contrast_sound_combo.grid(row=4, column=1, sticky=(tk.W))
         
         ttk.Label(frame, text="Piano Drop Speed:").grid(row=5, column=0, sticky=(tk.W))
         self.piano_drop_speed_entry = ttk.Entry(frame)
@@ -291,14 +267,62 @@ class AdvancedAudioSplitterUI:
         self.bass_drop_speed_entry = ttk.Entry(frame)
         self.bass_drop_speed_entry.grid(row=6, column=1, sticky=(tk.W))
             
-        ttk.Label(frame, text="Noise Drop Speed:").grid(row=13, column=0, sticky=(tk.W))
-        self.noise_drop_speed_entry = ttk.Entry(frame)
-        self.noise_drop_speed_entry.grid(row=13, column=1, sticky=(tk.W))
+        # ttk.Label(frame, text="Noise Drop Speed:").grid(row=13, column=0, sticky=(tk.W))
+        # self.noise_drop_speed_entry = ttk.Entry(frame)
+        # self.noise_drop_speed_entry.grid(row=13, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Contrast Drop Speed:").grid(row=14, column=0, sticky=(tk.W))
-        self.contrast_drop_speed_entry = ttk.Entry(frame)
-        self.contrast_drop_speed_entry.grid(row=14, column=1, sticky=(tk.W))
+        # ttk.Label(frame, text="Contrast Drop Speed:").grid(row=14, column=0, sticky=(tk.W))
+        # self.contrast_drop_speed_entry = ttk.Entry(frame)
+        # self.contrast_drop_speed_entry.grid(row=14, column=1, sticky=(tk.W))
+ 
+        # ttk.Label(frame, text="Other Begin Speed:").grid(row=15, column=0, sticky=(tk.W))
+        # self.other_begin_speed_entry = ttk.Entry(frame)
+        # self.other_begin_speed_entry.grid(row=15, column=1, sticky=(tk.W))
+
+        # ttk.Label(frame, text="Other Pre-drop Speed:").grid(row=16, column=0, sticky=(tk.W))
+        # self.other_predrop_speed_entry = ttk.Entry(frame)
+        # self.other_predrop_speed_entry.grid(row=16, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Bass Begin Speed:").grid(row=17, column=0, sticky=(tk.W))
+        self.bass_begin_speed_entry = ttk.Entry(frame)
+        self.bass_begin_speed_entry.grid(row=17, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Bass Pre-drop Speed:").grid(row=18, column=0, sticky=(tk.W))
+        self.bass_predrop_speed_entry = ttk.Entry(frame)
+        self.bass_predrop_speed_entry.grid(row=18, column=1, sticky=(tk.W))
+            
+        # ttk.Label(frame, text="Zoom Begin Speed:").grid(row=18, column=0, sticky=(tk.W))
+        # self.zoom_begin_speed_entry = ttk.Entry(frame)
+        # self.zoom_begin_speed_entry.grid(row=18, column=1, sticky=(tk.W))
+
+        # ttk.Label(frame, text="Zoom Pre-drop Speed:").grid(row=20, column=0, sticky=(tk.W))
+        # self.zoom_predrop_speed_entry = ttk.Entry(frame)
+        # self.zoom_predrop_speed_entry.grid(row=20, column=1, sticky=(tk.W))
+
+        # ttk.Label(frame, text="Noise Begin Speed:").grid(row=21, column=0, sticky=(tk.W))
+        # self.noise_begin_speed_entry = ttk.Entry(frame)
+        # self.noise_begin_speed_entry.grid(row=21, column=1, sticky=(tk.W))
         
+        # ttk.Label(frame, text="Noise Pre-drop Speed:").grid(row=22, column=0, sticky=(tk.W))
+        # self.noise_predrop_speed_entry = ttk.Entry(frame)
+        # self.noise_predrop_speed_entry.grid(row=22, column=1, sticky=(tk.W))
+        
+        # ttk.Label(frame, text="Contrast Begin Speed:").grid(row=23, column=0, sticky=(tk.W))
+        # self.contrast_begin_speed_entry = ttk.Entry(frame)
+        # self.contrast_begin_speed_entry.grid(row=23, column=1, sticky=(tk.W))
+            
+        # ttk.Label(frame, text="Contrast Pre-drop Speed:").grid(row=24, column=0, sticky=(tk.W))
+        # self.contrast_predrop_speed_entry = ttk.Entry(frame)
+        # self.contrast_predrop_speed_entry.grid(row=24, column=1, sticky=(tk.W))
+            
+        # ttk.Label(frame, text="Strength Begin Speed:").grid(row=25, column=0, sticky=(tk.W))
+        # self.strength_begin_speed_entry = ttk.Entry(frame)
+        # self.strength_begin_speed_entry.grid(row=25, column=1, sticky=(tk.W))
+            
+        # ttk.Label(frame, text="Strength Pre-drop Speed:").grid(row=26, column=0, sticky=(tk.W))
+        # self.strength_predrop_speed_entry = ttk.Entry(frame)
+        # self.strength_predrop_speed_entry.grid(row=26, column=1, sticky=(tk.W))
+
     def select_audio_file(self, audio_file_entry):
         file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.mp3 *.wav")])
         if file_path:
@@ -359,13 +383,16 @@ class AdvancedAudioSplitterUI:
             strength_sound = self.strength_sound_combo.get()
             noise_sound = self.noise_sound_combo.get()
             contrast_sound = self.contrast_sound_combo.get()
-            contrast_drop_speed = self.contrast_drop_speed_entry.get()
+            # contrast_drop_speed = self.contrast_drop_speed_entry.get()
             drums_drop_speed = self.drums_drop_speed_entry.get()
+            drums_predrop_speed = self.drums_predrop_speed_entry.get()
+            zoom_predrop_speed = self.zoom_predrop_speed_entry.get()
             drums_audio_path = self.drums_audio_path_entry.get()
+            bass_begin_speed_entry = self.bass_begin_speed_entry.get()
             zoom_drop_speed = self.zoom_drop_speed_entry.get()
             strength_drop_speed = self.strength_drop_speed_entry.get()
-            noise_drop_speed = self.noise_drop_speed_entry.get()
-            contrast_drop_speed = self.contrast_drop_speed_entry.get()
+            # noise_drop_speed = self.noise_drop_speed_entry.get()
+            piano_drop_speed = self.piano_drop_speed_entry.get()
             
             # Initialize the command list with the python path and script name
             cmd = [python_venv_path if os.path.exists(python_venv_path) else "python", "advanced_audio_splitter_keyframes.py"]
@@ -430,7 +457,47 @@ class AdvancedAudioSplitterUI:
                 cmd.extend(["--noise_drop_speed", noise_drop_speed])           
             if contrast_drop_speed:
                 cmd.extend(["--contrast_drop_speed", contrast_drop_speed])          
-            
+            if piano_drop_speed:
+                cmd.extend(["--piano_drop_speed", piano_drop_speed])          
+            if self.drums_begin_speed_entry.get():
+                cmd.extend(["--drums_begin_speed", self.drums_begin_speed_entry.get()])
+            if self.drums_predrop_speed_entry.get():
+                cmd.extend(["--drums_predrop_speed", self.drums_predrop_speed_entry.get()])
+
+            if self.other_begin_speed_entry.get():
+                cmd.extend(["--other_begin_speed", self.other_begin_speed_entry.get()])
+            if self.other_predrop_speed_entry.get():
+                cmd.extend(["--other_predrop_speed", self.other_predrop_speed_entry.get()])
+
+            if self.piano_begin_speed_entry.get():
+                cmd.extend(["--piano_begin_speed", self.piano_begin_speed_entry.get()])
+            if self.piano_predrop_speed_entry.get():
+                cmd.extend(["--piano_predrop_speed", self.piano_predrop_speed_entry.get()])
+
+            if self.bass_begin_speed_entry.get():
+                cmd.extend(["--bass_begin_speed", self.bass_begin_speed_entry.get()])
+            if self.bass_predrop_speed_entry.get():
+                cmd.extend(["--bass_predrop_speed", self.bass_predrop_speed_entry.get()])
+
+            if self.zoom_begin_speed_entry.get():
+                cmd.extend(["--zoom_begin_speed", self.zoom_begin_speed_entry.get()])
+            if self.zoom_predrop_speed_entry.get():
+                cmd.extend(["--zoom_predrop_speed", self.zoom_predrop_speed_entry.get()])
+
+            if self.noise_begin_speed_entry.get():
+                cmd.extend(["--noise_begin_speed", self.noise_begin_speed_entry.get()])
+            if self.noise_predrop_speed_entry.get():
+                cmd.extend(["--noise_predrop_speed", self.noise_predrop_speed_entry.get()])
+
+            if self.contrast_begin_speed_entry.get():
+                cmd.extend(["--contrast_begin_speed", self.contrast_begin_speed_entry.get()])
+            if self.contrast_predrop_speed_entry.get():
+                cmd.extend(["--contrast_predrop_speed", self.contrast_predrop_speed_entry.get()])
+            if self.strength_begin_speed_entry.get():
+                cmd.extend(["--strength_begin_speed", self.strength_begin_speed_entry.get()])
+            if self.strength_predrop_speed_entry.get():
+                cmd.extend(["--strength_predrop_speed", self.strength_predrop_speed_entry.get()])            
+                
             logging.info(f"Executing command: {' '.join(cmd)}")
             print(f"Executing command: {' '.join(cmd)}")
 
