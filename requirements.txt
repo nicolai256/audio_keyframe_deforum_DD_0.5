@@ -4,3 +4,4 @@ loguru
 spleeter
 librosa
 pydub
+ttkthemes
