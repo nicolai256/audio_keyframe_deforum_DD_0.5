@@ -267,5 +267,6 @@ class AdvancedAudioSplitterUI:
 if __name__ == "__main__":
     root = ThemedTk()
     root.set_theme("arc")
+    root.iconbitmap('./favicon.ico')     
     app = AdvancedAudioSplitterUI(root)
     root.mainloop()
