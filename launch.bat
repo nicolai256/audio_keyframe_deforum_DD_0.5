@@ -56,7 +56,7 @@ echo Installation des dépendances...
 pip install -r requirements.txt
 
 :: Exécution du script Python
-echo Démarrage de l'application...
+echo Application démarée!
 python gui.py
 
 :: Désactivation de l'environnement virtuel
