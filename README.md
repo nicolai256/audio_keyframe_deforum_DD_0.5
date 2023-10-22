@@ -1,11 +1,12 @@
-# audio to animation keyframes deforum DD [BETA]
-a script that can convert audio to animation keyframes for Deforum Stable Diffusion and Disco Diffusion
+#### forked from nicolai256/audio_keyframe_deforum_DD_0.5 audio to animation keyframes deforum DD [BETA]
 
-**this is still in BETA phase so give all the feedback you want to improve this**
+**WIP**
 
-the script splits up the audio into different files and makes keyframes from all those files
+The script splits up the audio into different files and makes keyframes from all those files
 
-u can import these generated keyframes into [this blender DSD keyframe plugin](https://www.youtube.com/watch?v=rzGINC9m4FM&ab_channel=Purz) if you want for changing the curves or editing the values visually
+You can import these generated keyframes into [this blender DSD keyframe plugin](https://www.youtube.com/watch?v=rzGINC9m4FM&ab_channel=Purz) if you want for changing the curves or editing the values visually
+
+### Just run launch.bat
 
 **dependencies**
 
@@ -217,10 +218,6 @@ python audio_keyframes.py --file audiofile.mp3 --fps 15 --speed 0.4 --music_cut 
 ```--musicend``` = the end of the audio (use 2,53 for 2 minutes 53 seconds)
 
 #
-
-support this and other projects 
-
-[PayPal](https://paypal.me/nicolaivernieuwe?country.x=BE&locale.x=en_US)<br/>
 
 #
 
