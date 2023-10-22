@@ -386,7 +386,7 @@ class AdvancedAudioSplitterUI:
             # contrast_drop_speed = self.contrast_drop_speed_entry.get()
             drums_drop_speed = self.drums_drop_speed_entry.get()
             drums_predrop_speed = self.drums_predrop_speed_entry.get()
-            zoom_predrop_speed = self.zoom_predrop_speed_entry.get()
+            # zoom_predrop_speed = self.zoom_predrop_speed_entry.get()
             drums_audio_path = self.drums_audio_path_entry.get()
             bass_begin_speed_entry = self.bass_begin_speed_entry.get()
             zoom_drop_speed = self.zoom_drop_speed_entry.get()
@@ -453,55 +453,48 @@ class AdvancedAudioSplitterUI:
                 cmd.extend(["--zoom_drop_speed", zoom_drop_speed])            
             if strength_drop_speed:
                 cmd.extend(["--strength_drop_speed", strength_drop_speed])               
-            if noise_drop_speed:
-                cmd.extend(["--noise_drop_speed", noise_drop_speed])           
-            if contrast_drop_speed:
-                cmd.extend(["--contrast_drop_speed", contrast_drop_speed])          
+            # if noise_drop_speed:
+                # cmd.extend(["--noise_drop_speed", noise_drop_speed])           
+            # if contrast_drop_speed:
+                # cmd.extend(["--contrast_drop_speed", contrast_drop_speed])          
             if piano_drop_speed:
                 cmd.extend(["--piano_drop_speed", piano_drop_speed])          
             if self.drums_begin_speed_entry.get():
                 cmd.extend(["--drums_begin_speed", self.drums_begin_speed_entry.get()])
             if self.drums_predrop_speed_entry.get():
                 cmd.extend(["--drums_predrop_speed", self.drums_predrop_speed_entry.get()])
-
-            if self.other_begin_speed_entry.get():
-                cmd.extend(["--other_begin_speed", self.other_begin_speed_entry.get()])
-            if self.other_predrop_speed_entry.get():
-                cmd.extend(["--other_predrop_speed", self.other_predrop_speed_entry.get()])
-
+            # if self.other_begin_speed_entry.get():
+                # cmd.extend(["--other_begin_speed", self.other_begin_speed_entry.get()])
+            # if self.other_predrop_speed_entry.get():
+                # cmd.extend(["--other_predrop_speed", self.other_predrop_speed_entry.get()])
             if self.piano_begin_speed_entry.get():
                 cmd.extend(["--piano_begin_speed", self.piano_begin_speed_entry.get()])
             if self.piano_predrop_speed_entry.get():
                 cmd.extend(["--piano_predrop_speed", self.piano_predrop_speed_entry.get()])
-
             if self.bass_begin_speed_entry.get():
                 cmd.extend(["--bass_begin_speed", self.bass_begin_speed_entry.get()])
             if self.bass_predrop_speed_entry.get():
                 cmd.extend(["--bass_predrop_speed", self.bass_predrop_speed_entry.get()])
-
-            if self.zoom_begin_speed_entry.get():
-                cmd.extend(["--zoom_begin_speed", self.zoom_begin_speed_entry.get()])
-            if self.zoom_predrop_speed_entry.get():
-                cmd.extend(["--zoom_predrop_speed", self.zoom_predrop_speed_entry.get()])
-
-            if self.noise_begin_speed_entry.get():
-                cmd.extend(["--noise_begin_speed", self.noise_begin_speed_entry.get()])
-            if self.noise_predrop_speed_entry.get():
-                cmd.extend(["--noise_predrop_speed", self.noise_predrop_speed_entry.get()])
-
-            if self.contrast_begin_speed_entry.get():
-                cmd.extend(["--contrast_begin_speed", self.contrast_begin_speed_entry.get()])
-            if self.contrast_predrop_speed_entry.get():
-                cmd.extend(["--contrast_predrop_speed", self.contrast_predrop_speed_entry.get()])
-            if self.strength_begin_speed_entry.get():
-                cmd.extend(["--strength_begin_speed", self.strength_begin_speed_entry.get()])
-            if self.strength_predrop_speed_entry.get():
-                cmd.extend(["--strength_predrop_speed", self.strength_predrop_speed_entry.get()])            
+            # if self.zoom_begin_speed_entry.get():
+                # cmd.extend(["--zoom_begin_speed", self.zoom_begin_speed_entry.get()])
+            # if self.zoom_predrop_speed_entry.get():
+                # cmd.extend(["--zoom_predrop_speed", self.zoom_predrop_speed_entry.get()])
+            # if self.noise_begin_speed_entry.get():
+                # cmd.extend(["--noise_begin_speed", self.noise_begin_speed_entry.get()])
+            # if self.noise_predrop_speed_entry.get():
+                # cmd.extend(["--noise_predrop_speed", self.noise_predrop_speed_entry.get()])
+            # if self.contrast_begin_speed_entry.get():
+                # cmd.extend(["--contrast_begin_speed", self.contrast_begin_speed_entry.get()])
+            # if self.contrast_predrop_speed_entry.get():
+                # cmd.extend(["--contrast_predrop_speed", self.contrast_predrop_speed_entry.get()])
+            # if self.strength_begin_speed_entry.get():
+                # cmd.extend(["--strength_begin_speed", self.strength_begin_speed_entry.get()])
+            # if self.strength_predrop_speed_entry.get():
+                # cmd.extend(["--strength_predrop_speed", self.strength_predrop_speed_entry.get()])            
                 
             logging.info(f"Executing command: {' '.join(cmd)}")
             print(f"Executing command: {' '.join(cmd)}")
 
-            # Execute the command and capture output
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             
             while True:
