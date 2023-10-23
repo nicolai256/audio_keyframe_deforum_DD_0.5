@@ -1,7 +1,7 @@
 ## ![AKD](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/8752374b-6e74-46cf-b625-fbd58216f525) Audio Keyframes for Deforum (GUI) 🎵
 
 Elevate your Deforum projects with pinpoint accuracy. This script allows you to dissect audio files into multiple stems and generate keyframes for intricate animations. Forked from: [Audio Keyframe Deforum](https://github.com/nicolai256/audio_keyframe_deforum_DD_0.5).
-![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/ca80efbd-5eb0-4ec7-8a66-c8236529334c)
+![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/0b25adeb-bfc5-4fe1-b3c3-0921fda9a348)
 
 
 ## 🚀 Quick Start 🚀
@@ -88,10 +88,6 @@ python advanced_audio_splitter_keyframes.py --fps 14 --drums_audio_path drums.wa
 
 ### ➕ More Features ➕
 
-- 🔣 Conditional Maths Synced to BPM
-- 🎧 Simple Audio Splitter Keyframes
-- 🎤 Simple Audio Keyframes
-
 #### 🔣 Conditional Maths Synced to BPM
 
 Generate keyframes that are perfectly synced to the beat per minute (BPM) of your audio file.
@@ -107,44 +103,4 @@ python conditional_maths_bpm_keyframes.py --file audiofile.mp3 --fps 14 --intens
 - `--file`: Specifies the audio file for BPM calculations.
 - `--fps`: Frame rate to match your target animation.
 - `--intensity`: Amplitude/strength/intensity of your BPM-based animation.
-
-#### 🎧 Simple Audio Splitter Keyframes
-
-A simplified script for splitting audio and generating keyframes.
-
-🔧 **Example Command**
-
-```bash
-python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5 --music_cut 1 --musicstart 1,10 --musicend 2,50
-```
-
-🎛 **Parameters**
-
-- `--file`: Specifies the audio file to process.
-- `--fps`: Frame rate to match your target animation.
-- `--stems`: The number of audio stems to create.
-- `--speed, --zoomspeed`: Amplitude/strength/intensity of your animation.
-- `--music_cut 1`: Enables audio trimming.
-- `--musicstart`: Sets the start time for the audio.
-- `--musicend`: Sets the end time for the audio.
-
-#### 🎤 Simple Audio Keyframes
-
-Ideal if you already have your own split audio files and want a quick and simple keyframe generation.
-
-🔧 **Example Command**
-
-```bash
-python audio_keyframes.py --file audiofile.mp3 --fps 15 --speed 0.4 --music_cut true --musicstart 1,10 --musicend 2,50
-```
-
-🎛 **Parameters**
-
-- `--file`: Specifies the audio file to process.
-- `--fps`: Frame rate to match your target animation.
-- `--speed`: Amplitude/strength/intensity of your animation.
-- `--music_cut`: Enables audio trimming.
-- `--musicstart`: Sets the start time for the audio.
-- `--musicend`: Sets the end time for the audio.
-
 #
