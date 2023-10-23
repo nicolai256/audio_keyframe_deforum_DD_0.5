@@ -8,17 +8,6 @@ Forked from [Audio Keyframe Deforum](https://github.com/nicolai256/audio_keyfram
 
 ![Screenshot](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/9dbb6b57-c30d-4bdf-b2a0-f4c7cdda7e2b)
 
-## Table of Contents
-
-- [Quick Start](#quick-start-)
-- [Dependencies](#dependencies-)
-- [Features](#features-)
-  - [Spleeter](#spleeter-built-in-audio-splitter)
-  - [Non-Spleeter Options](#non-spleeter-option-)
-  - [Keyframe Values](#keyframe-values-)
-  - [Additional Features](#more-features-)
-
----
 
 ## 🚀 Quick Start 🚀
 
