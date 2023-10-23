@@ -1,6 +1,5 @@
 opencv-python
 numpy
-loguru
 spleeter
 librosa
 pydub

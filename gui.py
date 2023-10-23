@@ -64,7 +64,7 @@ class AdvancedAudioSplitterUI:
         logging.info("Initializing UI...")
         self.master = master
         self.master.title("AKD GUI")
-        self.master.geometry('512x906')        
+        self.master.geometry('680x920')        
         try:
             self.create_widgets()
         except Exception as e:
@@ -89,7 +89,7 @@ class AdvancedAudioSplitterUI:
         self.create_advanced_widgets(self.advanced_frame)
 
         # Adding a Text widget to serve as a console
-        self.console = tk.Text(self.master, wrap=tk.WORD, height=6, width=50)
+        self.console = tk.Text(self.master, wrap=tk.WORD, height=9, width=73)
 
         self.console.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=1)  # Changé row de 4 à 1
         self.console.config(state=tk.DISABLED)
