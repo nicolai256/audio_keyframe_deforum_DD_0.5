@@ -11,8 +11,6 @@ logging.basicConfig(level=logging.INFO)
 
 function_type_options = ['sine', 'cosine', 'abs_sin', 'abs_cos', 'modulus', 'linear', 'triangle', 'fourier']
 
-function_type_combobox = None
-
 def validate_input(text, text_type, min_val=None):
     try:
         value = text_type(text)
