@@ -123,7 +123,10 @@ class AdvancedAudioSplitterUI:
         # ToolTip(self.contrast_drop_speed_entry, "Reactive impact of the contrast schedule when the audio makes a sound.")
         ToolTip(self.zoom_drop_speed_entry, "Reactive zoom drop speed for the audio.")
         ToolTip(self.music_cut_entry, "Cut in X splits")
-        
+        ToolTip(self.drums_predrop_speed_entry, "Pre-drop value for the impact of drums.")
+        ToolTip(self.bass_begin_speed_entry, "Starting value on keyframe 1 for bass.")
+        ToolTip(self.bass_predrop_speed_entry, "Value just before a drop for bass.")
+       
         self.fps_entry.insert(0, "30")
         self.stems_entry.insert(0, "4")
         self.speed_entry.insert(0, "1.5")
@@ -164,9 +167,9 @@ class AdvancedAudioSplitterUI:
         self.fps_entry.grid(row=1, column=1, sticky=(tk.W))
 
         ttk.Label(frame, text="Use Spleeter:").grid(row=2, column=0, sticky=(tk.W))
-        self.spleeter_var = tk.IntVar()
+        self.spleeter_var = tk.IntVar(value=1)  # Initialize to 1 to make it checked
         ttk.Checkbutton(frame, variable=self.spleeter_var).grid(row=2, column=1, sticky=(tk.W))
-
+        
         ttk.Label(frame, text="Drums Audio Path:").grid(row=3, column=0, sticky=(tk.W))
         self.drums_audio_path_entry = ttk.Entry(frame)
         self.drums_audio_path_entry.grid(row=3, column=1, sticky=(tk.W))
