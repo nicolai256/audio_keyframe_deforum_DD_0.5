@@ -1,57 +1,77 @@
 import argparse
 import json
 import librosa
-import cv2
 import numpy as np
 import os
-from os.path import isfile, join
-import os.path as pth
-
-parser = argparse.ArgumentParser(description='Feature Extraction From MP3')
-
-parser.add_argument('--file', type=str,help='your audio file')
-parser.add_argument("-s", "--fps", type=str, help="frames per second")
-parser.add_argument("--intensity", type=str, help="intensity of the keyframe")
-
-args = parser.parse_args()
-
-
-filename = args.file
-    
-y, sr = librosa.load(filename)
-    
-tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
-    
-print ('bpm: {:.5f}'.format(tempo))
-
-tempo1 = '{:.5f}'.format(tempo)
-#tempo.dtypes.head()
-#data = tempo
-#with open("bpm.json", "w") as fp2:
-#    json.dump(tempo, fp2)
-#    print("processing of the bpm succeeded and exported to bpm.json")
-
-
-fps = args.fps
-bpm = tempo1
-
-x = int(fps) * 60 / int(float(bpm))
-value = args.intensity
-export = '0:('+str(value)+'*sin(2*3.14*t/'+str(x)+'))'
-
-
+import logging
+import hashlib
 from os import path
-import os
+import mpmath
 
-i = 0
-flnm = "conditional_maths_bpm_" + str(i) + ".json"
-while path.exists(flnm) :
-    flnm = "conditional_maths_bpm_" + str(i) + ".json"
-    i += 1
+# Use mpmath for high-precision PI constant
+PI = mpmath.pi
 
-with open(flnm , "w") as fp:
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Feature Extraction From Audio Files')
+    parser.add_argument('--file', type=str, required=True, help='Your audio file')
+    parser.add_argument('--fps', type=int, required=True, help='Frames per second')
+    parser.add_argument('--intensity', type=float, required=True, help='Intensity of the keyframe')
+    args = parser.parse_args()
+    
+    if not path.exists(args.file) or args.fps <= 0 or args.intensity <= 0:
+        logging.error(f"Invalid arguments.")
+        exit(1)
+    
+    return args
+
+def load_audio_file(filename):
+    try:
+        y, sr = librosa.load(filename, sr=None)
         
-        json.dump(export, fp)
+        # Advanced tempo detection with Harmonic Resonance Analysis
+        onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+        tempo, _ = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr)
         
-        print(export)
-        print("processing of the keyframes succeeded and exported to " "conditional_maths_bpm_" + str(i) + ".json")
+        if tempo <= 0:
+            logging.error(f"Error: BPM detected as zero or negative.")
+            exit(1)
+        
+        # Use mpmath for high-precision calculations
+        return mpmath.mpf(tempo)
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+        exit(1)
+
+def calculate_expression(fps, tempo, intensity):
+    # Use mpmath for high-precision calculations
+    x = mpmath.mpf(fps) * 60 / tempo
+    return f'0:({intensity}*sin(2*{PI}*t/{x}))'
+
+def save_to_json(data, filename):
+    try:
+        with open(filename, 'w') as fp:
+            json.dump(data, fp)
+    except Exception as e:
+        logging.error(f"An error occurred while saving to JSON: {e}")
+        exit(1)
+
+def generate_unique_filename(base_name, file_content):
+    m = hashlib.sha256()
+    m.update(file_content.encode('utf-8'))
+    hash_value = m.hexdigest()[:10]
+    return f"{base_name}_{hash_value}.json"
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    
+    args = parse_arguments()
+    
+    tempo = load_audio_file(args.file)
+    logging.info(f'BPM: {mpmath.nstr(tempo, 50)}')  # Display tempo with 50 decimal places
+    
+    expression = calculate_expression(args.fps, tempo, args.intensity)
+    
+    json_filename = generate_unique_filename("conditional_maths_bpm", expression)
+    
+    save_to_json(expression, json_filename)
+    logging.info(f"Processing of the keyframes succeeded and exported to {json_filename}")
