@@ -1,7 +1,7 @@
 ## ![AKD](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/8752374b-6e74-46cf-b625-fbd58216f525) Audio Keyframes for Deforum (GUI) 🎵
 
 Elevate your Deforum projects with pinpoint accuracy. This script allows you to dissect audio files into multiple stems and generate keyframes for intricate animations. Forked from: [Audio Keyframe Deforum](https://github.com/nicolai256/audio_keyframe_deforum_DD_0.5).
-![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/43a42bc0-b68b-496b-a0c3-ea4c79b60623)
+![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/ca80efbd-5eb0-4ec7-8a66-c8236529334c)
 
 
 ## 🚀 Quick Start 🚀
