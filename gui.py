@@ -536,8 +536,8 @@ class AdvancedAudioSplitterUI:
                     logging.info(output.strip())
                     print(output.strip())
                 if error_output:
-                    logging.error(f"Error: {error_output.strip()}")
-                    print(f"Error: {error_output.strip()}")
+                    logging.error(f"{error_output.strip()}")
+                    print(f"{error_output.strip()}")
 
                 if process.poll() is not None:
                     break

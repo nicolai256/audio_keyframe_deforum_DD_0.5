@@ -2,14 +2,28 @@ from loguru import logger
 import json, argparse, subprocess, os
 from pydub import AudioSegment
 import wave
+import os
 from os import path
+import datetime
 import soundfile
 import numpy as np
 import librosa
 import csv
-
 from pydub import AudioSegment
+from joblib import Memory
+import logging
+from scipy import fftpack
 
+# Initialize joblib memory cache
+memory = Memory("cache_directory", verbose=0)
+
+@memory.cache
+def fft_analysis(y):
+    N = len(y)
+    T = 1.0 / 800.0
+    yf = fftpack.fft(y)
+    return np.abs(yf[0:N//2])
+    
 def parse_args():
     desc = "Blah"
 
@@ -206,9 +220,10 @@ if args.spleeter:
         print('')        
         
 class AudioKeyframeMeta:
-    def __init__(self, duration, length_of_file) -> None:
+    def __init__(self, duration, length_of_file, bpm=None) -> None:
         self.duration = duration
         self.length_of_file = length_of_file
+        self.bpm = bpm
 
 class AudioKeyframeService:
     def __init__(
@@ -216,17 +231,52 @@ class AudioKeyframeService:
     ) -> None:
         self.key_names = key_names
         self.fps = fps
+            
+    def bpmdetection(self, filename):
+        try:
+            y, sr = librosa.load(filename, sr=None)
+            
+            fft_result = fft_analysis(y)
+            
+            onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+            
+            tempo, _ = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr)
+            
+            if tempo <= 0:
+                logging.error("Error: BPM detected as zero or negative.")
+                return None
+            
+            print(f"BPM: {tempo:.2f}")
+            
+            with open("bpm.json", "w") as fp:
+                json.dump(tempo, fp)
+                print("Processing of the BPM succeeded and exported to bpm.json")
+            
+            return float(tempo)
+        
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+            return None
+
+    def detect_bpm(self, filename):
+        tempo = self.bpmdetection(filename)
+        return tempo
 
     def _get_metadata(self, filename):
         length_of_file = librosa.get_duration(path=filename)
         audio: AudioSegment = AudioSegment.from_file(filename)
-        audio.duration_seconds == (len(audio) / 1000.0)
-        minutes_duartion = int(audio.duration_seconds // 60)
+        
+        duration_seconds = len(audio) / 1000.0
+        
+        minutes_duartion = int(duration_seconds // 60)
         minutes_duration = minutes_duartion * 60
-        seconds_duration = round(audio.duration_seconds % 60)
+        seconds_duration = round(duration_seconds % 60)
         duration = minutes_duration + seconds_duration
+        
+        bpm = self.detect_bpm(filename)
+        
         return AudioKeyframeMeta(
-            **{"duration": duration, "length_of_file": length_of_file}
+            duration=duration, length_of_file=length_of_file, bpm=bpm
         )
 
     def _spleet(self, stems_dir, file, nstem):
@@ -241,15 +291,35 @@ class AudioKeyframeService:
             print('')
             subprocess.run(["spleeter", "separate", "-p", f"spleeter:{nstem}stems", "-o", f"{stems_dir}/", file,])
 
-    def process(
-        self,
-        n_stems: int,
-        file,
-        stems_dir="outputs",
-        use_vocals=False,
-        zoomspeed=4,
-        speed=4,
-    ):
+    def process_audio_type(self, audio_type, filename, zoomspeed=4):
+        args = parse_args()
+        logger.info(f"Processing file: {filename} for {audio_type} animation with speed: {getattr(args, f'{audio_type}_drop_speed')}")
+        
+        meta: AudioKeyframeMeta = self._get_metadata(filename)
+        beat_ind = self._get_prep_values(filename, duration=meta.duration)
+        
+        frames_change_pre_beat = 0
+        frames_change_post_beat = 100  # Buffer frames before and after a beat
+        
+        post_beat_transition_value = getattr(args, f"{audio_type}_begin_speed")
+        beat_transition_value = getattr(args, f"{audio_type}_drop_speed")
+        pre_beat_transition_value = getattr(args, f"{audio_type}_predrop_speed")
+        
+        key_frame_value = []
+        post_beat = 1
+        
+        return self._build_string(
+            beat_ind,
+            key_frame_value,
+            post_beat,
+            post_beat_transition_value,
+            pre_beat_transition_value,
+            beat_transition_value,
+            frames_change_post_beat,
+            frames_change_pre_beat,
+        )
+
+    def process(self, n_stems: int, file, stems_dir="outputs", use_vocals=False, zoomspeed=4, speed=4):
         args = parse_args()
 
         if args.spleeter:
@@ -284,8 +354,7 @@ class AudioKeyframeService:
             audio_file = os.path.join(stems_dir, filedircalc, f"{audio_type}.wav") if args.spleeter else getattr(args, audio_path_key, None)
 
             if audio_file and os.path.exists(audio_file):
-                processing_func = getattr(self, f"_process_{audio_type}")
-                final_dict[audio_type] = processing_func(audio_file, zoomspeed=zoomspeed)
+                final_dict[audio_type] = self.process_audio_type(audio_type, audio_file, zoomspeed=zoomspeed)
 
         return final_dict
 
@@ -301,195 +370,7 @@ class AudioKeyframeService:
         )
         beat_ind = np.argwhere(vals)
         return beat_ind
-    
-    def _process_piano(self, filename, zoomspeed=4):
-        args = parse_args()
-        logger.info(f"Processing file: {filename} for piano animation with speed: {args.piano_drop_speed}")
-        meta: AudioKeyframeMeta = self._get_metadata(filename)
-        beat_ind = self._get_prep_values(filename, duration=meta.duration)
-        frames_change_pre_beat = 0
-        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
-        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = args.piano_begin_speed
-        beat_transition_value = args.piano_drop_speed
-        pre_beat_transition__value = args.piano_predrop_speed
-        key_frame_value = []
-        post_beat = 1
-        return self._build_string(
-            beat_ind,
-            key_frame_value,
-            post_beat,
-            post_beat_transition__value,
-            pre_beat_transition__value,
-            beat_transition_value,
-            frames_change_post_beat,
-            frames_change_pre_beat,
-        )
-    
-    def _process_bass(self, filename, zoomspeed=4):
-        args = parse_args()
-        logger.info(f"Processing file: {filename} for bass animation with speed: {args.bass_drop_speed}")
-        meta: AudioKeyframeMeta = self._get_metadata(filename)
-        beat_ind = self._get_prep_values(filename, duration=meta.duration)
-        frames_change_pre_beat = 0
-        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
-        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = args.bass_begin_speed
-        beat_transition_value = args.bass_drop_speed
-        pre_beat_transition__value = args.bass_predrop_speed
-        key_frame_value = []
-        post_beat = 1
-        return self._build_string(
-            beat_ind,
-            key_frame_value,
-            post_beat,
-            post_beat_transition__value,
-            pre_beat_transition__value,
-            beat_transition_value,
-            frames_change_post_beat,
-            frames_change_pre_beat,
-        )
-    
-    def _process_other(self, filename, zoomspeed=4):
-        args = parse_args()
-        logger.info(f"Processing file: {filename} for other audio animation with speed: {args.other_drop_speed}")
-        meta: AudioKeyframeMeta = self._get_metadata(filename)
-        beat_ind = self._get_prep_values(filename, duration=meta.duration)
-        frames_change_pre_beat = 0
-        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
-        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = args.other_begin_speed
-        beat_transition_value = args.other_drop_speed
-        pre_beat_transition__value = args.other_predrop_speed
-        key_frame_value = []
-        post_beat = 1
-        return self._build_string(
-            beat_ind,
-            key_frame_value,
-            post_beat,
-            post_beat_transition__value,
-            pre_beat_transition__value,
-            beat_transition_value,
-            frames_change_post_beat,
-            frames_change_pre_beat,
-        )
-
-    def _process_drums(self, filename, zoomspeed=4):
-        args = parse_args()
-        logger.info(f"Processing file: {filename} for drums animation with speed: {args.drums_drop_speed}")
-        meta: AudioKeyframeMeta = self._get_metadata(filename)
-        beat_ind = self._get_prep_values(filename, duration=meta.duration)
-        frames_change_pre_beat = 0
-        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
-        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = args.drums_begin_speed
-        beat_transition_value = args.drums_drop_speed
-        pre_beat_transition__value = args.drums_predrop_speed
-        key_frame_value = []
-        post_beat = 1
-        return self._build_string(
-            beat_ind,
-            key_frame_value,
-            post_beat,
-            post_beat_transition__value,
-            pre_beat_transition__value,
-            beat_transition_value,
-            frames_change_post_beat,
-            frames_change_pre_beat,
-        )
-        
-    def _process_zoom(self, filename, zoomspeed=4):
-        args = parse_args()
-        logger.info(f"Processing file: {filename} with zoom schedule: {args.zoom_drop_speed}")
-        meta: AudioKeyframeMeta = self._get_metadata(filename)
-        beat_ind = self._get_prep_values(filename, duration=meta.duration)
-        frames_change_pre_beat = 0
-        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
-        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = args.zoom_begin_speed
-        beat_transition_value = args.zoom_drop_speed
-        pre_beat_transition__value = args.zoom_predrop_speed
-        key_frame_value = []
-        post_beat = 1
-        return self._build_string(
-            beat_ind,
-            key_frame_value,
-            post_beat,
-            post_beat_transition__value,
-            pre_beat_transition__value,
-            beat_transition_value,
-            frames_change_post_beat,
-            frames_change_pre_beat,
-        )
-    def _process_strength(self, filename, zoomspeed=4):
-        args = parse_args()
-        logger.info(f"Processing file: {filename} with strength schedule: {args.strength_drop_speed}")
-        meta: AudioKeyframeMeta = self._get_metadata(filename)
-        beat_ind = self._get_prep_values(filename, duration=meta.duration)
-        frames_change_pre_beat = 0
-        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
-        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = args.strength_begin_speed
-        beat_transition_value = args.strength_drop_speed
-        pre_beat_transition__value = args.strength_predrop_speed 
-        key_frame_value = []
-        post_beat = 1
-        return self._build_string(
-            beat_ind,
-            key_frame_value,
-            post_beat,
-            post_beat_transition__value,
-            pre_beat_transition__value,
-            beat_transition_value,
-            frames_change_post_beat,
-            frames_change_pre_beat,
-        )
-    def _process_noise(self, filename, zoomspeed=4):
-        args = parse_args()
-        logger.info(f"Processing file: {filename} with noise schedule: {args.noise_drop_speed}")
-        meta: AudioKeyframeMeta = self._get_metadata(filename)
-        beat_ind = self._get_prep_values(filename, duration=meta.duration)
-        frames_change_pre_beat = 0
-        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
-        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = args.noise_begin_speed
-        beat_transition_value = args.noise_drop_speed
-        pre_beat_transition__value = args.noise_predrop_speed
-        key_frame_value = []
-        post_beat = 1
-        return self._build_string(
-            beat_ind,
-            key_frame_value,
-            post_beat,
-            post_beat_transition__value,
-            pre_beat_transition__value,
-            beat_transition_value,
-            frames_change_post_beat,
-            frames_change_pre_beat,
-        )
-    def _process_contrast(self, filename, zoomspeed=4):
-        args = parse_args()
-        logger.info(f"Processing file: {filename} with contrast schedule: {args.contrast_predrop_speed}")
-        meta: AudioKeyframeMeta = self._get_metadata(filename)
-        beat_ind = self._get_prep_values(filename, duration=meta.duration)
-        frames_change_pre_beat = 0
-        frames_change_post_beat = 100  # there are the amount of buffer frames before and after a beat to let value linear change
-        #   If my beat is at 10.    9:(0), 10:(1), 22:(0). So between frames 10-22 they linearly scale. But look to change from linear to -exp
-        post_beat_transition__value = args.contrast_begin_speed
-        beat_transition_value = args.contrast_drop_speed
-        pre_beat_transition__value = args.contrast_predrop_speed
-        key_frame_value = []
-        post_beat = 1
-        return self._build_string(
-            beat_ind,
-            key_frame_value,
-            post_beat,
-            post_beat_transition__value,
-            pre_beat_transition__value,
-            beat_transition_value,
-            frames_change_post_beat,
-            frames_change_pre_beat,
-        )
+ 
     def _build_string(
         self,
         beat_ind,
@@ -551,41 +432,29 @@ class AudioKeyframeService:
             frames_change_post_beat,
             frames_change_pre_beat,
         )
-        
-    def bpmdetection():
-        filename = args.file
-    
-        y, sr = librosa.load(filename)
-    
-        tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
-        
-        print("")
-        print("")
-        print ('bpm: {:.2f}'.format(tempo))
-        data = tempo
-        with open("bpm.json", "w") as fp2:
-            json.dump(tempo, fp2)
-            print("processing of the bpm succeeded and exported to bpm.json")
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     args = parse_args()
     service = AudioKeyframeService(fps=args.fps)
+
+    if not os.path.exists("outputs"):
+        os.mkdir("outputs")
+
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    output_filename = f"audio_splitter_keyframes_{current_datetime}.json"
+
+    output_filepath = os.path.join("outputs", output_filename)
+
     if args.spleeter:
         if args.music_cut:
-            final_dict = service.process(args.stems,flnm, zoomspeed=args.zoomspeed, speed=args.speed)
+            final_dict = service.process(args.stems, args.file, zoomspeed=args.zoomspeed, speed=args.speed)
         else:
-            final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
+            final_dict = service.process(args.stems, args.file, zoomspeed=args.zoomspeed, speed=args.speed)
     else:
-        #not important, just to dodge an error
-        print("")
-        print("")
-        print('put your original audio in the source folder and always pass --file original_file.wav/mp3 , gives bugs otherwise, will fix later')
-        print("")
-        print("")
-        #important
-        final_dict = service.process(args.stems,file="do_not_delete.wav", zoomspeed=args.zoomspeed, speed=args.speed)
-    with open("audio_splitter_keyframes.json", "w") as fp:
+
+        final_dict = service.process(args.stems, file="do_not_delete.wav", zoomspeed=args.zoomspeed, speed=args.speed)
+
+    with open(output_filepath, "w") as fp:
         json.dump(final_dict, fp, indent=2)
-        print("")
-        print("")
-        print("processing of the keyframes succeeded and exported to audio_splitter_keyframes.json")
+        print(f"Processing of the keyframes succeeded and exported to {output_filepath}")
