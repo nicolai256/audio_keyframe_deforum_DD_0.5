@@ -64,7 +64,7 @@ class AdvancedAudioSplitterUI:
         logging.info("Initializing UI...")
         self.master = master
         self.master.title("AKD GUI")
-        self.master.geometry('512x900')        
+        self.master.geometry('512x906')        
         try:
             self.create_widgets()
         except Exception as e:
@@ -89,7 +89,7 @@ class AdvancedAudioSplitterUI:
         self.create_advanced_widgets(self.advanced_frame)
 
         # Adding a Text widget to serve as a console
-        self.console = tk.Text(self.master, wrap=tk.WORD, height=7, width=50)
+        self.console = tk.Text(self.master, wrap=tk.WORD, height=6, width=50)
 
         self.console.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=1)  # Changé row de 4 à 1
         self.console.config(state=tk.DISABLED)
@@ -205,10 +205,16 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="Other Audio Path:").grid(row=8, column=0, sticky=(tk.W))
         self.other_audio_path_entry = ttk.Entry(frame)
         self.other_audio_path_entry.grid(row=8, column=1, sticky=(tk.W))
-
+        
         ttk.Label(frame, text="BPM File:").grid(row=9, column=0, sticky=(tk.W))
         self.bpm_file_entry = ttk.Entry(frame)
-        self.bpm_file_entry.grid(row=9, column=1, sticky=(tk.W))
+        self.bpm_file_entry.grid(row=9, column=1, sticky=(tk.W))       
+        
+        self.add_file_chooser(frame, "Drums Audio Path:", 5, 0)
+        self.add_file_chooser(frame, "Piano Audio Path:", 6, 0)
+        self.add_file_chooser(frame, "Bass Audio Path:", 7, 0)
+        self.add_file_chooser(frame, "Other Audio Path:", 8, 0)
+        self.add_file_chooser(frame, "BPM File:", 9, 0)
         
     def create_spleeter_widgets(self, frame):
 
