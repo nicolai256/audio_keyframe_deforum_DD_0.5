@@ -148,9 +148,15 @@ class AdvancedAudioSplitterUI:
         self.bass_drop_speed_entry.insert(0, "0.4")
         self.bass_begin_speed_entry.insert(0, "0.0")
 
+        self.maths_cond_button = ttk.Button(self.master, text="Maths Cond.", command=self.open_cond_ui)
+        self.maths_cond_button.grid(row=0, column=2, sticky=(tk.E), pady=1, padx=1)
+
         self.execute_button = ttk.Button(self.master, text="Execute", command=self.execute_command_threaded)
         self.execute_button.grid(row=0, column=3, sticky=(tk.E), pady=1, padx=1)
-
+            
+    def open_cond_ui(self):
+        subprocess.Popen([sys.executable, "condUI.py"])
+        
     def create_labeled_frame(self, label, row, col):
         frame = ttk.LabelFrame(self.frame, text=label, padding="1")
         frame.grid(row=row, column=col, sticky=(tk.W, tk.E), pady=1, padx=1)
@@ -187,7 +193,7 @@ class AdvancedAudioSplitterUI:
         self.zoom_speed_entry.grid(row=3, column=1, sticky=(tk.W))
 
         ttk.Label(frame, text="Use Spleeter:").grid(row=4, column=0, sticky=(tk.W))
-        self.spleeter_var = tk.IntVar(value=1)  # Initialize to 1 to make it checked
+        self.spleeter_var = tk.IntVar(value=1)
         ttk.Checkbutton(frame, variable=self.spleeter_var).grid(row=4, column=1, sticky=(tk.W))
         
         ttk.Label(frame, text="Drums Audio Path:").grid(row=5, column=0, sticky=(tk.W))

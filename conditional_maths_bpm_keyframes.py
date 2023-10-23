@@ -22,7 +22,8 @@ def parse_arguments():
     parser.add_argument('--intensity', type=float, required=True, help='Intensity of the keyframe')
     parser.add_argument('--function_type', type=str, choices=['sine', 'cosine', 'abs_sin', 'abs_cos', 'modulus', 'linear', 'triangle', 'fourier'], default='sine', help='Type of function to generate')
     parser.add_argument('--advanced_params', type=str, default="", help='Advanced parameters as a string')
-        
+    parser.add_argument('--export-all-formulas', action='store_true', help='Export all formulas to JSON')
+    
     args = parser.parse_args()
 
     args.advanced_params = dict(map(str.strip, param.split("=")) for param in args.advanced_params.split(",")) if args.advanced_params else {}
@@ -78,14 +79,12 @@ def generate_unique_filename(base_name, file_content, audio_filename):
     return f"{base_name}_{audio_filename_without_extension}_{hash_value}.json"
 
 def generate_complex_expression(fps, tempo, intensity, function_type="sine", params={}):
-    x = float(fps) * 60 / tempo  # Standard float for performance
+    x = float(fps) * 60 / tempo
     A = params.get('A', 1)
     P = params.get('P', 1)
     D = params.get('D', 0)
     B = params.get('B', 1)
-    
-    function_type = args.function_type
-    
+        
     if function_type == "sine":
         return f'0:({D} + {A}*sin(2*{PI}*t/{x}/{P}))'
     elif function_type == "cosine":
@@ -104,7 +103,14 @@ def generate_complex_expression(fps, tempo, intensity, function_type="sine", par
         return f'0:({D} + ({A}*(sin*t/{P})+sin({A}*t/{P}) + sin({A}*t/{P})))'
     else:
         return None
-        
+  
+def generate_all_formulas(fps, tempo, intensity, params={}):
+    all_formulas = {}
+    for function_type in ['sine', 'cosine', 'abs_sin', 'abs_cos', 'modulus', 'linear', 'triangle', 'fourier']:
+        formula = generate_complex_expression(fps, tempo, intensity, function_type, params)
+        all_formulas[function_type] = formula
+    return all_formulas
+  
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     
@@ -115,19 +121,22 @@ if __name__ == "__main__":
     
     expression = calculate_expression(args.fps, tempo, args.intensity)
     
-    # Pour des animations complexes, utilisez generate_complex_expression
-    # Exemple : pour une animation en sinus avec A=2, P=3, et D=4
     complex_params = {'A': 2, 'P': 3, 'D': 4}
+    
+    all_formulas = None
+    if args.export_all_formulas:
+        all_formulas = generate_all_formulas(args.fps, tempo, args.intensity, params=complex_params)
+
     complex_expression = generate_complex_expression(args.fps, tempo, args.intensity, function_type=args.function_type, params=complex_params)
     
-    # Spécifiez le chemin complet du fichier JSON dans le dossier "outputs" avec le nom du fichier audio
     output_folder = "outputs"
-    os.makedirs(output_folder, exist_ok=True)  # Créez le dossier s'il n'existe pas
+    os.makedirs(output_folder, exist_ok=True)
     json_filename = os.path.join(output_folder, generate_unique_filename("conditional_maths_bpm", expression, args.file))
     
     data = {
         "expression": expression,
-        "complex_expression": complex_expression
+        "complex_expression": complex_expression,
+        "all_formulas": all_formulas     
     }
     
     save_to_json(data, json_filename)
