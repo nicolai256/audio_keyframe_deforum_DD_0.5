@@ -21,7 +21,7 @@ logging.info("Starting program...")
 class TextRedirector(io.StringIO):
     def __init__(self, widget):
         self.widget = widget
-
+        
     def write(self, str):
         self.widget.after(0, self._write, str)
 
@@ -64,6 +64,7 @@ class AdvancedAudioSplitterUI:
         logging.info("Initializing UI...")
         self.master = master
         self.master.title("AKD GUI")
+        self.master.geometry('512x900')        
         try:
             self.create_widgets()
         except Exception as e:
@@ -88,7 +89,8 @@ class AdvancedAudioSplitterUI:
         self.create_advanced_widgets(self.advanced_frame)
 
         # Adding a Text widget to serve as a console
-        self.console = tk.Text(self.master, wrap=tk.WORD, height=10)
+        self.console = tk.Text(self.master, wrap=tk.WORD, height=9, width=50)
+
         self.console.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=1)  # Changé row de 4 à 1
         self.console.config(state=tk.DISABLED)
         
