@@ -18,6 +18,219 @@ logger.addHandler(logging.StreamHandler())
 
 logging.info("Starting program...")
 
+music_genre_templates = {
+    "Default": {
+        "speed": "4",
+        "zoom_speed": "4",
+        "zoom_drop_speed": "5",
+        "strength_drop_speed": "0.50",
+        "drums_drop_speed": "0.2",
+        "drums_predrop_speed": "-0.2",
+        "drums_begin_speed": "0.0",
+        "piano_predrop_speed": "-0.4",
+        "piano_drop_speed": "0.25",
+        "piano_begin_speed": "0.0",
+        "bass_predrop_speed": "-0.4",
+        "bass_drop_speed": "0.4",
+        "bass_begin_speed": "0.0"
+    },
+    "Jazz": {
+        "speed": "3",
+        "zoom_speed": "3",
+        "zoom_drop_speed": "3.5",
+        "strength_drop_speed": "0.75",
+        "drums_drop_speed": "0.1",
+        "drums_predrop_speed": "0",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "0.1",
+        "piano_drop_speed": "0.15",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "0.1",
+        "bass_drop_speed": "0.2",
+        "bass_begin_speed": "0"
+    },
+    "Classical": {
+        "speed": "2",
+        "zoom_speed": "2",
+        "zoom_drop_speed": "2.5",
+        "strength_drop_speed": "0.85",
+        "drums_drop_speed": "0",
+        "drums_predrop_speed": "0",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "0.05",
+        "piano_drop_speed": "0.1",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "0.05",
+        "bass_drop_speed": "0.1",
+        "bass_begin_speed": "0"
+    },
+    "Hip-Hop": {
+        "speed": "5",
+        "zoom_speed": "5",
+        "zoom_drop_speed": "5.5",
+        "strength_drop_speed": "0.65",
+        "drums_drop_speed": "0.25",
+        "drums_predrop_speed": "-0.1",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "-0.2",
+        "piano_drop_speed": "0.3",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "-0.2",
+        "bass_drop_speed": "0.3",
+        "bass_begin_speed": "0"
+    },
+    "Minimal": {
+        "speed": "1",
+        "zoom_speed": "1",
+        "zoom_drop_speed": "1.5",
+        "strength_drop_speed": "0.9",
+        "drums_drop_speed": "0",
+        "drums_predrop_speed": "0",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "0",
+        "piano_drop_speed": "0",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "0",
+        "bass_drop_speed": "0",
+        "bass_begin_speed": "0"
+    },
+    "Abstract": {
+        "speed": "4",
+        "zoom_speed": "4",
+        "zoom_drop_speed": "4.5",
+        "strength_drop_speed": "0.7",
+        "drums_drop_speed": "0.1",
+        "drums_predrop_speed": "-0.1",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "-0.1",
+        "piano_drop_speed": "0.2",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "-0.1",
+        "bass_drop_speed": "0.2",
+        "bass_begin_speed": "0"
+    },
+    "Violent": {
+        "speed": "6",
+        "zoom_speed": "6",
+        "zoom_drop_speed": "6.5",
+        "strength_drop_speed": "0.55",
+        "drums_drop_speed": "0.3",
+        "drums_predrop_speed": "-0.3",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "-0.5",
+        "piano_drop_speed": "0.35",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "-0.5",
+        "bass_drop_speed": "0.35",
+        "bass_begin_speed": "0"
+    },
+    "Techno": {
+        "speed": "5",
+        "zoom_speed": "5",
+        "zoom_drop_speed": "5.5",
+        "strength_drop_speed": "0.6",
+        "drums_drop_speed": "0.3",
+        "drums_predrop_speed": "-0.1",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "-0.2",
+        "piano_drop_speed": "0.25",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "-0.2",
+        "bass_drop_speed": "0.3",
+        "bass_begin_speed": "0"
+    },
+    "Reggae": {
+        "speed": "3",
+        "zoom_speed": "3",
+        "zoom_drop_speed": "3.5",
+        "strength_drop_speed": "0.7",
+        "drums_drop_speed": "0.1",
+        "drums_predrop_speed": "0",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "0",
+        "piano_drop_speed": "0.15",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "0.1",
+        "bass_drop_speed": "0.2",
+        "bass_begin_speed": "0"
+    },
+    "Blues": {
+        "speed": "2",
+        "zoom_speed": "2",
+        "zoom_drop_speed": "2.5",
+        "strength_drop_speed": "0.8",
+        "drums_drop_speed": "0",
+        "drums_predrop_speed": "0",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "0.05",
+        "piano_drop_speed": "0.1",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "0.05",
+        "bass_drop_speed": "0.1",
+        "bass_begin_speed": "0"
+    },
+    "Dubstep": {
+        "speed": "6",
+        "zoom_speed": "6",
+        "zoom_drop_speed": "6.5",
+        "strength_drop_speed": "0.55",
+        "drums_drop_speed": "0.4",
+        "drums_predrop_speed": "-0.4",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "-0.5",
+        "piano_drop_speed": "0.5",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "-0.5",
+        "bass_drop_speed": "0.5",
+        "bass_begin_speed": "0"
+    },
+    "Funk": {
+        "speed": "3",
+        "zoom_speed": "3",
+        "zoom_drop_speed": "4",
+        "strength_drop_speed": "0.7",
+        "drums_drop_speed": "0.15",
+        "drums_predrop_speed": "-0.15",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "-0.1",
+        "piano_drop_speed": "0.2",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "-0.1",
+        "bass_drop_speed": "0.25",
+        "bass_begin_speed": "0"
+    },
+    "Psychedelic": {
+        "speed": "7",
+        "zoom_speed": "7",
+        "zoom_drop_speed": "8",
+        "strength_drop_speed": "0.5",
+        "drums_drop_speed": "0.4",
+        "drums_predrop_speed": "-0.3",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "-0.4",
+        "piano_drop_speed": "0.45",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "-0.4",
+        "bass_drop_speed": "0.45",
+        "bass_begin_speed": "0"
+    },
+    "Ambient": {
+        "speed": "1",
+        "zoom_speed": "1",
+        "zoom_drop_speed": "1.5",
+        "strength_drop_speed": "0.9",
+        "drums_drop_speed": "0",
+        "drums_predrop_speed": "0",
+        "drums_begin_speed": "0",
+        "piano_predrop_speed": "0",
+        "piano_drop_speed": "0",
+        "piano_begin_speed": "0",
+        "bass_predrop_speed": "0",
+        "bass_drop_speed": "0",
+        "bass_begin_speed": "0"
+    },    
+}
+
 class TextRedirector(io.StringIO):
     def __init__(self, widget):
         self.widget = widget
@@ -64,7 +277,7 @@ class AdvancedAudioSplitterUI:
         logging.info("Initializing UI...")
         self.master = master
         self.master.title("AKD GUI")
-        self.master.geometry('680x920')        
+        self.master.geometry('680x1000')        
         try:
             self.create_widgets()
         except Exception as e:
@@ -89,7 +302,7 @@ class AdvancedAudioSplitterUI:
         self.create_advanced_widgets(self.advanced_frame)
 
         # Adding a Text widget to serve as a console
-        self.console = tk.Text(self.master, wrap=tk.WORD, height=9, width=73)
+        self.console = tk.Text(self.master, wrap=tk.WORD, height=10, width=73)
 
         self.console.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=1)  # Changé row de 4 à 1
         self.console.config(state=tk.DISABLED)
@@ -119,9 +332,7 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.bpm_file_entry, "Path to the audio file for BPM calculations.")
         ToolTip(self.piano_begin_speed_entry, "Starting value on keyframe 1 for piano.")
         ToolTip(self.piano_predrop_speed_entry, "Value just before a drop for piano.")
-        ToolTip(self.strength_drop_speed_entry, "Reactive impact of the strength schedule when the audio makes a sound.")
-        # ToolTip(self.noise_drop_speed_entry, "Reactive impact of the noise schedule when the audio makes a sound.")
-        # ToolTip(self.contrast_drop_speed_entry, "Reactive impact of the contrast schedule when the audio makes a sound.")
+        ToolTip(self.strength_drop_speed_entry, "Reactive impact of the strength schedule when the audio makes a sound.")        
         ToolTip(self.zoom_drop_speed_entry, "Reactive zoom drop speed for the audio.")
         ToolTip(self.music_cut_entry, "Cut in X splits")
         ToolTip(self.drums_predrop_speed_entry, "Pre-drop value for the impact of drums.")
@@ -129,7 +340,6 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.bass_predrop_speed_entry, "Value just before a drop for bass.")
         ToolTip(self.speed_entry, "The amplitude / strength / intensity of your animation.")
         ToolTip(self.zoom_speed_entry, "The amplitude / strength / intensity of your animation.")
-        # ToolTip(self.zoom_predrop_speed_entry, "Reactive zoom impact of the audio on the animation right before the audio makes a sound.")
         ToolTip(self.zoom_drop_speed_entry, "Reactive zoom impact of the audio on the animation when the audio makes a sound.")
        
         self.fps_entry.insert(0, "30")
@@ -153,6 +363,37 @@ class AdvancedAudioSplitterUI:
 
         self.execute_button = ttk.Button(self.master, text="Execute", command=self.execute_command_threaded)
         self.execute_button.grid(row=0, column=3, sticky=(tk.E), pady=1, padx=1)
+
+    def load_genre_template(self):
+        selected_genre = self.music_genre_combo.get()
+        if selected_genre in music_genre_templates:
+            template = music_genre_templates[selected_genre]
+            self.speed_entry.delete(0, tk.END)
+            self.speed_entry.insert(0, template['speed'])
+            self.zoom_speed_entry.delete(0, tk.END)
+            self.zoom_speed_entry.insert(0, template['zoom_speed'])
+            self.zoom_drop_speed_entry.delete(0, tk.END)
+            self.zoom_drop_speed_entry.insert(0, template['zoom_drop_speed'])
+            self.strength_drop_speed_entry.delete(0, tk.END)
+            self.strength_drop_speed_entry.insert(0, template['strength_drop_speed'])
+            self.drums_drop_speed_entry.delete(0, tk.END)
+            self.drums_drop_speed_entry.insert(0, template['drums_drop_speed'])
+            self.drums_predrop_speed_entry.delete(0, tk.END)
+            self.drums_predrop_speed_entry.insert(0, template['drums_predrop_speed'])
+            self.drums_begin_speed_entry.delete(0, tk.END)
+            self.drums_begin_speed_entry.insert(0, template['drums_begin_speed'])
+            self.piano_predrop_speed_entry.delete(0, tk.END)
+            self.piano_predrop_speed_entry.insert(0, template['piano_predrop_speed'])
+            self.piano_drop_speed_entry.delete(0, tk.END)
+            self.piano_drop_speed_entry.insert(0, template['piano_drop_speed'])
+            self.piano_begin_speed_entry.delete(0, tk.END)
+            self.piano_begin_speed_entry.insert(0, template['piano_begin_speed'])
+            self.bass_predrop_speed_entry.delete(0, tk.END)
+            self.bass_predrop_speed_entry.insert(0, template['bass_predrop_speed'])
+            self.bass_drop_speed_entry.delete(0, tk.END)
+            self.bass_drop_speed_entry.insert(0, template['bass_drop_speed'])
+            self.bass_begin_speed_entry.delete(0, tk.END)
+            self.bass_begin_speed_entry.insert(0, template['bass_begin_speed'])
             
     def open_cond_ui(self):
         subprocess.Popen([sys.executable, "condUI.py"])
@@ -261,10 +502,6 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="Zoom Drop Speed:").grid(row=2, column=0, sticky=(tk.W))
         self.zoom_drop_speed_entry = ttk.Entry(frame)
         self.zoom_drop_speed_entry.grid(row=2, column=1, sticky=(tk.W))
-         
-        # ttk.Label(frame, text="Zoom Pre-Drop Speed:").grid(row=3, column=0, sticky=(tk.W))
-        # self.zoom_drop_speed_entry = ttk.Entry(frame)
-        # self.zoom_drop_speed_entry.grid(row=3, column=1, sticky=(tk.W))
   
         ttk.Label(frame, text="Strength Drop Speed:").grid(row=12, column=0, sticky=(tk.W))
         self.strength_drop_speed_entry = ttk.Entry(frame)
@@ -297,22 +534,6 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="Bass Drop Speed:").grid(row=6, column=0, sticky=(tk.W))
         self.bass_drop_speed_entry = ttk.Entry(frame)
         self.bass_drop_speed_entry.grid(row=6, column=1, sticky=(tk.W))
-            
-        # ttk.Label(frame, text="Noise Drop Speed:").grid(row=13, column=0, sticky=(tk.W))
-        # self.noise_drop_speed_entry = ttk.Entry(frame)
-        # self.noise_drop_speed_entry.grid(row=13, column=1, sticky=(tk.W))
-
-        # ttk.Label(frame, text="Contrast Drop Speed:").grid(row=14, column=0, sticky=(tk.W))
-        # self.contrast_drop_speed_entry = ttk.Entry(frame)
-        # self.contrast_drop_speed_entry.grid(row=14, column=1, sticky=(tk.W))
- 
-        # ttk.Label(frame, text="Other Begin Speed:").grid(row=15, column=0, sticky=(tk.W))
-        # self.other_begin_speed_entry = ttk.Entry(frame)
-        # self.other_begin_speed_entry.grid(row=15, column=1, sticky=(tk.W))
-
-        # ttk.Label(frame, text="Other Pre-drop Speed:").grid(row=16, column=0, sticky=(tk.W))
-        # self.other_predrop_speed_entry = ttk.Entry(frame)
-        # self.other_predrop_speed_entry.grid(row=16, column=1, sticky=(tk.W))
 
         ttk.Label(frame, text="Bass Begin Speed:").grid(row=17, column=0, sticky=(tk.W))
         self.bass_begin_speed_entry = ttk.Entry(frame)
@@ -321,38 +542,13 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="Bass Pre-drop Speed:").grid(row=18, column=0, sticky=(tk.W))
         self.bass_predrop_speed_entry = ttk.Entry(frame)
         self.bass_predrop_speed_entry.grid(row=18, column=1, sticky=(tk.W))
-            
-        # ttk.Label(frame, text="Zoom Begin Speed:").grid(row=18, column=0, sticky=(tk.W))
-        # self.zoom_begin_speed_entry = ttk.Entry(frame)
-        # self.zoom_begin_speed_entry.grid(row=18, column=1, sticky=(tk.W))
+       
+        self.music_genre_label = ttk.Label(self.audio_frame, text="Genre :")
+        self.music_genre_label.grid(row=19, column=0, sticky=(tk.W))
 
-        # ttk.Label(frame, text="Zoom Pre-drop Speed:").grid(row=20, column=0, sticky=(tk.W))
-        # self.zoom_predrop_speed_entry = ttk.Entry(frame)
-        # self.zoom_predrop_speed_entry.grid(row=20, column=1, sticky=(tk.W))
-
-        # ttk.Label(frame, text="Noise Begin Speed:").grid(row=21, column=0, sticky=(tk.W))
-        # self.noise_begin_speed_entry = ttk.Entry(frame)
-        # self.noise_begin_speed_entry.grid(row=21, column=1, sticky=(tk.W))
-        
-        # ttk.Label(frame, text="Noise Pre-drop Speed:").grid(row=22, column=0, sticky=(tk.W))
-        # self.noise_predrop_speed_entry = ttk.Entry(frame)
-        # self.noise_predrop_speed_entry.grid(row=22, column=1, sticky=(tk.W))
-        
-        # ttk.Label(frame, text="Contrast Begin Speed:").grid(row=23, column=0, sticky=(tk.W))
-        # self.contrast_begin_speed_entry = ttk.Entry(frame)
-        # self.contrast_begin_speed_entry.grid(row=23, column=1, sticky=(tk.W))
-            
-        # ttk.Label(frame, text="Contrast Pre-drop Speed:").grid(row=24, column=0, sticky=(tk.W))
-        # self.contrast_predrop_speed_entry = ttk.Entry(frame)
-        # self.contrast_predrop_speed_entry.grid(row=24, column=1, sticky=(tk.W))
-            
-        # ttk.Label(frame, text="Strength Begin Speed:").grid(row=25, column=0, sticky=(tk.W))
-        # self.strength_begin_speed_entry = ttk.Entry(frame)
-        # self.strength_begin_speed_entry.grid(row=25, column=1, sticky=(tk.W))
-            
-        # ttk.Label(frame, text="Strength Pre-drop Speed:").grid(row=26, column=0, sticky=(tk.W))
-        # self.strength_predrop_speed_entry = ttk.Entry(frame)
-        # self.strength_predrop_speed_entry.grid(row=26, column=1, sticky=(tk.W))
+        self.music_genre_combo = ttk.Combobox(self.audio_frame, values=list(music_genre_templates.keys()))
+        self.music_genre_combo.grid(row=19, column=1, sticky=(tk.W))
+        self.music_genre_combo.bind("<<ComboboxSelected>>", lambda event: self.load_genre_template())
 
     def select_audio_file(self, audio_file_entry):
         file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.mp3 *.wav")])
@@ -413,16 +609,13 @@ class AdvancedAudioSplitterUI:
             zoom_sound = self.zoom_sound_combo.get()
             strength_sound = self.strength_sound_combo.get()
             noise_sound = self.noise_sound_combo.get()
-            contrast_sound = self.contrast_sound_combo.get()
-            # contrast_drop_speed = self.contrast_drop_speed_entry.get()
+            contrast_sound = self.contrast_sound_combo.get()            
             drums_drop_speed = self.drums_drop_speed_entry.get()
             drums_predrop_speed = self.drums_predrop_speed_entry.get()
-            # zoom_predrop_speed = self.zoom_predrop_speed_entry.get()
             drums_audio_path = self.drums_audio_path_entry.get()
             bass_begin_speed_entry = self.bass_begin_speed_entry.get()
             zoom_drop_speed = self.zoom_drop_speed_entry.get()
             strength_drop_speed = self.strength_drop_speed_entry.get()
-            # noise_drop_speed = self.noise_drop_speed_entry.get()
             piano_drop_speed = self.piano_drop_speed_entry.get()
             
             # Initialize the command list with the python path and script name
@@ -483,21 +676,13 @@ class AdvancedAudioSplitterUI:
             if zoom_drop_speed:
                 cmd.extend(["--zoom_drop_speed", zoom_drop_speed])            
             if strength_drop_speed:
-                cmd.extend(["--strength_drop_speed", strength_drop_speed])               
-            # if noise_drop_speed:
-                # cmd.extend(["--noise_drop_speed", noise_drop_speed])           
-            # if contrast_drop_speed:
-                # cmd.extend(["--contrast_drop_speed", contrast_drop_speed])          
+                cmd.extend(["--strength_drop_speed", strength_drop_speed])                         
             if piano_drop_speed:
                 cmd.extend(["--piano_drop_speed", piano_drop_speed])          
             if self.drums_begin_speed_entry.get():
                 cmd.extend(["--drums_begin_speed", self.drums_begin_speed_entry.get()])
             if self.drums_predrop_speed_entry.get():
                 cmd.extend(["--drums_predrop_speed", self.drums_predrop_speed_entry.get()])
-            # if self.other_begin_speed_entry.get():
-                # cmd.extend(["--other_begin_speed", self.other_begin_speed_entry.get()])
-            # if self.other_predrop_speed_entry.get():
-                # cmd.extend(["--other_predrop_speed", self.other_predrop_speed_entry.get()])
             if self.piano_begin_speed_entry.get():
                 cmd.extend(["--piano_begin_speed", self.piano_begin_speed_entry.get()])
             if self.piano_predrop_speed_entry.get():
@@ -505,24 +690,7 @@ class AdvancedAudioSplitterUI:
             if self.bass_begin_speed_entry.get():
                 cmd.extend(["--bass_begin_speed", self.bass_begin_speed_entry.get()])
             if self.bass_predrop_speed_entry.get():
-                cmd.extend(["--bass_predrop_speed", self.bass_predrop_speed_entry.get()])
-            # if self.zoom_begin_speed_entry.get():
-                # cmd.extend(["--zoom_begin_speed", self.zoom_begin_speed_entry.get()])
-            # if self.zoom_predrop_speed_entry.get():
-                # cmd.extend(["--zoom_predrop_speed", self.zoom_predrop_speed_entry.get()])
-            # if self.noise_begin_speed_entry.get():
-                # cmd.extend(["--noise_begin_speed", self.noise_begin_speed_entry.get()])
-            # if self.noise_predrop_speed_entry.get():
-                # cmd.extend(["--noise_predrop_speed", self.noise_predrop_speed_entry.get()])
-            # if self.contrast_begin_speed_entry.get():
-                # cmd.extend(["--contrast_begin_speed", self.contrast_begin_speed_entry.get()])
-            # if self.contrast_predrop_speed_entry.get():
-                # cmd.extend(["--contrast_predrop_speed", self.contrast_predrop_speed_entry.get()])
-            # if self.strength_begin_speed_entry.get():
-                # cmd.extend(["--strength_begin_speed", self.strength_begin_speed_entry.get()])
-            # if self.strength_predrop_speed_entry.get():
-                # cmd.extend(["--strength_predrop_speed", self.strength_predrop_speed_entry.get()])            
-                
+                cmd.extend(["--bass_predrop_speed", self.bass_predrop_speed_entry.get()])               
             logging.info(f"Executing command: {' '.join(cmd)}")
             print(f"Executing command: {' '.join(cmd)}")
 
