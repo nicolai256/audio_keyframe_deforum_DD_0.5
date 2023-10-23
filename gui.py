@@ -101,7 +101,6 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.stems_entry, "The number of audio stems to split the original audio into.")
         ToolTip(self.music_start_entry, "Start time for the audio in minute,second format.")
         ToolTip(self.music_end_entry, "End time for the audio in minute,second format.")
-        ToolTip(self.speed_entry, "The amplitude/strength/intensity of your animation.")
         ToolTip(self.zoom_speed_entry, "Reactive zoom impact speed for the audio.")
         ToolTip(self.zoom_sound_combo, "Sound for zoom effect. Choose from 'drums', 'other', 'piano', 'bass'.")
         ToolTip(self.strength_sound_combo, "Sound for strength schedule. Recommended to be the same as zoom sound.")
@@ -126,15 +125,26 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.drums_predrop_speed_entry, "Pre-drop value for the impact of drums.")
         ToolTip(self.bass_begin_speed_entry, "Starting value on keyframe 1 for bass.")
         ToolTip(self.bass_predrop_speed_entry, "Value just before a drop for bass.")
+        ToolTip(self.speed_entry, "The amplitude / strength / intensity of your animation.")
+        ToolTip(self.zoom_speed_entry, "The amplitude / strength / intensity of your animation.")
+        # ToolTip(self.zoom_predrop_speed_entry, "Reactive zoom impact of the audio on the animation right before the audio makes a sound.")
+        ToolTip(self.zoom_drop_speed_entry, "Reactive zoom impact of the audio on the animation when the audio makes a sound.")
        
         self.fps_entry.insert(0, "30")
+        self.speed_entry.insert(0, "4")
+        self.zoom_speed_entry.insert(0, "4")
         self.stems_entry.insert(0, "4")
-        self.speed_entry.insert(0, "1.5")
-        self.zoom_speed_entry.insert(0, "0.8")
-        self.drums_drop_speed_entry.insert(0, "0.3")
-        self.drums_begin_speed_entry.insert(0, "0.1")
+        self.zoom_drop_speed_entry.insert(0, "5")        
+        self.strength_drop_speed_entry.insert(0, "0.50")
+        self.drums_drop_speed_entry.insert(0, "0.2")
+        self.drums_predrop_speed_entry.insert(0, "-0.2")
+        self.drums_begin_speed_entry.insert(0, "0.0")
+        self.piano_predrop_speed_entry.insert(0, "-0.4")
         self.piano_drop_speed_entry.insert(0, "0.25")
+        self.piano_begin_speed_entry.insert(0, "0.0")
+        self.bass_predrop_speed_entry.insert(0, "-0.4")
         self.bass_drop_speed_entry.insert(0, "0.4")
+        self.bass_begin_speed_entry.insert(0, "0.0")
 
         self.execute_button = ttk.Button(self.master, text="Execute", command=self.execute_command_threaded)
         self.execute_button.grid(row=0, column=3, sticky=(tk.E), pady=1, padx=1)
@@ -165,30 +175,38 @@ class AdvancedAudioSplitterUI:
         ttk.Label(frame, text="FPS:").grid(row=1, column=0, sticky=(tk.W))
         self.fps_entry = ttk.Entry(frame)
         self.fps_entry.grid(row=1, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Use Spleeter:").grid(row=2, column=0, sticky=(tk.W))
-        self.spleeter_var = tk.IntVar(value=1)  # Initialize to 1 to make it checked
-        ttk.Checkbutton(frame, variable=self.spleeter_var).grid(row=2, column=1, sticky=(tk.W))
         
-        ttk.Label(frame, text="Drums Audio Path:").grid(row=3, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Speed:").grid(row=2, column=0, sticky=(tk.W))
+        self.speed_entry = ttk.Entry(frame)
+        self.speed_entry.grid(row=2, column=1, sticky=(tk.W))
+        
+        ttk.Label(frame, text="Zoom Speed:").grid(row=3, column=0, sticky=(tk.W))
+        self.zoom_speed_entry = ttk.Entry(frame)
+        self.zoom_speed_entry.grid(row=3, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Use Spleeter:").grid(row=4, column=0, sticky=(tk.W))
+        self.spleeter_var = tk.IntVar(value=1)  # Initialize to 1 to make it checked
+        ttk.Checkbutton(frame, variable=self.spleeter_var).grid(row=4, column=1, sticky=(tk.W))
+        
+        ttk.Label(frame, text="Drums Audio Path:").grid(row=5, column=0, sticky=(tk.W))
         self.drums_audio_path_entry = ttk.Entry(frame)
-        self.drums_audio_path_entry.grid(row=3, column=1, sticky=(tk.W))
+        self.drums_audio_path_entry.grid(row=5, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Piano Audio Path:").grid(row=4, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Piano Audio Path:").grid(row=6, column=0, sticky=(tk.W))
         self.piano_audio_path_entry = ttk.Entry(frame)
-        self.piano_audio_path_entry.grid(row=4, column=1, sticky=(tk.W))
+        self.piano_audio_path_entry.grid(row=6, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Bass Audio Path:").grid(row=5, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Bass Audio Path:").grid(row=7, column=0, sticky=(tk.W))
         self.bass_audio_path_entry = ttk.Entry(frame)
-        self.bass_audio_path_entry.grid(row=5, column=1, sticky=(tk.W))
+        self.bass_audio_path_entry.grid(row=7, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Other Audio Path:").grid(row=6, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Other Audio Path:").grid(row=8, column=0, sticky=(tk.W))
         self.other_audio_path_entry = ttk.Entry(frame)
-        self.other_audio_path_entry.grid(row=6, column=1, sticky=(tk.W))
+        self.other_audio_path_entry.grid(row=8, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="BPM File:").grid(row=7, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="BPM File:").grid(row=9, column=0, sticky=(tk.W))
         self.bpm_file_entry = ttk.Entry(frame)
-        self.bpm_file_entry.grid(row=7, column=1, sticky=(tk.W))
+        self.bpm_file_entry.grid(row=9, column=1, sticky=(tk.W))
         
     def create_spleeter_widgets(self, frame):
 
@@ -225,18 +243,14 @@ class AdvancedAudioSplitterUI:
         self.contrast_sound_combo.grid(row=5, column=1, sticky=(tk.W))
 
     def create_advanced_widgets(self, frame):
-
-        ttk.Label(frame, text="Speed:").grid(row=0, column=0, sticky=(tk.W))
-        self.speed_entry = ttk.Entry(frame)
-        self.speed_entry.grid(row=0, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Zoom Speed:").grid(row=1, column=0, sticky=(tk.W))
-        self.zoom_speed_entry = ttk.Entry(frame)
-        self.zoom_speed_entry.grid(row=1, column=1, sticky=(tk.W))
        
         ttk.Label(frame, text="Zoom Drop Speed:").grid(row=2, column=0, sticky=(tk.W))
         self.zoom_drop_speed_entry = ttk.Entry(frame)
         self.zoom_drop_speed_entry.grid(row=2, column=1, sticky=(tk.W))
+         
+        # ttk.Label(frame, text="Zoom Pre-Drop Speed:").grid(row=3, column=0, sticky=(tk.W))
+        # self.zoom_drop_speed_entry = ttk.Entry(frame)
+        # self.zoom_drop_speed_entry.grid(row=3, column=1, sticky=(tk.W))
   
         ttk.Label(frame, text="Strength Drop Speed:").grid(row=12, column=0, sticky=(tk.W))
         self.strength_drop_speed_entry = ttk.Entry(frame)
