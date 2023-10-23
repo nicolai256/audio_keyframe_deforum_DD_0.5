@@ -548,7 +548,7 @@ class AudioKeyframeService:
         )
         beat_ind = np.argwhere(vals)
         return beat_ind
- 
+     
     def _build_string(
         self,
         beat_ind,
@@ -560,31 +560,32 @@ class AudioKeyframeService:
         frames_change_post_beat,
         frames_change_pre_beat,
     ):
+        # Ajout de la frame 0 si elle n'est pas déjà présente
+        if len(key_frame_value) == 0 or (len(key_frame_value) > 0 and key_frame_value[0][0] != 0):
+            key_frame_value.insert(0, (0, pre_beat_transition__value))
+
         for i in range(len(beat_ind)):
-            # logging.info()
             if post_beat < beat_ind[i]:
                 post_tup = (post_beat, post_beat_transition__value)
                 key_frame_value.append(post_tup)
-                # logging.info(f"{i}  beat_ind[i]: {beat_ind[i]}, post {post_tup}")
+
             pre = (beat_ind[i] - frames_change_pre_beat - 1)[0]
             if (
                 len(key_frame_value) == 0
                 or len(key_frame_value) != 0
                 and key_frame_value[-1][0] != pre
             ):
-                # logging.info(f"{i}  beat_ind[i]: {beat_ind[i]}, pre {pre, 0}")
                 key_frame_value.append((pre, pre_beat_transition__value))
+
             beat = beat_ind[i][0]
-            # logging.info(f"{i}  beat_ind[i]: {beat_ind[i]}, beat {beat, beat_transition_value}")
             key_frame_value.append((beat, beat_transition_value))
             post_beat = (beat_ind[i] + (frames_change_post_beat))[0]
+
         string_list = []
         for key_frame, val in key_frame_value:
             string = f"{key_frame}:({val}),"
             string_list.append(string)
-            
-        #space = f"/n"
-        #string_list.append(space)
+
         key_frame_string = "".join(string_list)
         key_frame_string = key_frame_string[:-1]
         return key_frame_string
@@ -632,7 +633,3 @@ if __name__ == "__main__":
     else:
 
         final_dict = service.process(args.stems, file="do_not_delete.wav", zoomspeed=args.zoomspeed, speed=args.speed)
-
-    with open(output_filepath, "w") as fp:
-        json.dump(final_dict, fp, indent=2)
-        print(f"Processing of the keyframes succeeded and exported to {output_filepath}")

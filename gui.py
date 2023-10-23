@@ -213,22 +213,7 @@ music_genre_templates = {
         "bass_predrop_speed": "-0.4",
         "bass_drop_speed": "0.45",
         "bass_begin_speed": "0"
-    },
-    "Ambient": {
-        "speed": "1",
-        "zoom_speed": "1",
-        "zoom_drop_speed": "1.5",
-        "strength_drop_speed": "0.9",
-        "drums_drop_speed": "0",
-        "drums_predrop_speed": "0",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "0",
-        "piano_drop_speed": "0",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "0",
-        "bass_drop_speed": "0",
-        "bass_begin_speed": "0"
-    },    
+    },   
 }
 
 class TextRedirector(io.StringIO):
@@ -277,7 +262,7 @@ class AdvancedAudioSplitterUI:
         logging.info("Initializing UI...")
         self.master = master
         self.master.title("AKD GUI")
-        self.master.geometry('680x1000')        
+        self.master.geometry('672x1000')        
         try:
             self.create_widgets()
         except Exception as e:
@@ -498,58 +483,58 @@ class AdvancedAudioSplitterUI:
         self.contrast_sound_combo.grid(row=5, column=1, sticky=(tk.W))
 
     def create_advanced_widgets(self, frame):
+      
+        self.music_genre_label = ttk.Label(frame, text="Genre :")
+        self.music_genre_label.grid(row=0, column=0, sticky=(tk.W))
+
+        self.music_genre_combo = ttk.Combobox(frame, values=list(music_genre_templates.keys()))
+        self.music_genre_combo.grid(row=0, column=1, sticky=(tk.W))
+        self.music_genre_combo.bind("<<ComboboxSelected>>", lambda event: self.load_genre_template())
        
-        ttk.Label(frame, text="Zoom Drop Speed:").grid(row=2, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Zoom Drop Speed:").grid(row=3, column=0, sticky=(tk.W))
         self.zoom_drop_speed_entry = ttk.Entry(frame)
-        self.zoom_drop_speed_entry.grid(row=2, column=1, sticky=(tk.W))
+        self.zoom_drop_speed_entry.grid(row=3, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Drums Drop Speed:").grid(row=1, column=0, sticky=(tk.W))
+        self.drums_drop_speed_entry = ttk.Entry(frame)
+        self.drums_drop_speed_entry.grid(row=1, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Drums Pre-drop Speed:").grid(row=5, column=0, sticky=(tk.W))
+        self.drums_predrop_speed_entry = ttk.Entry(frame)
+        self.drums_predrop_speed_entry.grid(row=5, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Drums Begin Speed:").grid(row=2, column=0, sticky=(tk.W))
+        self.drums_begin_speed_entry = ttk.Entry(frame)
+        self.drums_begin_speed_entry.grid(row=2, column=1, sticky=(tk.W))
+        
+        ttk.Label(frame, text="Piano Drop Speed:").grid(row=6, column=0, sticky=(tk.W))
+        self.piano_drop_speed_entry = ttk.Entry(frame)
+        self.piano_drop_speed_entry.grid(row=6, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Piano Begin Speed:").grid(row=8, column=0, sticky=(tk.W))
+        self.piano_begin_speed_entry = ttk.Entry(frame)
+        self.piano_begin_speed_entry.grid(row=8, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Piano Pre-drop Speed:").grid(row=9, column=0, sticky=(tk.W))
+        self.piano_predrop_speed_entry = ttk.Entry(frame)
+        self.piano_predrop_speed_entry.grid(row=9, column=1, sticky=(tk.W))
+        
+        ttk.Label(frame, text="Bass Drop Speed:").grid(row=7, column=0, sticky=(tk.W))
+        self.bass_drop_speed_entry = ttk.Entry(frame)
+        self.bass_drop_speed_entry.grid(row=7, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Bass Begin Speed:").grid(row=10, column=0, sticky=(tk.W))
+        self.bass_begin_speed_entry = ttk.Entry(frame)
+        self.bass_begin_speed_entry.grid(row=10, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Bass Pre-drop Speed:").grid(row=11, column=0, sticky=(tk.W))
+        self.bass_predrop_speed_entry = ttk.Entry(frame)
+        self.bass_predrop_speed_entry.grid(row=11, column=1, sticky=(tk.W))
   
         ttk.Label(frame, text="Strength Drop Speed:").grid(row=12, column=0, sticky=(tk.W))
         self.strength_drop_speed_entry = ttk.Entry(frame)
         self.strength_drop_speed_entry.grid(row=12, column=1, sticky=(tk.W))
             
-        ttk.Label(frame, text="Drums Drop Speed:").grid(row=0, column=0, sticky=(tk.W))
-        self.drums_drop_speed_entry = ttk.Entry(frame)
-        self.drums_drop_speed_entry.grid(row=0, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Drums Pre-drop Speed:").grid(row=4, column=0, sticky=(tk.W))
-        self.drums_predrop_speed_entry = ttk.Entry(frame)
-        self.drums_predrop_speed_entry.grid(row=4, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Drums Begin Speed:").grid(row=1, column=0, sticky=(tk.W))
-        self.drums_begin_speed_entry = ttk.Entry(frame)
-        self.drums_begin_speed_entry.grid(row=1, column=1, sticky=(tk.W))
-        
-        ttk.Label(frame, text="Piano Drop Speed:").grid(row=5, column=0, sticky=(tk.W))
-        self.piano_drop_speed_entry = ttk.Entry(frame)
-        self.piano_drop_speed_entry.grid(row=5, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Piano Begin Speed:").grid(row=7, column=0, sticky=(tk.W))
-        self.piano_begin_speed_entry = ttk.Entry(frame)
-        self.piano_begin_speed_entry.grid(row=7, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Piano Pre-drop Speed:").grid(row=8, column=0, sticky=(tk.W))
-        self.piano_predrop_speed_entry = ttk.Entry(frame)
-        self.piano_predrop_speed_entry.grid(row=8, column=1, sticky=(tk.W))
-        
-        ttk.Label(frame, text="Bass Drop Speed:").grid(row=6, column=0, sticky=(tk.W))
-        self.bass_drop_speed_entry = ttk.Entry(frame)
-        self.bass_drop_speed_entry.grid(row=6, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Bass Begin Speed:").grid(row=17, column=0, sticky=(tk.W))
-        self.bass_begin_speed_entry = ttk.Entry(frame)
-        self.bass_begin_speed_entry.grid(row=17, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Bass Pre-drop Speed:").grid(row=18, column=0, sticky=(tk.W))
-        self.bass_predrop_speed_entry = ttk.Entry(frame)
-        self.bass_predrop_speed_entry.grid(row=18, column=1, sticky=(tk.W))
-       
-        self.music_genre_label = ttk.Label(self.audio_frame, text="Genre :")
-        self.music_genre_label.grid(row=19, column=0, sticky=(tk.W))
-
-        self.music_genre_combo = ttk.Combobox(self.audio_frame, values=list(music_genre_templates.keys()))
-        self.music_genre_combo.grid(row=19, column=1, sticky=(tk.W))
-        self.music_genre_combo.bind("<<ComboboxSelected>>", lambda event: self.load_genre_template())
-
     def select_audio_file(self, audio_file_entry):
         file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.mp3 *.wav")])
         if file_path:
