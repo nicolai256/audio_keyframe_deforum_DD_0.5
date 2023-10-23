@@ -18,11 +18,12 @@ This will automatically set up a virtual environment and launch the GUI.
 ## 🛠 Dependencies 🛠
 
 - numpy
-- loguru
+- ttkthemes
 - spleeter
 - librosa
 - pydub
-
+- mpmath
+- joblib
 
 ## 🎚 Features 🎚
 
