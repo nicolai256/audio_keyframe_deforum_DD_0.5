@@ -2,49 +2,64 @@ import argparse
 import json
 import librosa
 import numpy as np
+from scipy import fftpack
 import os
 import logging
 import hashlib
 from os import path
-import mpmath
+from joblib import Memory
 
-# Use mpmath for high-precision PI constant
-PI = mpmath.pi
+# Initialize joblib memory cache
+memory = Memory("cache_directory", verbose=0)
+
+# Standard PI for performance-sensitive operations
+PI = np.pi
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Feature Extraction From Audio Files')
     parser.add_argument('--file', type=str, required=True, help='Your audio file')
     parser.add_argument('--fps', type=int, required=True, help='Frames per second')
     parser.add_argument('--intensity', type=float, required=True, help='Intensity of the keyframe')
+    parser.add_argument('--function_type', type=str, choices=['sine', 'cosine', 'abs_sin', 'abs_cos', 'modulus', 'linear', 'triangle', 'fourier'], default='sine', help='Type of function to generate')
+    parser.add_argument('--advanced_params', type=str, default="", help='Advanced parameters as a string')
+        
     args = parser.parse_args()
-    
+
+    args.advanced_params = dict(map(str.strip, param.split("=")) for param in args.advanced_params.split(",")) if args.advanced_params else {}
+
     if not path.exists(args.file) or args.fps <= 0 or args.intensity <= 0:
         logging.error(f"Invalid arguments.")
         exit(1)
     
     return args
 
+@memory.cache
+def fft_analysis(y):
+    N = len(y)
+    T = 1.0 / 800.0
+    yf = fftpack.fft(y)
+    return np.abs(yf[0:N//2])
+
 def load_audio_file(filename):
     try:
         y, sr = librosa.load(filename, sr=None)
         
-        # Advanced tempo detection with Harmonic Resonance Analysis
+        # FFT for more precise frequency analysis
+        fft_result = fft_analysis(y)
         onset_env = librosa.onset.onset_strength(y=y, sr=sr)
         tempo, _ = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr)
         
         if tempo <= 0:
             logging.error(f"Error: BPM detected as zero or negative.")
             exit(1)
-        
-        # Use mpmath for high-precision calculations
-        return mpmath.mpf(tempo)
+
+        return float(tempo)  # Standard float for performance
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         exit(1)
 
 def calculate_expression(fps, tempo, intensity):
-    # Use mpmath for high-precision calculations
-    x = mpmath.mpf(fps) * 60 / tempo
+    x = float(fps) * 60 / tempo  # Standard float for performance
     return f'0:({intensity}*sin(2*{PI}*t/{x}))'
 
 def save_to_json(data, filename):
@@ -55,23 +70,65 @@ def save_to_json(data, filename):
         logging.error(f"An error occurred while saving to JSON: {e}")
         exit(1)
 
-def generate_unique_filename(base_name, file_content):
+def generate_unique_filename(base_name, file_content, audio_filename):
     m = hashlib.sha256()
     m.update(file_content.encode('utf-8'))
     hash_value = m.hexdigest()[:10]
-    return f"{base_name}_{hash_value}.json"
+    audio_filename_without_extension = os.path.splitext(os.path.basename(audio_filename))[0]
+    return f"{base_name}_{audio_filename_without_extension}_{hash_value}.json"
 
+def generate_complex_expression(fps, tempo, intensity, function_type="sine", params={}):
+    x = float(fps) * 60 / tempo  # Standard float for performance
+    A = params.get('A', 1)
+    P = params.get('P', 1)
+    D = params.get('D', 0)
+    B = params.get('B', 1)
+    
+    function_type = args.function_type
+    
+    if function_type == "sine":
+        return f'0:({D} + {A}*sin(2*{PI}*t/{x}/{P}))'
+    elif function_type == "cosine":
+        return f'0:({D} + {A}*cos(2*{PI}*t/{x}/{P}))'
+    elif function_type == "abs_sin":
+        return f'0:({A} - (abs(sin(10*t/{P}))*{B}))'
+    elif function_type == "abs_cos":
+        return f'0:({A} - (abs(cos(10*t/{P}))*{B}))'
+    elif function_type == "modulus":
+        return f'0:({A}*(t%{P})+{D})'
+    elif function_type == "linear":
+        return f'0:({A}*t+{D})'
+    elif function_type == "triangle":
+        return f'0:((2 + 2*{A})/3.14*arcsin(sin((2*3.14)/{P}*t)))'
+    elif function_type == "fourier":
+        return f'0:({D} + ({A}*(sin*t/{P})+sin({A}*t/{P}) + sin({A}*t/{P})))'
+    else:
+        return None
+        
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     
     args = parse_arguments()
     
     tempo = load_audio_file(args.file)
-    logging.info(f'BPM: {mpmath.nstr(tempo, 50)}')  # Display tempo with 50 decimal places
+    logging.info(f'BPM: {tempo:.5f}')
     
     expression = calculate_expression(args.fps, tempo, args.intensity)
     
-    json_filename = generate_unique_filename("conditional_maths_bpm", expression)
+    # Pour des animations complexes, utilisez generate_complex_expression
+    # Exemple : pour une animation en sinus avec A=2, P=3, et D=4
+    complex_params = {'A': 2, 'P': 3, 'D': 4}
+    complex_expression = generate_complex_expression(args.fps, tempo, args.intensity, function_type=args.function_type, params=complex_params)
     
-    save_to_json(expression, json_filename)
-    logging.info(f"Processing of the keyframes succeeded and exported to {json_filename}")
+    # Spécifiez le chemin complet du fichier JSON dans le dossier "outputs" avec le nom du fichier audio
+    output_folder = "outputs"
+    os.makedirs(output_folder, exist_ok=True)  # Créez le dossier s'il n'existe pas
+    json_filename = os.path.join(output_folder, generate_unique_filename("conditional_maths_bpm", expression, args.file))
+    
+    data = {
+        "expression": expression,
+        "complex_expression": complex_expression
+    }
+    
+    save_to_json(data, json_filename)
+    logging.info(f"Le traitement des images clés a réussi et a été exporté dans {json_filename}")

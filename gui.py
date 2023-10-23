@@ -551,7 +551,6 @@ class AdvancedAudioSplitterUI:
         except Exception as e:
             logger.critical(f"An unhandled exception occurred: {e}")
             print(f"An unhandled exception occurred: {e}")
-
             
 if __name__ == "__main__":
     try:
