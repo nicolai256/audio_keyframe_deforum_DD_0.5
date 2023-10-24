@@ -11,7 +11,7 @@
 
 ## Elevate Your Deforum Projects to Unprecedented Heights
 
-Achieve unparalleled precision in your Deforum projects with Audio Keyframes for Deforum (GUI). This powerful tool enables you to dissect audio files into multiple stems and construct highly intricate keyframes for your animations.
+Achieve unparalleled precision in your Deforum projects with Audio Keyframes for Deforum (GUI). This tool enables you to dissect audio files into multiple stems and construct highly intricate keyframes for your animations.
 
 Original project forked from [Audio Keyframe Deforum](https://github.com/nicolai256/audio_keyframe_deforum_DD_0.5).
 
