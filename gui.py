@@ -605,7 +605,35 @@ music_genre_templates = {
         "other_drop_speed": "0.35",
         "other_predrop_speed": "-0.3",
         "other_begin_speed": "0.25"
-    }   
+    },
+    "FeelTheFonk#2": {
+        "speed": "5.1",
+        "zoom_speed": "5.2",
+        "zoom_drop_speed": "5.8",
+        "zoom_predrop_speed": "5.1",
+        "zoom_begin_speed": "5.2",
+        "strength_predrop_speed": "0.81",
+        "strength_begin_speed": "0.83",
+        "strength_drop_speed": "0.82",
+        "drums_drop_speed": "0.3",
+        "drums_predrop_speed": "-0.1",
+        "drums_begin_speed": "0.25",
+        "piano_predrop_speed": "0.0",
+        "piano_drop_speed": "0.35",
+        "piano_begin_speed": "0.3",
+        "contrast_predrop_speed": "1.0",
+        "contrast_drop_speed": "1.04",
+        "contrast_begin_speed": "0.99",
+        "bass_predrop_speed": "0.0",
+        "bass_drop_speed": "0.4",
+        "bass_begin_speed": "0.35",
+        "noise_drop_speed": "0.04",
+        "noise_predrop_speed": "0.03",
+        "noise_begin_speed": "0.035",
+        "other_drop_speed": "0.4",
+        "other_predrop_speed": "-0.2",
+        "other_begin_speed": "0.3"
+    },   
 }
 
 class TextRedirector(io.StringIO):
@@ -654,7 +682,7 @@ class AdvancedAudioSplitterUI:
         logging.info("Initializing UI...")
         self.master = master
         self.master.title("AKD GUI")
-        self.master.geometry('672x1000')        
+        self.master.geometry('646x852')        
         try:
             self.create_widgets()
         except Exception as e:
@@ -669,7 +697,7 @@ class AdvancedAudioSplitterUI:
 
         # Create sub-frames for each group of widgets
         self.audio_frame = self.create_labeled_frame("Audio Settings", row=0, col=0)
-        self.spleeter_frame = self.create_labeled_frame("Spleeter Settings", row=1, col=0)
+        self.spleeter_frame = self.create_labeled_frame("Sounds Settings", row=1, col=0)
         self.script_frame = self.create_labeled_frame("Script Settings", row=2, col=0)
         self.advanced_frame = self.create_labeled_frame("Advanced Settings", row=3, col=0)
         
@@ -698,6 +726,12 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.strength_sound_combo, "Sound for strength schedule. Recommended to be the same as zoom sound.")
         ToolTip(self.noise_sound_combo, "Sound for noise schedule. Recommended to be the same as zoom sound.")
         ToolTip(self.contrast_sound_combo, "Sound for contrast schedule. Recommended to be the same as zoom sound.")
+        ToolTip(self.contrast_drop_speed_entry, "Reactive contrast impact of the audio on the animation when the audio makes a sound.")
+        ToolTip(self.contrast_predrop_speed_entry, "Reactive contrast impact of the audio on the animation right before the audio makes a sound.")
+        ToolTip(self.contrast_begin_speed_entry, "Reactive contrast impact of the audio on the animation (starting value on keyframe 1.")
+        ToolTip(self.other_drop_speed_entry, "Reactive other impact of the audio on the animation when the audio makes a sound.")
+        ToolTip(self.other_predrop_speed_entry, "Reactive other impact of the audio on the animation right before the audio makes a sound.")
+        ToolTip(self.other_begin_speed_entry, "Reactive other impact of the audio on the animation (starting value on keyframe 1.")
         ToolTip(self.drums_drop_speed_entry, "Reactive impact of the drums audio on the animation when the audio makes a sound.")
         ToolTip(self.drums_begin_speed_entry, "Starting value on keyframe 1 for drums.")
         ToolTip(self.drums_audio_path_entry, "Path to your drums .wav file if not using Spleeter.")
@@ -709,7 +743,9 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.bpm_file_entry, "Path to the audio file for BPM calculations.")
         ToolTip(self.piano_begin_speed_entry, "Starting value on keyframe 1 for piano.")
         ToolTip(self.piano_predrop_speed_entry, "Value just before a drop for piano.")
-        ToolTip(self.strength_drop_speed_entry, "Reactive impact of the strength schedule when the audio makes a sound.")        
+        ToolTip(self.strength_drop_speed_entry, "Reactive image strength impact of the audio on the animation when the audio makes a sound.")        
+        ToolTip(self.strength_predrop_speed_entry, "Reactive image strength impact of the audio on the animation right before the audio makes a sound.")        
+        ToolTip(self.strength_begin_speed_entry, "Reactive image strength impact of the audio on the animation (starting value on keyframe 1.")        
         ToolTip(self.zoom_drop_speed_entry, "Reactive zoom drop speed for the audio.")
         ToolTip(self.music_cut_entry, "Cut in X splits")
         ToolTip(self.drums_predrop_speed_entry, "Pre-drop value for the impact of drums.")
@@ -721,6 +757,7 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.noise_drop_speed_entry, "Reactive impact of the noise schedule when the audio makes a sound.")
         ToolTip(self.contrast_drop_speed_entry, "Reactive impact of the contrast schedule when the audio makes a sound.")
         ToolTip(self.zoom_predrop_speed_entry, "Reactive zoom impact of the audio on the animation right before the audio makes a sound.")
+        ToolTip(self.zoom_begin_speed_entry, "Reactive zoom impact of the audio on the animation (starting value on keyframe 1.")
        
         self.fps_entry.insert(0, "30")
         self.speed_entry.insert(0, "4")
@@ -867,24 +904,24 @@ class AdvancedAudioSplitterUI:
         self.add_file_chooser(frame, "Bass Audio Path:", 7, 0)
         self.add_file_chooser(frame, "Other Audio Path:", 8, 0)
         self.add_file_chooser(frame, "BPM File:", 9, 0)
+
+        ttk.Label(self.audio_frame, text="Music Cut:").grid(row=1, column=3, sticky=(tk.W))
+        self.music_cut_entry = ttk.Entry(self.audio_frame)
+        self.music_cut_entry.grid(row=1, column=4, sticky=(tk.W))
+
+        ttk.Label(self.audio_frame, text="Music Start:").grid(row=2, column=3, sticky=(tk.W))
+        self.music_start_entry = ttk.Entry(self.audio_frame)
+        self.music_start_entry.grid(row=2, column=4, sticky=(tk.W))
+
+        ttk.Label(self.audio_frame, text="Music End:").grid(row=3, column=3, sticky=(tk.W))
+        self.music_end_entry = ttk.Entry(self.audio_frame)
+        self.music_end_entry.grid(row=3, column=4, sticky=(tk.W))
+
+        ttk.Label(frame, text="Stems:").grid(row=4, column=3, sticky=(tk.W))
+        self.stems_entry = ttk.Entry(frame)
+        self.stems_entry.grid(row=4, column=4, sticky=(tk.W))
         
     def create_spleeter_widgets(self, frame):
-
-        ttk.Label(self.audio_frame, text="Music Cut:").grid(row=11, column=0, sticky=(tk.W))
-        self.music_cut_entry = ttk.Entry(self.audio_frame)
-        self.music_cut_entry.grid(row=11, column=1, sticky=(tk.W))
-
-        ttk.Label(self.audio_frame, text="Music Start:").grid(row=12, column=0, sticky=(tk.W))
-        self.music_start_entry = ttk.Entry(self.audio_frame)
-        self.music_start_entry.grid(row=12, column=1, sticky=(tk.W))
-
-        ttk.Label(self.audio_frame, text="Music End:").grid(row=13, column=0, sticky=(tk.W))
-        self.music_end_entry = ttk.Entry(self.audio_frame)
-        self.music_end_entry.grid(row=13, column=1, sticky=(tk.W))
-
-        ttk.Label(frame, text="Stems:").grid(row=1, column=0, sticky=(tk.W))
-        self.stems_entry = ttk.Entry(frame)
-        self.stems_entry.grid(row=1, column=1, sticky=(tk.W))
         
         ttk.Label(frame, text="Zoom Sound:").grid(row=2, column=0, sticky=(tk.W))
         self.zoom_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
@@ -894,13 +931,13 @@ class AdvancedAudioSplitterUI:
         self.strength_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
         self.strength_sound_combo.grid(row=3, column=1, sticky=(tk.W))
         
-        ttk.Label(frame, text="Noise Sound:").grid(row=4, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Noise Sound:").grid(row=2, column=2, sticky=(tk.W))
         self.noise_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
-        self.noise_sound_combo.grid(row=4, column=1, sticky=(tk.W))
+        self.noise_sound_combo.grid(row=2, column=3, sticky=(tk.W))
 
-        ttk.Label(frame, text="Contrast Sound:").grid(row=5, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Contrast Sound:").grid(row=3, column=2, sticky=(tk.W))
         self.contrast_sound_combo = ttk.Combobox(frame, values=("drums", "other", "piano", "bass"))
-        self.contrast_sound_combo.grid(row=5, column=1, sticky=(tk.W))
+        self.contrast_sound_combo.grid(row=3, column=3, sticky=(tk.W))
 
     def create_advanced_widgets(self, frame):
        
@@ -964,16 +1001,16 @@ class AdvancedAudioSplitterUI:
         self.other_drop_speed_entry = ttk.Entry(frame)
         self.other_drop_speed_entry.grid(row=9, column=1, sticky=(tk.W))
       
-        self.music_genre_label = ttk.Label(frame, text="Genre :")
-        self.music_genre_label.grid(row=0, column=2, sticky=(tk.W))
+        self.music_genre_label = ttk.Label(frame, text="Genre:")
+        self.music_genre_label.grid(row=0, column=0, sticky=(tk.W))
 
         self.music_genre_combo = ttk.Combobox(frame, values=list(music_genre_templates.keys()))
-        self.music_genre_combo.grid(row=0, column=3, sticky=(tk.W))
+        self.music_genre_combo.grid(row=0, column=1, sticky=(tk.W))
         self.music_genre_combo.bind("<<ComboboxSelected>>", lambda event: self.load_genre_template())
 
-        ttk.Label(frame, text="Drums Drop Speed:").grid(row=0, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Drums Drop Speed:").grid(row=0, column=2, sticky=(tk.W))
         self.drums_drop_speed_entry = ttk.Entry(frame)
-        self.drums_drop_speed_entry.grid(row=0, column=1, sticky=(tk.W))
+        self.drums_drop_speed_entry.grid(row=0, column=3, sticky=(tk.W))
 
         ttk.Label(frame, text="Drums Pre-drop Speed:").grid(row=1, column=0, sticky=(tk.W))
         self.drums_predrop_speed_entry = ttk.Entry(frame)
