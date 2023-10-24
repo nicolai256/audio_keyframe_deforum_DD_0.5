@@ -23,6 +23,10 @@ music_genre_templates = {
         "speed": "4",
         "zoom_speed": "4",
         "zoom_drop_speed": "5",
+        "zoom_predrop_speed": "4.5",
+        "zoom_begin_speed": "4",
+        "strength_predrop_speed": "0.70",
+        "strength_begin_speed": "0.60",
         "strength_drop_speed": "0.50",
         "drums_drop_speed": "0.2",
         "drums_predrop_speed": "-0.2",
@@ -30,190 +34,578 @@ music_genre_templates = {
         "piano_predrop_speed": "-0.4",
         "piano_drop_speed": "0.25",
         "piano_begin_speed": "0.0",
+        "contrast_predrop_speed": "0.95",
+        "contrast_drop_speed": "1.01",
+        "contrast_begin_speed": "0.95",
         "bass_predrop_speed": "-0.4",
         "bass_drop_speed": "0.4",
-        "bass_begin_speed": "0.0"
+        "bass_begin_speed": "0.0",
+        "noise_drop_speed": "0.02",
+        "noise_predrop_speed": "0.00",
+        "noise_begin_speed": "0.01",
+        "other_drop_speed": "0.4",
+        "other_predrop_speed": "-0.4",
+        "other_begin_speed": "0.0"
     },
     "Jazz": {
-        "speed": "3",
-        "zoom_speed": "3",
-        "zoom_drop_speed": "3.5",
-        "strength_drop_speed": "0.75",
-        "drums_drop_speed": "0.1",
-        "drums_predrop_speed": "0",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "0.1",
-        "piano_drop_speed": "0.15",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "0.1",
-        "bass_drop_speed": "0.2",
-        "bass_begin_speed": "0"
+        "speed": "3.25",
+        "zoom_speed": "3.15",
+        "zoom_drop_speed": "3.65",
+        "zoom_predrop_speed": "3.2",
+        "zoom_begin_speed": "3",
+        "strength_predrop_speed": "0.78",
+        "strength_begin_speed": "0.74",
+        "strength_drop_speed": "0.79",
+        "drums_drop_speed": "0.17",
+        "drums_predrop_speed": "0.07",
+        "drums_begin_speed": "0.12",
+        "piano_predrop_speed": "0.22",
+        "piano_drop_speed": "0.24",
+        "piano_begin_speed": "0.2",
+        "contrast_predrop_speed": "0.98",
+        "contrast_drop_speed": "1.03",
+        "contrast_begin_speed": "0.97",
+        "bass_predrop_speed": "0.22",
+        "bass_drop_speed": "0.27",
+        "bass_begin_speed": "0.2",
+        "noise_drop_speed": "0.04",
+        "noise_predrop_speed": "0.02",
+        "noise_begin_speed": "0.03",
+        "other_drop_speed": "0.35",
+        "other_predrop_speed": "-0.25",
+        "other_begin_speed": "0.15"
+    },
+    "Jungle": {
+        "speed": "6.5",
+        "zoom_speed": "6.4",
+        "zoom_drop_speed": "6.8",
+        "zoom_predrop_speed": "6.3",
+        "zoom_begin_speed": "6.2",
+        "strength_predrop_speed": "0.7",
+        "strength_begin_speed": "0.68",
+        "strength_drop_speed": "0.72",
+        "drums_drop_speed": "0.5",
+        "drums_predrop_speed": "-0.4",
+        "drums_begin_speed": "0.45",
+        "piano_predrop_speed": "-0.3",
+        "piano_drop_speed": "0.35",
+        "piano_begin_speed": "0.25",
+        "contrast_predrop_speed": "0.9",
+        "contrast_drop_speed": "0.92",
+        "contrast_begin_speed": "0.88",
+        "bass_predrop_speed": "-0.4",
+        "bass_drop_speed": "0.5",
+        "bass_begin_speed": "0.35",
+        "noise_drop_speed": "0.06",
+        "noise_predrop_speed": "0.04",
+        "noise_begin_speed": "0.05",
+        "other_drop_speed": "0.55",
+        "other_predrop_speed": "-0.45",
+        "other_begin_speed": "0.4"
+    },
+    "2Step": {
+        "speed": "5.5",
+        "zoom_speed": "5.4",
+        "zoom_drop_speed": "6",
+        "zoom_begin_speed": "5.3",
+        "zoom_predrop_speed": "5.2",
+        "strength_predrop_speed": "0.68",
+        "strength_begin_speed": "0.67",
+        "strength_drop_speed": "0.69",
+        "drums_drop_speed": "0.35",
+        "drums_predrop_speed": "-0.2",
+        "drums_begin_speed": "0.15",
+        "other_drop_speed": "0.45",
+        "other_begin_speed": "0.2",
+        "other_predrop_speed": "-0.15",
+        "piano_drop_speed": "0.25",
+        "piano_predrop_speed": "-0.1",
+        "piano_begin_speed": "0.2",
+        "bass_drop_speed": "0.4",
+        "bass_predrop_speed": "-0.15",
+        "bass_begin_speed": "0.2",
+        "noise_drop_speed": "0.03",
+        "noise_begin_speed": "0.02",
+        "noise_predrop_speed": "0.01",
+        "contrast_drop_speed": "1.02",
+        "contrast_begin_speed": "1",
+        "contrast_predrop_speed": "0.98"
+    },
+    "UKG": {
+        "speed": "5",
+        "zoom_speed": "5.1",
+        "zoom_drop_speed": "5.8",
+        "zoom_begin_speed": "5",
+        "zoom_predrop_speed": "4.9",
+        "strength_predrop_speed": "0.66",
+        "strength_begin_speed": "0.65",
+        "strength_drop_speed": "0.67",
+        "drums_drop_speed": "0.3",
+        "drums_predrop_speed": "-0.1",
+        "drums_begin_speed": "0.15",
+        "other_drop_speed": "0.4",
+        "other_begin_speed": "0.2",
+        "other_predrop_speed": "-0.1",
+        "piano_drop_speed": "0.2",
+        "piano_predrop_speed": "-0.05",
+        "piano_begin_speed": "0.18",
+        "bass_drop_speed": "0.35",
+        "bass_predrop_speed": "-0.1",
+        "bass_begin_speed": "0.18",
+        "noise_drop_speed": "0.02",
+        "noise_begin_speed": "0.01",
+        "noise_predrop_speed": "0",
+        "contrast_drop_speed": "1.01",
+        "contrast_begin_speed": "1",
+        "contrast_predrop_speed": "0.99"
     },
     "Classical": {
-        "speed": "2",
-        "zoom_speed": "2",
-        "zoom_drop_speed": "2.5",
-        "strength_drop_speed": "0.85",
+        "speed": "2.1",
+        "zoom_speed": "2.05",
+        "zoom_drop_speed": "2.6",
+        "zoom_begin_speed": "2",
+        "zoom_predrop_speed": "1.9",
+        "strength_predrop_speed": "0.87",
+        "strength_begin_speed": "0.88",
+        "strength_drop_speed": "0.86",
         "drums_drop_speed": "0",
         "drums_predrop_speed": "0",
         "drums_begin_speed": "0",
-        "piano_predrop_speed": "0.05",
-        "piano_drop_speed": "0.1",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "0.05",
-        "bass_drop_speed": "0.1",
-        "bass_begin_speed": "0"
+        "other_drop_speed": "0.15",
+        "other_begin_speed": "0.1",
+        "other_predrop_speed": "0",
+        "piano_predrop_speed": "0.07",
+        "piano_drop_speed": "0.12",
+        "piano_begin_speed": "0.1",
+        "bass_predrop_speed": "0.08",
+        "bass_drop_speed": "0.12",
+        "bass_begin_speed": "0.1",
+        "noise_drop_speed": "0.01",
+        "noise_begin_speed": "0.005",
+        "noise_predrop_speed": "0",
+        "contrast_drop_speed": "1.01",
+        "contrast_begin_speed": "0.97",
+        "contrast_predrop_speed": "0.95"
     },
     "Hip-Hop": {
-        "speed": "5",
-        "zoom_speed": "5",
-        "zoom_drop_speed": "5.5",
-        "strength_drop_speed": "0.65",
-        "drums_drop_speed": "0.25",
-        "drums_predrop_speed": "-0.1",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "-0.2",
-        "piano_drop_speed": "0.3",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "-0.2",
-        "bass_drop_speed": "0.3",
-        "bass_begin_speed": "0"
+        "speed": "5.2",
+        "zoom_speed": "5.1",
+        "zoom_drop_speed": "5.6",
+        "zoom_begin_speed": "5",
+        "zoom_predrop_speed": "5",
+        "strength_predrop_speed": "0.67",
+        "strength_begin_speed": "0.66",
+        "strength_drop_speed": "0.68",
+        "drums_drop_speed": "0.28",
+        "drums_predrop_speed": "-0.08",
+        "drums_begin_speed": "0.1",
+        "piano_predrop_speed": "-0.18",
+        "piano_drop_speed": "0.32",
+        "piano_begin_speed": "0.15",
+        "contrast_predrop_speed": "0.95",
+        "contrast_drop_speed": "1",
+        "contrast_begin_speed": "0.94",
+        "bass_predrop_speed": "-0.18",
+        "bass_drop_speed": "0.32",
+        "bass_begin_speed": "0.2",
+        "noise_drop_speed": "0.03",
+        "noise_begin_speed": "0.02",
+        "noise_predrop_speed": "0.01",
+        "other_drop_speed": "0.35",
+        "other_begin_speed": "0.1",
+        "other_predrop_speed": "-0.15"
     },
     "Minimal": {
-        "speed": "1",
-        "zoom_speed": "1",
-        "zoom_drop_speed": "1.5",
-        "strength_drop_speed": "0.9",
-        "drums_drop_speed": "0",
-        "drums_predrop_speed": "0",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "0",
-        "piano_drop_speed": "0",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "0",
-        "bass_drop_speed": "0",
-        "bass_begin_speed": "0"
-    },
-    "Abstract": {
         "speed": "4",
         "zoom_speed": "4",
         "zoom_drop_speed": "4.5",
-        "strength_drop_speed": "0.7",
-        "drums_drop_speed": "0.1",
+        "zoom_begin_speed": "4",
+        "zoom_predrop_speed": "3.9",
+        "strength_predrop_speed": "0.6",
+        "strength_begin_speed": "0.59",
+        "strength_drop_speed": "0.61",
+        "drums_drop_speed": "0.2",
         "drums_predrop_speed": "-0.1",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "-0.1",
-        "piano_drop_speed": "0.2",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "-0.1",
-        "bass_drop_speed": "0.2",
-        "bass_begin_speed": "0"
+        "drums_begin_speed": "0.1",
+        "piano_predrop_speed": "-0.2",
+        "piano_drop_speed": "0.25",
+        "piano_begin_speed": "0.1",
+        "contrast_predrop_speed": "0.9",
+        "contrast_drop_speed": "0.92",
+        "contrast_begin_speed": "0.88",
+        "bass_predrop_speed": "-0.2",
+        "bass_drop_speed": "0.25",
+        "bass_begin_speed": "0.1",
+        "noise_drop_speed": "0.02",
+        "noise_begin_speed": "0.01",
+        "noise_predrop_speed": "0",
+        "other_drop_speed": "0.3",
+        "other_begin_speed": "0.1",
+        "other_predrop_speed": "-0.1"
     },
-    "Violent": {
+    "Abstract": {
         "speed": "6",
         "zoom_speed": "6",
         "zoom_drop_speed": "6.5",
-        "strength_drop_speed": "0.55",
-        "drums_drop_speed": "0.3",
-        "drums_predrop_speed": "-0.3",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "-0.5",
+        "zoom_begin_speed": "6",
+        "zoom_predrop_speed": "5.9",
+        "strength_predrop_speed": "0.55",
+        "strength_begin_speed": "0.54",
+        "strength_drop_speed": "0.56",
+        "drums_drop_speed": "0.4",
+        "drums_predrop_speed": "-0.2",
+        "drums_begin_speed": "0.2",
+        "piano_predrop_speed": "-0.3",
         "piano_drop_speed": "0.35",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "-0.5",
+        "piano_begin_speed": "0.2",
+        "contrast_predrop_speed": "0.9",
+        "contrast_drop_speed": "0.92",
+        "contrast_begin_speed": "0.88",
+        "bass_predrop_speed": "-0.3",
         "bass_drop_speed": "0.35",
-        "bass_begin_speed": "0"
+        "bass_begin_speed": "0.2",
+        "noise_drop_speed": "0.03",
+        "noise_begin_speed": "0.02",
+        "noise_predrop_speed": "0.01",
+        "other_drop_speed": "0.4",
+        "other_begin_speed": "0.2",
+        "other_predrop_speed": "-0.2"
+    },
+    "Violent": {
+        "speed": "9",
+        "zoom_speed": "9",
+        "zoom_drop_speed": "9.5",
+        "zoom_begin_speed": "8.9",
+        "zoom_predrop_speed": "9.1",
+        "noise_drop_speed": "0.04",
+        "noise_begin_speed": "0.03",
+        "noise_predrop_speed": "0.02",
+        "other_drop_speed": "0.6",
+        "other_begin_speed": "0.5",
+        "other_predrop_speed": "0.55",
+        "strength_predrop_speed": "0.9",
+        "strength_begin_speed": "0.88",
+        "strength_drop_speed": "0.92",
+        "drums_drop_speed": "0.6",
+        "drums_predrop_speed": "-0.5",
+        "drums_begin_speed": "0.55",
+        "piano_predrop_speed": "-0.4",
+        "piano_drop_speed": "0.5",
+        "piano_begin_speed": "0.45",
+        "contrast_predrop_speed": "1.1",
+        "contrast_drop_speed": "1.15",
+        "contrast_begin_speed": "1.05",
+        "bass_predrop_speed": "-0.6",
+        "bass_drop_speed": "0.7",
+        "bass_begin_speed": "0.65"
     },
     "Techno": {
-        "speed": "5",
-        "zoom_speed": "5",
-        "zoom_drop_speed": "5.5",
-        "strength_drop_speed": "0.6",
-        "drums_drop_speed": "0.3",
-        "drums_predrop_speed": "-0.1",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "-0.2",
-        "piano_drop_speed": "0.25",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "-0.2",
-        "bass_drop_speed": "0.3",
-        "bass_begin_speed": "0"
+        "speed": "5.2",
+        "zoom_speed": "5.3",
+        "zoom_drop_speed": "5.7",
+        "zoom_predrop_speed": "5.1",
+        "noise_drop_speed": "0.03",
+        "noise_begin_speed": "0.02",
+        "noise_predrop_speed": "0.01",
+        "other_drop_speed": "0.5",
+        "other_begin_speed": "0.45",
+        "other_predrop_speed": "0.48",
+        "strength_predrop_speed": "0.85",
+        "strength_begin_speed": "0.83",
+        "strength_drop_speed": "0.87",
+        "drums_drop_speed": "0.5",
+        "drums_predrop_speed": "-0.45",
+        "drums_begin_speed": "0.48",
+        "piano_predrop_speed": "-0.35",
+        "piano_drop_speed": "0.4",
+        "piano_begin_speed": "0.38",
+        "contrast_predrop_speed": "1.05",
+        "contrast_drop_speed": "1.08",
+        "contrast_begin_speed": "1.02",
+        "bass_predrop_speed": "-0.5",
+        "bass_drop_speed": "0.55",
+        "bass_begin_speed": "0.52"
     },
     "Reggae": {
-        "speed": "3",
-        "zoom_speed": "3",
-        "zoom_drop_speed": "3.5",
-        "strength_drop_speed": "0.7",
-        "drums_drop_speed": "0.1",
-        "drums_predrop_speed": "0",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "0",
-        "piano_drop_speed": "0.15",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "0.1",
-        "bass_drop_speed": "0.2",
-        "bass_begin_speed": "0"
+        "speed": "4",
+        "zoom_speed": "4",
+        "zoom_drop_speed": "4.5",
+        "zoom_begin_speed": "3.9",
+        "zoom_predrop_speed": "4.1",
+        "noise_drop_speed": "0.01",
+        "noise_begin_speed": "0.005",
+        "noise_predrop_speed": "0.007",
+        "other_drop_speed": "0.3",
+        "other_begin_speed": "0.28",
+        "other_predrop_speed": "0.29",
+        "strength_predrop_speed": "0.75",
+        "strength_begin_speed": "0.73",
+        "strength_drop_speed": "0.77",
+        "drums_drop_speed": "0.2",
+        "drums_predrop_speed": "-0.18",
+        "drums_begin_speed": "0.19",
+        "piano_predrop_speed": "-0.15",
+        "piano_drop_speed": "0.2",
+        "piano_begin_speed": "0.18",
+        "contrast_predrop_speed": "0.98",
+        "contrast_drop_speed": "1.01",
+        "contrast_begin_speed": "0.97",
+        "bass_predrop_speed": "-0.2",
+        "bass_drop_speed": "0.25",
+        "bass_begin_speed": "0.22"
     },
-    "Blues": {
+    "Lounge": {
+        "speed": "3",
+        "zoom_speed": "2.9",
+        "zoom_drop_speed": "3.1",
+        "zoom_begin_speed": "2.8",
+        "zoom_predrop_speed": "2.9",
+        "strength_drop_speed": "0.7",
+        "strength_begin_speed": "0.69",
+        "strength_predrop_speed": "0.71",
+        "drums_drop_speed": "0.1",
+        "drums_begin_speed": "0.09",
+        "drums_predrop_speed": "0.08",
+        "noise_drop_speed": "0.01",
+        "noise_begin_speed": "0.009",
+        "noise_predrop_speed": "0.008",
+        "other_drop_speed": "0.2",
+        "other_begin_speed": "0.19",
+        "other_predrop_speed": "0.18",
+        "piano_drop_speed": "0.25",
+        "piano_begin_speed": "0.24",
+        "piano_predrop_speed": "0.23",
+        "contrast_drop_speed": "0.98",
+        "contrast_begin_speed": "0.97",
+        "contrast_predrop_speed": "0.96",
+        "bass_drop_speed": "0.2",
+        "bass_begin_speed": "0.19",
+        "bass_predrop_speed": "0.18"
+    },
+    "Deep Dub": {
+        "speed": "6.1",
+        "zoom_speed": "6.2",
+        "zoom_drop_speed": "6.7",
+        "zoom_begin_speed": "6",
+        "zoom_predrop_speed": "6.1",
+        "strength_drop_speed": "0.58",
+        "strength_begin_speed": "0.56",
+        "strength_predrop_speed": "0.57",
+        "drums_drop_speed": "0.42",
+        "drums_begin_speed": "0.05",
+        "drums_predrop_speed": "-0.38",
+        "noise_drop_speed": "0.02",
+        "noise_begin_speed": "0.01",
+        "noise_predrop_speed": "0",
+        "other_drop_speed": "0.5",
+        "other_begin_speed": "0.1",
+        "other_predrop_speed": "-0.48",
+        "piano_drop_speed": "0.52",
+        "piano_begin_speed": "0.1",
+        "piano_predrop_speed": "-0.48",
+        "contrast_drop_speed": "0.92",
+        "contrast_begin_speed": "0.88",
+        "contrast_predrop_speed": "0.9",
+        "bass_drop_speed": "0.52",
+        "bass_begin_speed": "0.1",
+        "bass_predrop_speed": "-0.48"
+    },
+    "Funk": {
+        "speed": "3.1",
+        "zoom_speed": "3.05",
+        "zoom_drop_speed": "4.2",
+        "zoom_begin_speed": "3",
+        "zoom_predrop_speed": "3.1",
+        "strength_drop_speed": "0.73",
+        "strength_begin_speed": "0.71",
+        "strength_predrop_speed": "0.72",
+        "drums_drop_speed": "0.17",
+        "drums_begin_speed": "0.1",
+        "drums_predrop_speed": "-0.13",
+        "noise_drop_speed": "0.015",
+        "noise_begin_speed": "0.01",
+        "noise_predrop_speed": "0",
+        "other_drop_speed": "0.22",
+        "other_begin_speed": "0.1",
+        "other_predrop_speed": "-0.08",
+        "piano_drop_speed": "0.22",
+        "piano_begin_speed": "0.1",
+        "piano_predrop_speed": "-0.08",
+        "contrast_drop_speed": "0.97",
+        "contrast_begin_speed": "0.94",
+        "contrast_predrop_speed": "0.95",
+        "bass_drop_speed": "0.27",
+        "bass_begin_speed": "0.1",
+        "bass_predrop_speed": "-0.08"
+    },
+    "Psychedelic": {
+        "speed": "7.2",
+        "zoom_speed": "7.1",
+        "zoom_drop_speed": "8.2",
+        "zoom_predrop_speed": "7",
+        "zoom_begin_speed": "7",
+        "strength_predrop_speed": "0.52",
+        "strength_begin_speed": "0.51",
+        "strength_drop_speed": "0.53",
+        "drums_drop_speed": "0.42",
+        "drums_predrop_speed": "-0.28",
+        "drums_begin_speed": "0.05",
+        "piano_predrop_speed": "-0.38",
+        "piano_drop_speed": "0.47",
+        "piano_begin_speed": "0.1",
+        "contrast_predrop_speed": "0.9",
+        "contrast_drop_speed": "0.92",
+        "contrast_begin_speed": "0.88",
+        "bass_predrop_speed": "-0.38",
+        "bass_drop_speed": "0.47",
+        "bass_begin_speed": "0.1",
+        "noise_drop_speed": "0.02",
+        "noise_begin_speed": "0.01",
+        "noise_predrop_speed": "0",
+        "other_drop_speed": "0.4",
+        "other_begin_speed": "0",
+        "other_predrop_speed": "-0.4"
+    },
+    "Ambient": {
         "speed": "2",
         "zoom_speed": "2",
         "zoom_drop_speed": "2.5",
+        "zoom_predrop_speed": "1.8",
+        "zoom_begin_speed": "2",
+        "strength_predrop_speed": "0.8",
+        "strength_begin_speed": "0.8",
         "strength_drop_speed": "0.8",
         "drums_drop_speed": "0",
         "drums_predrop_speed": "0",
         "drums_begin_speed": "0",
-        "piano_predrop_speed": "0.05",
-        "piano_drop_speed": "0.1",
-        "piano_begin_speed": "0",
+        "piano_predrop_speed": "0.1",
+        "piano_drop_speed": "0.15",
+        "piano_begin_speed": "0.1",
+        "contrast_predrop_speed": "0.95",
+        "contrast_drop_speed": "0.95",
+        "contrast_begin_speed": "0.95",
         "bass_predrop_speed": "0.05",
         "bass_drop_speed": "0.1",
-        "bass_begin_speed": "0"
+        "bass_begin_speed": "0.05",
+        "noise_drop_speed": "0.01",
+        "noise_begin_speed": "0.01",
+        "noise_predrop_speed": "0",
+        "other_drop_speed": "0.2",
+        "other_begin_speed": "0",
+        "other_predrop_speed": "-0.2"
     },
-    "Dubstep": {
-        "speed": "6",
-        "zoom_speed": "6",
-        "zoom_drop_speed": "6.5",
-        "strength_drop_speed": "0.55",
-        "drums_drop_speed": "0.4",
-        "drums_predrop_speed": "-0.4",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "-0.5",
-        "piano_drop_speed": "0.5",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "-0.5",
-        "bass_drop_speed": "0.5",
-        "bass_begin_speed": "0"
-    },
-    "Funk": {
-        "speed": "3",
-        "zoom_speed": "3",
-        "zoom_drop_speed": "4",
-        "strength_drop_speed": "0.7",
-        "drums_drop_speed": "0.15",
-        "drums_predrop_speed": "-0.15",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "-0.1",
-        "piano_drop_speed": "0.2",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "-0.1",
+    "Cinematic": {
+        "speed": "4",
+        "zoom_speed": "4",
+        "zoom_drop_speed": "4.5",
+        "zoom_predrop_speed": "3.8",
+        "zoom_begin_speed": "4",
+        "strength_predrop_speed": "0.75",
+        "strength_begin_speed": "0.76",
+        "strength_drop_speed": "0.77",
+        "drums_drop_speed": "0.2",
+        "drums_predrop_speed": "-0.1",
+        "drums_begin_speed": "0.15",
+        "piano_predrop_speed": "0.3",
+        "piano_drop_speed": "0.35",
+        "piano_begin_speed": "0.25",
+        "contrast_predrop_speed": "1",
+        "contrast_drop_speed": "1.02",
+        "contrast_begin_speed": "0.98",
+        "bass_predrop_speed": "0.2",
         "bass_drop_speed": "0.25",
-        "bass_begin_speed": "0"
+        "bass_begin_speed": "0.15",
+        "noise_drop_speed": "0.02",
+        "noise_begin_speed": "0.02",
+        "noise_predrop_speed": "0.01",
+        "other_drop_speed": "0.4",
+        "other_begin_speed": "0.1",
+        "other_predrop_speed": "-0.3"
     },
-    "Psychedelic": {
-        "speed": "7",
-        "zoom_speed": "7",
-        "zoom_drop_speed": "8",
-        "strength_drop_speed": "0.5",
-        "drums_drop_speed": "0.4",
-        "drums_predrop_speed": "-0.3",
-        "drums_begin_speed": "0",
-        "piano_predrop_speed": "-0.4",
-        "piano_drop_speed": "0.45",
-        "piano_begin_speed": "0",
-        "bass_predrop_speed": "-0.4",
-        "bass_drop_speed": "0.45",
-        "bass_begin_speed": "0"
-    },   
+    "Vaporwave": {
+        "speed": "2.5",
+        "zoom_speed": "2.5",
+        "zoom_drop_speed": "3",
+        "zoom_predrop_speed": "2.4",
+        "zoom_begin_speed": "2.5",
+        "strength_predrop_speed": "0.65",
+        "strength_begin_speed": "0.67",
+        "strength_drop_speed": "0.63",
+        "drums_drop_speed": "0.1",
+        "drums_predrop_speed": "-0.1",
+        "drums_begin_speed": "0.05",
+        "piano_predrop_speed": "-0.3",
+        "piano_drop_speed": "0.2",
+        "piano_begin_speed": "0.1",
+        "contrast_predrop_speed": "0.9",
+        "contrast_drop_speed": "0.92",
+        "contrast_begin_speed": "0.91",
+        "bass_predrop_speed": "-0.3",
+        "bass_drop_speed": "0.3",
+        "bass_begin_speed": "0.1",
+        "noise_drop_speed": "0.01",
+        "noise_predrop_speed": "0.00",
+        "noise_begin_speed": "0.01",
+        "other_drop_speed": "0.3",
+        "other_predrop_speed": "-0.3",
+        "other_begin_speed": "0.1"
+    },
+    "Chillstep": {
+        "speed": "3.5",
+        "zoom_speed": "3.5",
+        "zoom_drop_speed": "4",
+        "zoom_predrop_speed": "3.4",
+        "zoom_begin_speed": "3.5",
+        "strength_predrop_speed": "0.60",
+        "strength_begin_speed": "0.62",
+        "strength_drop_speed": "0.58",
+        "drums_drop_speed": "0.2",
+        "drums_predrop_speed": "-0.15",
+        "drums_begin_speed": "0.1",
+        "piano_predrop_speed": "-0.2",
+        "piano_drop_speed": "0.2",
+        "piano_begin_speed": "0.15",
+        "contrast_predrop_speed": "0.93",
+        "contrast_drop_speed": "0.95",
+        "contrast_begin_speed": "0.92",
+        "bass_predrop_speed": "-0.2",
+        "bass_drop_speed": "0.3",
+        "bass_begin_speed": "0.15",
+        "noise_drop_speed": "0.02",
+        "noise_predrop_speed": "0.01",
+        "noise_begin_speed": "0.02",
+        "other_drop_speed": "0.25",
+        "other_predrop_speed": "-0.25",
+        "other_begin_speed": "0.15"
+    },
+    "FeelTheFonk#1": {
+        "speed": "4.8",
+        "zoom_speed": "4.8",
+        "zoom_drop_speed": "5.5",
+        "zoom_predrop_speed": "4.7",
+        "zoom_begin_speed": "4.8",
+        "strength_predrop_speed": "0.76",
+        "strength_begin_speed": "0.78",
+        "strength_drop_speed": "0.77",
+        "drums_drop_speed": "0.25",
+        "drums_predrop_speed": "-0.15",
+        "drums_begin_speed": "0.2",
+        "piano_predrop_speed": "-0.1",
+        "piano_drop_speed": "0.3",
+        "piano_begin_speed": "0.25",
+        "contrast_predrop_speed": "0.99",
+        "contrast_drop_speed": "1.03",
+        "contrast_begin_speed": "0.98",
+        "bass_predrop_speed": "-0.1",
+        "bass_drop_speed": "0.35",
+        "bass_begin_speed": "0.3",
+        "noise_drop_speed": "0.03",
+        "noise_predrop_speed": "0.02",
+        "noise_begin_speed": "0.025",
+        "other_drop_speed": "0.35",
+        "other_predrop_speed": "-0.3",
+        "other_begin_speed": "0.25"
+    }   
 }
 
 class TextRedirector(io.StringIO):
@@ -287,7 +679,7 @@ class AdvancedAudioSplitterUI:
         self.create_advanced_widgets(self.advanced_frame)
 
         # Adding a Text widget to serve as a console
-        self.console = tk.Text(self.master, wrap=tk.WORD, height=10, width=73)
+        self.console = tk.Text(self.master, wrap=tk.WORD, height=10, width=53)
 
         self.console.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=1)  # Changé row de 4 à 1
         self.console.config(state=tk.DISABLED)
@@ -326,13 +718,29 @@ class AdvancedAudioSplitterUI:
         ToolTip(self.speed_entry, "The amplitude / strength / intensity of your animation.")
         ToolTip(self.zoom_speed_entry, "The amplitude / strength / intensity of your animation.")
         ToolTip(self.zoom_drop_speed_entry, "Reactive zoom impact of the audio on the animation when the audio makes a sound.")
+        ToolTip(self.noise_drop_speed_entry, "Reactive impact of the noise schedule when the audio makes a sound.")
+        ToolTip(self.contrast_drop_speed_entry, "Reactive impact of the contrast schedule when the audio makes a sound.")
+        ToolTip(self.zoom_predrop_speed_entry, "Reactive zoom impact of the audio on the animation right before the audio makes a sound.")
        
         self.fps_entry.insert(0, "30")
         self.speed_entry.insert(0, "4")
         self.zoom_speed_entry.insert(0, "4")
         self.stems_entry.insert(0, "4")
         self.zoom_drop_speed_entry.insert(0, "5")        
+        self.zoom_predrop_speed_entry.insert(0, "0.5")        
+        self.zoom_begin_speed_entry.insert(0, "0")        
         self.strength_drop_speed_entry.insert(0, "0.50")
+        self.strength_predrop_speed_entry.insert(0, "0.60")
+        self.strength_begin_speed_entry.insert(0, "0.70")
+        self.contrast_drop_speed_entry.insert(0, "1.01")
+        self.contrast_predrop_speed_entry.insert(0, "0.95")
+        self.contrast_begin_speed_entry.insert(0, "0.95")
+        self.noise_drop_speed_entry.insert(0, "0.02")
+        self.noise_predrop_speed_entry.insert(0, "0.00")
+        self.noise_begin_speed_entry.insert(0, "0.01")
+        self.other_drop_speed_entry.insert(0, "0.4")
+        self.other_predrop_speed_entry.insert(0, "-0.4")
+        self.other_begin_speed_entry.insert(0, "0.0")
         self.drums_drop_speed_entry.insert(0, "0.2")
         self.drums_predrop_speed_entry.insert(0, "-0.2")
         self.drums_begin_speed_entry.insert(0, "0.0")
@@ -344,42 +752,54 @@ class AdvancedAudioSplitterUI:
         self.bass_begin_speed_entry.insert(0, "0.0")
 
         self.maths_cond_button = ttk.Button(self.master, text="Maths Cond.", command=self.open_cond_ui)
-        self.maths_cond_button.grid(row=0, column=2, sticky=(tk.E), pady=1, padx=1)
+        self.maths_cond_button.grid(row=0, column=2, sticky=(tk.E), pady=0, padx=0)
 
         self.execute_button = ttk.Button(self.master, text="Execute", command=self.execute_command_threaded)
-        self.execute_button.grid(row=0, column=3, sticky=(tk.E), pady=1, padx=1)
+        self.execute_button.grid(row=0, column=2, sticky=(tk.E, tk.S), pady=0, padx=0)
 
     def load_genre_template(self):
         selected_genre = self.music_genre_combo.get()
         if selected_genre in music_genre_templates:
             template = music_genre_templates[selected_genre]
-            self.speed_entry.delete(0, tk.END)
-            self.speed_entry.insert(0, template['speed'])
-            self.zoom_speed_entry.delete(0, tk.END)
-            self.zoom_speed_entry.insert(0, template['zoom_speed'])
-            self.zoom_drop_speed_entry.delete(0, tk.END)
-            self.zoom_drop_speed_entry.insert(0, template['zoom_drop_speed'])
-            self.strength_drop_speed_entry.delete(0, tk.END)
-            self.strength_drop_speed_entry.insert(0, template['strength_drop_speed'])
-            self.drums_drop_speed_entry.delete(0, tk.END)
-            self.drums_drop_speed_entry.insert(0, template['drums_drop_speed'])
-            self.drums_predrop_speed_entry.delete(0, tk.END)
-            self.drums_predrop_speed_entry.insert(0, template['drums_predrop_speed'])
-            self.drums_begin_speed_entry.delete(0, tk.END)
-            self.drums_begin_speed_entry.insert(0, template['drums_begin_speed'])
-            self.piano_predrop_speed_entry.delete(0, tk.END)
-            self.piano_predrop_speed_entry.insert(0, template['piano_predrop_speed'])
-            self.piano_drop_speed_entry.delete(0, tk.END)
-            self.piano_drop_speed_entry.insert(0, template['piano_drop_speed'])
-            self.piano_begin_speed_entry.delete(0, tk.END)
-            self.piano_begin_speed_entry.insert(0, template['piano_begin_speed'])
-            self.bass_predrop_speed_entry.delete(0, tk.END)
-            self.bass_predrop_speed_entry.insert(0, template['bass_predrop_speed'])
-            self.bass_drop_speed_entry.delete(0, tk.END)
-            self.bass_drop_speed_entry.insert(0, template['bass_drop_speed'])
-            self.bass_begin_speed_entry.delete(0, tk.END)
-            self.bass_begin_speed_entry.insert(0, template['bass_begin_speed'])
             
+            widget_mapping = {
+                'speed': self.speed_entry,
+                'zoom_speed': self.zoom_speed_entry,
+                'zoom_drop_speed': self.zoom_drop_speed_entry,
+                'zoom_predrop_speed': self.zoom_predrop_speed_entry,
+                'zoom_begin_speed': self.zoom_begin_speed_entry,
+                'strength_drop_speed': self.strength_drop_speed_entry,
+                'strength_predrop_speed': self.strength_predrop_speed_entry,
+                'strength_begin_speed': self.strength_begin_speed_entry,
+                'drums_drop_speed': self.drums_drop_speed_entry,
+                'drums_predrop_speed': self.drums_predrop_speed_entry,
+                'drums_begin_speed': self.drums_begin_speed_entry,
+                'piano_predrop_speed': self.piano_predrop_speed_entry,
+                'piano_drop_speed': self.piano_drop_speed_entry,
+                'piano_begin_speed': self.piano_begin_speed_entry,
+                'bass_predrop_speed': self.bass_predrop_speed_entry,
+                'bass_drop_speed': self.bass_drop_speed_entry,
+                'bass_begin_speed': self.bass_begin_speed_entry,
+                'noise_begin_speed': self.noise_begin_speed_entry,
+                'noise_drop_speed': self.noise_drop_speed_entry,
+                'noise_predrop_speed': self.noise_predrop_speed_entry,
+                'other_predrop_speed': self.other_predrop_speed_entry,
+                'other_drop_speed': self.other_drop_speed_entry,
+                'other_begin_speed': self.other_begin_speed_entry,
+                'contrast_drop_speed': self.contrast_drop_speed_entry,
+                'contrast_predrop_speed': self.contrast_predrop_speed_entry,
+                'contrast_begin_speed': self.contrast_begin_speed_entry
+            }
+            
+            for key, widget in widget_mapping.items():
+                widget.delete(0, tk.END)
+                if key in template:
+                    widget.insert(0, template[key])
+                else:
+                    print(f"Warning: Key {key} not found in the selected genre template.")
+        else:
+            print(f"Warning: Selected genre {selected_genre} not found in templates.")
+
     def open_cond_ui(self):
         subprocess.Popen([sys.executable, "condUI.py"])
         
@@ -483,57 +903,109 @@ class AdvancedAudioSplitterUI:
         self.contrast_sound_combo.grid(row=5, column=1, sticky=(tk.W))
 
     def create_advanced_widgets(self, frame):
+       
+        ttk.Label(frame, text="Zoom Drop Speed:").grid(row=1, column=2, sticky=(tk.W))
+        self.zoom_drop_speed_entry = ttk.Entry(frame)
+        self.zoom_drop_speed_entry.grid(row=1, column=3, sticky=(tk.W))
+            
+        ttk.Label(frame, text="Zoom Begin Speed:").grid(row=2, column=2, sticky=(tk.W))
+        self.zoom_begin_speed_entry = ttk.Entry(frame)
+        self.zoom_begin_speed_entry.grid(row=2, column=3, sticky=(tk.W))
+
+        ttk.Label(frame, text="Zoom Pre-drop Speed:").grid(row=3, column=2, sticky=(tk.W))
+        self.zoom_predrop_speed_entry = ttk.Entry(frame)
+        self.zoom_predrop_speed_entry.grid(row=3, column=3, sticky=(tk.W))
+
+        ttk.Label(frame, text="Noise Begin Speed:").grid(row=4, column=2, sticky=(tk.W))
+        self.noise_begin_speed_entry = ttk.Entry(frame)
+        self.noise_begin_speed_entry.grid(row=4, column=3, sticky=(tk.W))
+            
+        ttk.Label(frame, text="Noise Drop Speed:").grid(row=6, column=2, sticky=(tk.W))
+        self.noise_drop_speed_entry = ttk.Entry(frame)
+        self.noise_drop_speed_entry.grid(row=6, column=3, sticky=(tk.W))
+        
+        ttk.Label(frame, text="Noise Pre-drop Speed:").grid(row=5, column=2, sticky=(tk.W))
+        self.noise_predrop_speed_entry = ttk.Entry(frame)
+        self.noise_predrop_speed_entry.grid(row=5, column=3, sticky=(tk.W))
+        
+        ttk.Label(frame, text="Contrast Begin Speed:").grid(row=6, column=2, sticky=(tk.W))
+        self.contrast_begin_speed_entry = ttk.Entry(frame)
+        self.contrast_begin_speed_entry.grid(row=6, column=3, sticky=(tk.W))
+
+        ttk.Label(frame, text="Contrast Drop Speed:").grid(row=7, column=2, sticky=(tk.W))
+        self.contrast_drop_speed_entry = ttk.Entry(frame)
+        self.contrast_drop_speed_entry.grid(row=7, column=3, sticky=(tk.W))
+             
+        ttk.Label(frame, text="Contrast Pre-drop Speed:").grid(row=8, column=2, sticky=(tk.W))
+        self.contrast_predrop_speed_entry = ttk.Entry(frame)
+        self.contrast_predrop_speed_entry.grid(row=8, column=3, sticky=(tk.W))
+            
+        ttk.Label(frame, text="Strength Begin Speed:").grid(row=9, column=2, sticky=(tk.W))
+        self.strength_begin_speed_entry = ttk.Entry(frame)
+        self.strength_begin_speed_entry.grid(row=9, column=3, sticky=(tk.W))
+  
+        ttk.Label(frame, text="Strength Drop Speed:").grid(row=10, column=2, sticky=(tk.W))
+        self.strength_drop_speed_entry = ttk.Entry(frame)
+        self.strength_drop_speed_entry.grid(row=10, column=3, sticky=(tk.W))
+        
+        ttk.Label(frame, text="Strength Pre-drop Speed:").grid(row=11, column=2, sticky=(tk.W))
+        self.strength_predrop_speed_entry = ttk.Entry(frame)
+        self.strength_predrop_speed_entry.grid(row=11, column=3, sticky=(tk.W))
+
+        ttk.Label(frame, text="Other Begin Speed:").grid(row=10, column=0, sticky=(tk.W))
+        self.other_begin_speed_entry = ttk.Entry(frame)
+        self.other_begin_speed_entry.grid(row=10, column=1, sticky=(tk.W))
+
+        ttk.Label(frame, text="Other Pre-drop Speed:").grid(row=11, column=0, sticky=(tk.W))
+        self.other_predrop_speed_entry = ttk.Entry(frame)
+        self.other_predrop_speed_entry.grid(row=11, column=1, sticky=(tk.W))
+      
+        ttk.Label(frame, text="Other Drop Speed:").grid(row=9, column=0, sticky=(tk.W))
+        self.other_drop_speed_entry = ttk.Entry(frame)
+        self.other_drop_speed_entry.grid(row=9, column=1, sticky=(tk.W))
       
         self.music_genre_label = ttk.Label(frame, text="Genre :")
-        self.music_genre_label.grid(row=0, column=0, sticky=(tk.W))
+        self.music_genre_label.grid(row=0, column=2, sticky=(tk.W))
 
         self.music_genre_combo = ttk.Combobox(frame, values=list(music_genre_templates.keys()))
-        self.music_genre_combo.grid(row=0, column=1, sticky=(tk.W))
+        self.music_genre_combo.grid(row=0, column=3, sticky=(tk.W))
         self.music_genre_combo.bind("<<ComboboxSelected>>", lambda event: self.load_genre_template())
-       
-        ttk.Label(frame, text="Zoom Drop Speed:").grid(row=3, column=0, sticky=(tk.W))
-        self.zoom_drop_speed_entry = ttk.Entry(frame)
-        self.zoom_drop_speed_entry.grid(row=3, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Drums Drop Speed:").grid(row=1, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Drums Drop Speed:").grid(row=0, column=0, sticky=(tk.W))
         self.drums_drop_speed_entry = ttk.Entry(frame)
-        self.drums_drop_speed_entry.grid(row=1, column=1, sticky=(tk.W))
+        self.drums_drop_speed_entry.grid(row=0, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Drums Pre-drop Speed:").grid(row=5, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Drums Pre-drop Speed:").grid(row=1, column=0, sticky=(tk.W))
         self.drums_predrop_speed_entry = ttk.Entry(frame)
-        self.drums_predrop_speed_entry.grid(row=5, column=1, sticky=(tk.W))
+        self.drums_predrop_speed_entry.grid(row=1, column=1, sticky=(tk.W))
 
         ttk.Label(frame, text="Drums Begin Speed:").grid(row=2, column=0, sticky=(tk.W))
         self.drums_begin_speed_entry = ttk.Entry(frame)
         self.drums_begin_speed_entry.grid(row=2, column=1, sticky=(tk.W))
         
-        ttk.Label(frame, text="Piano Drop Speed:").grid(row=6, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Piano Drop Speed:").grid(row=3, column=0, sticky=(tk.W))
         self.piano_drop_speed_entry = ttk.Entry(frame)
-        self.piano_drop_speed_entry.grid(row=6, column=1, sticky=(tk.W))
+        self.piano_drop_speed_entry.grid(row=3, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Piano Begin Speed:").grid(row=8, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Piano Begin Speed:").grid(row=4, column=0, sticky=(tk.W))
         self.piano_begin_speed_entry = ttk.Entry(frame)
-        self.piano_begin_speed_entry.grid(row=8, column=1, sticky=(tk.W))
+        self.piano_begin_speed_entry.grid(row=4, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Piano Pre-drop Speed:").grid(row=9, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Piano Pre-drop Speed:").grid(row=5, column=0, sticky=(tk.W))
         self.piano_predrop_speed_entry = ttk.Entry(frame)
-        self.piano_predrop_speed_entry.grid(row=9, column=1, sticky=(tk.W))
+        self.piano_predrop_speed_entry.grid(row=5, column=1, sticky=(tk.W))
         
-        ttk.Label(frame, text="Bass Drop Speed:").grid(row=7, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Bass Drop Speed:").grid(row=6, column=0, sticky=(tk.W))
         self.bass_drop_speed_entry = ttk.Entry(frame)
-        self.bass_drop_speed_entry.grid(row=7, column=1, sticky=(tk.W))
+        self.bass_drop_speed_entry.grid(row=6, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Bass Begin Speed:").grid(row=10, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Bass Begin Speed:").grid(row=7, column=0, sticky=(tk.W))
         self.bass_begin_speed_entry = ttk.Entry(frame)
-        self.bass_begin_speed_entry.grid(row=10, column=1, sticky=(tk.W))
+        self.bass_begin_speed_entry.grid(row=7, column=1, sticky=(tk.W))
 
-        ttk.Label(frame, text="Bass Pre-drop Speed:").grid(row=11, column=0, sticky=(tk.W))
+        ttk.Label(frame, text="Bass Pre-drop Speed:").grid(row=8, column=0, sticky=(tk.W))
         self.bass_predrop_speed_entry = ttk.Entry(frame)
-        self.bass_predrop_speed_entry.grid(row=11, column=1, sticky=(tk.W))
-  
-        ttk.Label(frame, text="Strength Drop Speed:").grid(row=12, column=0, sticky=(tk.W))
-        self.strength_drop_speed_entry = ttk.Entry(frame)
-        self.strength_drop_speed_entry.grid(row=12, column=1, sticky=(tk.W))
+        self.bass_predrop_speed_entry.grid(row=8, column=1, sticky=(tk.W))
             
     def select_audio_file(self, audio_file_entry):
         file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.mp3 *.wav")])
@@ -595,13 +1067,31 @@ class AdvancedAudioSplitterUI:
             strength_sound = self.strength_sound_combo.get()
             noise_sound = self.noise_sound_combo.get()
             contrast_sound = self.contrast_sound_combo.get()            
+            drums_begin_speed = self.drums_begin_speed_entry.get()
             drums_drop_speed = self.drums_drop_speed_entry.get()
             drums_predrop_speed = self.drums_predrop_speed_entry.get()
             drums_audio_path = self.drums_audio_path_entry.get()
             bass_begin_speed_entry = self.bass_begin_speed_entry.get()
-            zoom_drop_speed = self.zoom_drop_speed_entry.get()
+            bass_drop_speed_entry = self.bass_drop_speed_entry.get()
+            bass_predrop_speed_entry = self.bass_predrop_speed_entry.get()
             strength_drop_speed = self.strength_drop_speed_entry.get()
+            strength_predrop_speed = self.strength_predrop_speed_entry.get()
+            strength_begin_speed = self.strength_begin_speed_entry.get()
             piano_drop_speed = self.piano_drop_speed_entry.get()
+            piano_predrop_speed = self.piano_predrop_speed_entry.get()
+            piano_begin_speed = self.piano_begin_speed_entry.get()
+            contrast_drop_speed = self.contrast_drop_speed_entry.get()
+            contrast_predrop_speed = self.contrast_predrop_speed_entry.get()
+            contrast_begin_speed = self.contrast_begin_speed_entry.get()
+            zoom_drop_speed = self.zoom_drop_speed_entry.get()            
+            zoom_predrop_speed = self.zoom_predrop_speed_entry.get()       
+            zoom_begin_speed = self.zoom_begin_speed_entry.get()       
+            noise_drop_speed = self.noise_drop_speed_entry.get()
+            noise_predrop_speed = self.noise_predrop_speed_entry.get()
+            noise_begin_speed = self.noise_begin_speed_entry.get()
+            other_drop_speed = self.other_drop_speed_entry.get()
+            other_predrop_speed = self.other_predrop_speed_entry.get()
+            other_begin_speed = self.other_begin_speed_entry.get()
             
             # Initialize the command list with the python path and script name
             cmd = [python_venv_path if os.path.exists(python_venv_path) else "python", "advanced_audio_splitter_keyframes.py"]
@@ -675,7 +1165,32 @@ class AdvancedAudioSplitterUI:
             if self.bass_begin_speed_entry.get():
                 cmd.extend(["--bass_begin_speed", self.bass_begin_speed_entry.get()])
             if self.bass_predrop_speed_entry.get():
-                cmd.extend(["--bass_predrop_speed", self.bass_predrop_speed_entry.get()])               
+                cmd.extend(["--bass_predrop_speed", self.bass_predrop_speed_entry.get()])
+            if self.zoom_begin_speed_entry.get():
+                cmd.extend(["--zoom_begin_speed", self.zoom_begin_speed_entry.get()])
+            if self.zoom_predrop_speed_entry.get():
+                cmd.extend(["--zoom_predrop_speed", self.zoom_predrop_speed_entry.get()])
+            if self.noise_begin_speed_entry.get():
+                cmd.extend(["--noise_begin_speed", self.noise_begin_speed_entry.get()])
+            if self.noise_predrop_speed_entry.get():
+                cmd.extend(["--noise_predrop_speed", self.noise_predrop_speed_entry.get()])
+            if self.contrast_begin_speed_entry.get():
+                cmd.extend(["--contrast_begin_speed", self.contrast_begin_speed_entry.get()])
+            if self.contrast_predrop_speed_entry.get():
+                cmd.extend(["--contrast_predrop_speed", self.contrast_predrop_speed_entry.get()])
+            if self.strength_begin_speed_entry.get():
+                cmd.extend(["--strength_begin_speed", self.strength_begin_speed_entry.get()])
+            if self.strength_predrop_speed_entry.get():
+                cmd.extend(["--strength_predrop_speed", self.strength_predrop_speed_entry.get()])   						
+            if self.other_begin_speed_entry.get():
+                cmd.extend(["--other_begin_speed", self.other_begin_speed_entry.get()])
+            if self.other_predrop_speed_entry.get():
+                cmd.extend(["--other_predrop_speed", self.other_predrop_speed_entry.get()])				
+            if noise_drop_speed:
+                cmd.extend(["--noise_drop_speed", noise_drop_speed])           
+            if contrast_drop_speed:
+                cmd.extend(["--contrast_drop_speed", contrast_drop_speed])
+                
             logging.info(f"Executing command: {' '.join(cmd)}")
             print(f"Executing command: {' '.join(cmd)}")
 
