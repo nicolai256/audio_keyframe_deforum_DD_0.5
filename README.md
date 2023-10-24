@@ -58,24 +58,22 @@ The feature uses Fast Fourier Transform (FFT) for frequency analysis and utilize
 
 #### 📐 **Available Functions for Keyframe Generation**
 
-Here's a breakdown of each mathematical function you can use for keyframe generation, along with how each one affects the motion or camera dynamics:
-
----
+Here's a comprehensive guide to each mathematical function available for keyframe generation, complete with their respective visual representations and impacts on motion or camera dynamics.
 
 - **Sine Function (`sine`)**
-
+  
   - **Expression**: `D + A*sin(2*PI*t/x/P)`
-
+  
   - **Motion Impact**: Generates smooth, oscillating movements that rise and fall in a sinusoidal pattern. Ideal for creating natural, flowing motions like waves.
-
+![Sine_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/ffabf053-f03c-417e-8dde-ce800b8ead18)
 ---
 
 - **Cosine Function (`cosine`)**
 
   - **Expression**: `D + A*cos(2*PI*t/x/P)`
-
+  
   - **Motion Impact**: Similar to the sine function but starts at its peak, providing a phase-shifted oscillation. Useful for motions that need to start at a peak or valley.
-
+![Cosine_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/3be028e1-f78a-4105-baa8-e53480c9b0ea)
 ---
 
 - **Absolute Sine Function (`abs_sin`)**
@@ -83,46 +81,48 @@ Here's a breakdown of each mathematical function you can use for keyframe genera
   - **Expression**: `A - (abs(sin(10*t/P))*B)`
 
   - **Motion Impact**: Produces oscillations that are always positive, giving a 'bouncing' effect. Great for motions that should not cross a certain threshold.
-
+![Absolute_Sine_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/4e731090-51dc-4179-a5d6-3fcef66e9841)
 ---
 
 - **Absolute Cosine Function (`abs_cos`)**
 
   - **Expression**: `A - (abs(cos(10*t/P))*B)`
-
+  
   - **Motion Impact**: Similar to Absolute Sine but starts at its lowest point. Useful for motions like heartbeats that start slow and then rise quickly.
-
+![Absolute_Cosine_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/f8a5ffc3-1726-43ed-8052-19875a469ba1)
 ---
 
 - **Modulus Function (`modulus`)**
 
   - **Expression**: `A*(t%P)+D`
-
+  
   - **Motion Impact**: Produces a sawtooth wave, ideal for creating abrupt, repetitive motions like a ticking clock.
-
+![Modulus_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/6dcf8c91-a395-4cbd-8b66-7cf3b700ba4c)
 ---
 
 - **Linear Function (`linear`)**
 
   - **Expression**: `A*t+D`
-
+  
   - **Motion Impact**: Generates a straight line, which is useful for constant-speed motion in one direction.
-
+![Linear_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/26930f16-a3cb-494c-b0f4-5478e5c4df38)
 ---
 
 - **Triangle Function (`triangle`)**
 
   - **Expression**: `(2 + 2*A)/3.14*arcsin(sin((2*3.14)/P*t))`
-
+  
   - **Motion Impact**: Creates a triangular wave for motions that have sharp peaks and valleys, such as a bouncing ball hitting the ground and rising sharply.
-
+![Triangle_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/8e09e32a-c68f-42b1-aa5d-b2ae6b81a08f)
 ---
 
 - **Fourier Function (`fourier`)**
 
   - **Expression**: `D + (A*(sin*t/P)+sin(A*t/P) + sin(A*t/P))`
-
+  
   - **Motion Impact**: Generates complex, layered oscillations by summing multiple sine waves. Ideal for intricate, multi-layered motions like spirals.
+![Fourier_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/1d8aa29c-28d8-4d0d-9520-2be873ce1384)
+---
 
 
 #### 📊 **Advanced Parameters**
