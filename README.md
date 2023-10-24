@@ -56,6 +56,74 @@ Unearth the zenith of animation synchronization by leveraging our sophisticated 
 
 The feature uses Fast Fourier Transform (FFT) for frequency analysis and utilizes diverse mathematical functions such as sine, cosine, and Fourier transformations. Thanks to these, your keyframes will not just be in sync with the audio but will embody the rhythm and mood of it.
 
+#### 📐 **Available Functions for Keyframe Generation**
+
+Here's a breakdown of each mathematical function you can use for keyframe generation, along with how each one affects the motion or camera dynamics:
+
+---
+
+- **Sine Function (`sine`)**
+
+  - **Expression**: `D + A*sin(2*PI*t/x/P)`
+
+  - **Motion Impact**: Generates smooth, oscillating movements that rise and fall in a sinusoidal pattern. Ideal for creating natural, flowing motions like waves.
+
+---
+
+- **Cosine Function (`cosine`)**
+
+  - **Expression**: `D + A*cos(2*PI*t/x/P)`
+
+  - **Motion Impact**: Similar to the sine function but starts at its peak, providing a phase-shifted oscillation. Useful for motions that need to start at a peak or valley.
+
+---
+
+- **Absolute Sine Function (`abs_sin`)**
+
+  - **Expression**: `A - (abs(sin(10*t/P))*B)`
+
+  - **Motion Impact**: Produces oscillations that are always positive, giving a 'bouncing' effect. Great for motions that should not cross a certain threshold.
+
+---
+
+- **Absolute Cosine Function (`abs_cos`)**
+
+  - **Expression**: `A - (abs(cos(10*t/P))*B)`
+
+  - **Motion Impact**: Similar to Absolute Sine but starts at its lowest point. Useful for motions like heartbeats that start slow and then rise quickly.
+
+---
+
+- **Modulus Function (`modulus`)**
+
+  - **Expression**: `A*(t%P)+D`
+
+  - **Motion Impact**: Produces a sawtooth wave, ideal for creating abrupt, repetitive motions like a ticking clock.
+
+---
+
+- **Linear Function (`linear`)**
+
+  - **Expression**: `A*t+D`
+
+  - **Motion Impact**: Generates a straight line, which is useful for constant-speed motion in one direction.
+
+---
+
+- **Triangle Function (`triangle`)**
+
+  - **Expression**: `(2 + 2*A)/3.14*arcsin(sin((2*3.14)/P*t))`
+
+  - **Motion Impact**: Creates a triangular wave for motions that have sharp peaks and valleys, such as a bouncing ball hitting the ground and rising sharply.
+
+---
+
+- **Fourier Function (`fourier`)**
+
+  - **Expression**: `D + (A*(sin*t/P)+sin(A*t/P) + sin(A*t/P))`
+
+  - **Motion Impact**: Generates complex, layered oscillations by summing multiple sine waves. Ideal for intricate, multi-layered motions like spirals.
+
 
 #### 📊 **Advanced Parameters**
 
@@ -73,22 +141,6 @@ The exported JSON will contain the following keys:
 - `expression`: The generated mathematical expression for keyframes.
 - `complex_expression`: The complex mathematical expression if any advanced parameters are used.
 - `all_formulas`: A dictionary of all possible formulas if `--export-all-formulas` is used.
-
-
-#### 🔧 **Example Command**
-
-```bash
-python conditional_maths_bpm_keyframes.py --file audiofile.mp3 --fps 14 --intensity 2 --function_type sine --advanced_params "A=2,P=3,D=4"
-```
-
-#### 🎛 **Parameters**
-
-- `--file`: The audio file whose BPM will serve as the synchronization baseline.
-- `--fps`: Frame rate to synchronize with your targeted animation speed.
-- `--intensity`: The amplitude, strength, or intensity of your BPM-tailored keyframes.
-- `--function_type`: The type of mathematical function to be used for keyframe generation. Options are 'sine', 'cosine', 'abs_sin', 'abs_cos', 'modulus', 'linear', 'triangle', and 'fourier'.
-- `--advanced_params`: A comma-separated list of advanced parameters for the chosen function, formatted as "A=2,P=3,D=4".
-- `--export-all-formulas`: An optional flag to export all possible formulas based on the provided parameters to a JSON file.
 
 ---
 
