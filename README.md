@@ -32,8 +32,7 @@ This single command sets up a virtual environment and kickstarts the GUI for a s
 
 ## 🛠 Dependencies 🛠
 
-Ensure you have the following Python packages installed or simply run `pip install -r requirements.txt`:
-
+```
 - numpy
 - ttkthemes
 - spleeter
@@ -41,7 +40,7 @@ Ensure you have the following Python packages installed or simply run `pip insta
 - pydub
 - mpmath
 - joblib
-
+```
 ---
 
 ### ➕ Conditional Maths Synced to BPM ➕
