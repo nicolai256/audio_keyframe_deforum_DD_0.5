@@ -15,7 +15,7 @@ Achieve unparalleled precision in your Deforum projects with Audio Keyframes for
 
 Original project forked from [Audio Keyframe Deforum](https://github.com/nicolai256/audio_keyframe_deforum_DD_0.5).
 
-![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/c9f4e07b-69fd-4acb-a1bd-2c39fe200a7c)
+![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/d073730c-5761-4ba1-8484-85239ec62b5c)
 
 
 ## 🚀 Quick Start 🚀
