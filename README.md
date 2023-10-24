@@ -144,21 +144,11 @@ The exported JSON will contain the following keys:
 
 ---
 
-## 🎚 Features 🎚
-
-### 📦 Spleeter (Built-in Audio Splitter)
-
-Unveil the layers of your audio files by leveraging the power of the integrated Spleeter tool.
-
-**🔧 Example Command**
-
-```bash
-python advanced_audio_splitter_keyframes.py -f audio.mp3 --fps 14 --spleeter 1
-```
-
 #### 🎛 Parameters
 
-- `--spleeter 1`: Activate Spleeter for audio dissection.
+For those who demand the highest quality Audio Split, consider using [Ultimate Vocal Remover](https://github.com/Anjok07/ultimatevocalremovergui).
+
+- `--spleeter 1`: Activate Spleeter for audio dissection. 
 - `--file audio.mp3/wav`: Choose the audio file to dissect.
 - `--fps 14`: Align the frame rate with your target animation.
 - `--stems 5`: Determine the number of audio stems to generate.
@@ -169,33 +159,11 @@ python advanced_audio_splitter_keyframes.py -f audio.mp3 --fps 14 --spleeter 1
 - `--strength_sound bass`: Choose the sound type for strength effects.
 - `--noise_sound bass`: Choose the sound type for noise effects.
 - `--contrast_sound bass`: Choose the sound type for contrast effects.
-
----
-
-### 🎶 Non-Spleeter Option 🎶
-
-For those who demand the highest quality, consider using [Ultimate Vocal Remover](https://github.com/Anjok07/ultimatevocalremovergui).
-
-**🔧 Example Command**
-
-```bash
-python advanced_audio_splitter_keyframes.py --fps 14 --drums_audio_path drums.wav --zoom_audio_path bass.wav
-```
-
-#### 🎛 Parameters
-
 - `--drums_audio_path drums.wav`: Specify the drums audio file.
 - `--piano_audio_path piano.wav`: Specify the piano audio file.
 - `--bass_audio_path bass.wav`: Specify the bass audio file.
 - `--other_audio_path other.wav`: Specify other types of audio files.
 - `--zoom_audio_path bass.wav`: Specify the zoom audio file.
-
----
-
-### 📈 Keyframe Values 📈
-
-#### 🔧 Example Values
-
 - `--drums_drop_speed 0.2`: Set the reactive impact of drums.
 - `--drums_begin_speed 0.0`: Set the starting keyframe value for drums.
 - `--drums_predrop_speed -0.2`: Set the pre-impact value for drums.
@@ -205,5 +173,7 @@ python advanced_audio_splitter_keyframes.py --fps 14 --drums_audio_path drums.wa
 - `--piano_drop_speed 0.4`: Set the reactive impact of piano audio.
 - `--piano_begin_speed 0.0`: Set the starting keyframe value for piano audio.
 - `--piano_predrop_speed -0.4`: Set the pre-impact value for piano audio.
-
+- `--contrast_drop_speed 0.4`: Set the reactive impact of constrat.
+- `--constrast_begin_speed 0.0`: Set the starting keyframe value for constrast
+- `--constrast_predrop_speed -0.4`: Set the pre-impact value for constrast.
 ---
