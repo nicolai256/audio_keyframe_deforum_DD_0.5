@@ -1,13 +1,13 @@
 import os
 from ttkthemes import ThemedTk
 import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
+from tkinter import ttk, filedialog
 import subprocess
 import threading
 import sys
 import io
 import logging
+from datetime import datetime
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -637,21 +637,40 @@ music_genre_templates = {
 }
 
 class TextRedirector(io.StringIO):
-    def __init__(self, widget):
-        self.widget = widget
-        
+    def __init__(self, app_object, message_type="info"):
+        """
+        :param app_object: The main application object that contains the add_message method.
+        :param message_type: The default type of the message. Can be "info", "error", etc.
+        """
+        self.app_object = app_object
+        self.message_type = message_type
+
     def write(self, str):
-        self.widget.after(0, self._write, str)
+        # Schedule _write to run as soon as possible
+        self.app_object.after(0, self._write, str)
 
     def _write(self, str):
         try:
-            self.widget.config(state=tk.NORMAL)
-            self.widget.insert(tk.END, str)
-            self.widget.see(tk.END)
-            self.widget.config(state=tk.DISABLED)
+            # Detect message type if possible (this part can be customized as needed)
+            detected_type = self.message_type
+            if "error" in str.lower():
+                detected_type = "error"
+            elif "warning" in str.lower():
+                detected_type = "warning"
+            # ...
+
+            # Add message to the console
+            self.app_object.add_message(str.strip(), detected_type)
         except tk.TclError as e:
+            # Log the error if the Tkinter operation fails
             logging.error(f"Error in TextRedirector: {e}")
 
+    def flush(self):
+        """
+        Implement flush method to prevent "io.UnsupportedOperation: fileno" errors.
+        """
+        pass
+            
 class ToolTip:
     def __init__(self, widget, text):
         self.widget = widget
@@ -682,7 +701,7 @@ class AdvancedAudioSplitterUI:
         logging.info("Initializing UI...")
         self.master = master
         self.master.title("AKD GUI")
-        self.master.geometry('646x852')        
+        self.master.geometry('690x890')        
         try:
             self.create_widgets()
         except Exception as e:
@@ -706,15 +725,30 @@ class AdvancedAudioSplitterUI:
         self.create_spleeter_widgets(self.spleeter_frame)
         self.create_advanced_widgets(self.advanced_frame)
 
-        # Adding a Text widget to serve as a console
-        self.console = tk.Text(self.master, wrap=tk.WORD, height=10, width=53)
+        # Create a frame to hold the console and its scrollbar
+        console_frame = tk.Frame(self.master)
+        console_frame.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=1)
 
-        self.console.grid(row=1, column=0, columnspan=3, sticky=(tk.W, tk.E), pady=1)  # Changé row de 4 à 1
-        self.console.config(state=tk.DISABLED)
-        
+        # Adding a Text widget to serve as a console
+        self.console = tk.Text(console_frame, wrap=tk.WORD, height=11, width=66,
+                               bg="black", fg="white", font=("Courier New", 12))
+        self.console.pack(side=tk.LEFT, fill=tk.BOTH)
+
+        # Adding a Scrollbar
+        scrollbar = ttk.Scrollbar(console_frame, orient="vertical", command=self.console.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.console.config(yscrollcommand=scrollbar.set)
+
+        # Configure tags
+        self.console.tag_configure("error", foreground="red")
+        self.console.tag_configure("warning", foreground="orange")
+        self.console.tag_configure("info", foreground="lightgreen")
+        self.console.tag_configure("highlight", background="yellow")
+        self.console.tag_configure("timestamp", foreground="green")
+
         # Redirect stdout and stderr
-        sys.stdout = TextRedirector(self.console)
-        sys.stderr = TextRedirector(self.console)   
+        sys.stdout = TextRedirector(self, message_type="info")  # Note : Passez 'self' ici
+        sys.stderr = TextRedirector(self, message_type="error") 
 
         ToolTip(self.audio_file_entry, "Path to the audio file you want to process.")
         ToolTip(self.fps_entry, "Frames Per Second for the target animation.")
@@ -836,6 +870,14 @@ class AdvancedAudioSplitterUI:
                     print(f"Warning: Key {key} not found in the selected genre template.")
         else:
             print(f"Warning: Selected genre {selected_genre} not found in templates.")
+
+    def add_message(self, message, tag):
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        self.console.config(state=tk.NORMAL)
+        self.console.insert(tk.END, f"[{timestamp}] ", "timestamp")
+        self.console.insert(tk.END, f"{message}\n", tag)
+        self.console.config(state=tk.DISABLED)
+        self.console.see(tk.END)  # Auto-scroll to the end
 
     def open_cond_ui(self):
         subprocess.Popen([sys.executable, "condUI.py"])
@@ -1077,8 +1119,8 @@ class AdvancedAudioSplitterUI:
     def execute_command(self):
         try:
             if not self.validate_input():
-                logger.warning("Invalid input. Please correct.")
-                print("Invalid input. Please correct.")
+                logging.error("Invalid input. Please correct.")
+                self.add_message("Invalid input. Please correct.", "error")
                 return
 
             # Check if venv exists and is activated
@@ -1228,8 +1270,8 @@ class AdvancedAudioSplitterUI:
             if contrast_drop_speed:
                 cmd.extend(["--contrast_drop_speed", contrast_drop_speed])
                 
+            self.add_message(f"Executing command: {' '.join(cmd)}", "info")
             logging.info(f"Executing command: {' '.join(cmd)}")
-            print(f"Executing command: {' '.join(cmd)}")
 
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             
@@ -1239,30 +1281,32 @@ class AdvancedAudioSplitterUI:
 
                 if output:
                     logging.info(output.strip())
-                    print(output.strip())
+                    self.add_message(output.strip(), "info")
                 if error_output:
                     logging.error(f"{error_output.strip()}")
-                    print(f"{error_output.strip()}")
+                    self.add_message(error_output.strip(), "error")
 
                 if process.poll() is not None:
                     break
 
             if process.returncode != 0:
+                self.add_message("An error occurred during command execution.", "error")
                 logging.error("An error occurred during command execution.")
             else:
+                self.add_message("Command executed successfully.", "info")
                 logging.info("Command executed successfully.")
 
 
         except FileNotFoundError as e:
-            logger.error(f"File not found: {e}")
-            print(f"File not found: {e}")
+            self.add_message(f"File not found: {e}", "error")
+            logging.error(f"File not found: {e}")
         except subprocess.CalledProcessError as e:
-            logger.error(f"Subprocess failed: {e}")
-            print(f"Subprocess failed: {e}")
+            self.add_message(f"Subprocess failed: {e}", "error")
+            logging.error(f"Subprocess failed: {e}")
         except Exception as e:
-            logger.critical(f"An unhandled exception occurred: {e}")
-            print(f"An unhandled exception occurred: {e}")
-            
+            self.add_message(f"An unhandled exception occurred: {e}", "error")
+            logging.critical(f"An unhandled exception occurred: {e}")
+
 if __name__ == "__main__":
     try:
         logging.info("Inside main...")
@@ -1271,5 +1315,5 @@ if __name__ == "__main__":
         app = AdvancedAudioSplitterUI(root)
         root.mainloop()
     except Exception as e:
+        app.add_message(f"An unhandled exception occurred: {e}", "error")
         logging.critical(f"An unhandled exception occurred: {e}")
-        print(f"An unhandled exception occurred: {e}")
