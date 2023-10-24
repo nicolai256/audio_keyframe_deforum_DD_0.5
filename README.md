@@ -1,5 +1,5 @@
 # ![AKD Logo](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/8752374b-6e74-46cf-b625-fbd58216f525) Audio Keyframes for Deforum (GUI) 🎵
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/FeelTheFonk/AudioKeyframeDeforum_GUI.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/FeelTheFonk/AudioKeyframeDeforum_GUI.svg)
@@ -15,7 +15,7 @@ Achieve unparalleled precision in your Deforum projects with Audio Keyframes for
 
 Original project forked from [Audio Keyframe Deforum](https://github.com/nicolai256/audio_keyframe_deforum_DD_0.5).
 
-![Screenshot](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/9dbb6b57-c30d-4bdf-b2a0-f4c7cdda7e2b)
+![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/c9f4e07b-69fd-4acb-a1bd-2c39fe200a7c)
 
 
 ## 🚀 Quick Start 🚀
