@@ -44,6 +44,54 @@ Ensure you have the following Python packages installed or simply run `pip insta
 
 ---
 
+### ➕ Conditional Maths Synced to BPM ➕
+
+![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/01e4a289-2f01-4c66-8617-fc22d3532aec)
+
+#### 🌐 Overview
+
+Unearth the zenith of animation synchronization by leveraging our sophisticated mathematical algorithms. These algorithms are precisely tailored to sync with the beat per minute (BPM) of your audio file, offering a seamless and dynamic animation experience.
+
+#### 🧠 What's Under the Hood?
+
+The feature uses Fast Fourier Transform (FFT) for frequency analysis and utilizes diverse mathematical functions such as sine, cosine, and Fourier transformations. Thanks to these, your keyframes will not just be in sync with the audio but will embody the rhythm and mood of it.
+
+
+#### 📊 **Advanced Parameters**
+
+These are parameters for fine-tuning the mathematical functions:
+
+- `A`: Amplitude of the function.
+- `P`: Period of the function.
+- `D`: Vertical shift of the function.
+- `B`: Magnitude for absolute value functions.
+
+#### 📜 **Exported JSON Structure**
+
+The exported JSON will contain the following keys:
+
+- `expression`: The generated mathematical expression for keyframes.
+- `complex_expression`: The complex mathematical expression if any advanced parameters are used.
+- `all_formulas`: A dictionary of all possible formulas if `--export-all-formulas` is used.
+
+
+#### 🔧 **Example Command**
+
+```bash
+python conditional_maths_bpm_keyframes.py --file audiofile.mp3 --fps 14 --intensity 2 --function_type sine --advanced_params "A=2,P=3,D=4"
+```
+
+#### 🎛 **Parameters**
+
+- `--file`: The audio file whose BPM will serve as the synchronization baseline.
+- `--fps`: Frame rate to synchronize with your targeted animation speed.
+- `--intensity`: The amplitude, strength, or intensity of your BPM-tailored keyframes.
+- `--function_type`: The type of mathematical function to be used for keyframe generation. Options are 'sine', 'cosine', 'abs_sin', 'abs_cos', 'modulus', 'linear', 'triangle', and 'fourier'.
+- `--advanced_params`: A comma-separated list of advanced parameters for the chosen function, formatted as "A=2,P=3,D=4".
+- `--export-all-formulas`: An optional flag to export all possible formulas based on the provided parameters to a JSON file.
+
+---
+
 ## 🎚 Features 🎚
 
 ### 📦 Spleeter (Built-in Audio Splitter)
@@ -105,51 +153,5 @@ python advanced_audio_splitter_keyframes.py --fps 14 --drums_audio_path drums.wa
 - `--piano_drop_speed 0.4`: Set the reactive impact of piano audio.
 - `--piano_begin_speed 0.0`: Set the starting keyframe value for piano audio.
 - `--piano_predrop_speed -0.4`: Set the pre-impact value for piano audio.
-
----
-
-### ➕ Conditional Maths Synced to BPM ➕
-
-![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/01e4a289-2f01-4c66-8617-fc22d3532aec)
-
-#### 🌐 Overview
-
-Unearth the zenith of animation synchronization by leveraging our sophisticated mathematical algorithms. These algorithms are precisely tailored to sync with the beat per minute (BPM) of your audio file, offering a seamless and dynamic animation experience.
-
-#### 🧠 What's Under the Hood?
-
-The feature uses Fast Fourier Transform (FFT) for frequency analysis and utilizes diverse mathematical functions such as sine, cosine, and Fourier transformations. Thanks to these, your keyframes will not just be in sync with the audio but will embody the rhythm and mood of it.
-
-#### 🔧 **Example Command**
-
-```bash
-python conditional_maths_bpm_keyframes.py --file audiofile.mp3 --fps 14 --intensity 2 --function_type sine --advanced_params "A=2,P=3,D=4"
-```
-
-#### 🎛 **Parameters**
-
-- `--file`: The audio file whose BPM will serve as the synchronization baseline.
-- `--fps`: Frame rate to synchronize with your targeted animation speed.
-- `--intensity`: The amplitude, strength, or intensity of your BPM-tailored keyframes.
-- `--function_type`: The type of mathematical function to be used for keyframe generation. Options are 'sine', 'cosine', 'abs_sin', 'abs_cos', 'modulus', 'linear', 'triangle', and 'fourier'.
-- `--advanced_params`: A comma-separated list of advanced parameters for the chosen function, formatted as "A=2,P=3,D=4".
-- `--export-all-formulas`: An optional flag to export all possible formulas based on the provided parameters to a JSON file.
-
-#### 📊 **Advanced Parameters**
-
-These are parameters for fine-tuning the mathematical functions:
-
-- `A`: Amplitude of the function.
-- `P`: Period of the function.
-- `D`: Vertical shift of the function.
-- `B`: Magnitude for absolute value functions.
-
-#### 📜 **Exported JSON Structure**
-
-The exported JSON will contain the following keys:
-
-- `expression`: The generated mathematical expression for keyframes.
-- `complex_expression`: The complex mathematical expression if any advanced parameters are used.
-- `all_formulas`: A dictionary of all possible formulas if `--export-all-formulas` is used.
 
 ---
