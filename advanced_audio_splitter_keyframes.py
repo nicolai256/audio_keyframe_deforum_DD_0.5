@@ -97,74 +97,121 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-# Function to convert time from minutes,seconds to seconds
-def time_to_seconds(time_txt):
-    a_minute = 60
-    minute, second = map(int, time_txt.split(","))
-    return minute * a_minute + second
-
-# Function to get unique file name
-def get_unique_filename(src, extension):
-    file_base, _ = os.path.splitext(src)
-    i = 0
-    unique_filename = f"{file_base}{i}_cut.{extension}"
-    
-    while path.exists(unique_filename):
-        i += 1
-        unique_filename = f"{file_base}{i}_cut.{extension}"
-    
-    return unique_filename
-
 args = parse_args()
-
 if args.spleeter:
     if args.music_cut:
-        print("\n")
+        print('')
+        print('')
+        import shutil
         
         src = args.file
-        flnm = ""
-        
-        if src.endswith('.wav') or src.endswith('.mp3'):
-            extension = "wav"
-            flnm = get_unique_filename(src, extension)
+        if src.endswith('.wav'):
+            filee, _ = os.path.splitext(src)
+            i = 0
+            flnm = filee + str(i) + "_cut.wav"
+            while path.exists(flnm) :
+                flnm = filee + str(i) + "_cut.wav"
+                i += 1
+        elif src.endswith('.mp3'):
+            filee, _ = os.path.splitext(src)
+            i = 0
+            flnm = filee + str(i) + "_cut.wav"
+            while path.exists(flnm) :
+                flnm = filee + str(i) + "_cut.wav"
+                i += 1
+                
+            src = args.file
+            dst = flnm
 
-            if src.endswith('.mp3'):
-                sound = AudioSegment.from_mp3(src)
-                sound.export(flnm, format="wav")
+            # convert wav to mp3                                                            
+            sound = AudioSegment.from_mp3(src)
+            sound.export(dst, format="wav")   
         
-        audio: AudioSegment = AudioSegment.from_file(flnm)
-        duration = int(audio.duration_seconds)
-        
-        start = 0
-        end = duration
+        result = []
+        filename = flnm
+        file = flnm
 
         if args.musicstart:
-            start = time_to_seconds(args.musicstart) if "," in args.musicstart else int(args.musicstart)
+            if "," in args.musicstart:
+                txt = args.musicstart
+                a_minute = 60
+                a_minute = int(a_minute)
+                minute, second = txt.split(",")
+                minute = int(minute)
+                second = int(second)
+                minutes_60 = minute * a_minute
+                time = minutes_60 + second
+                print('converting minutes to seconds')
+        if args.musicend: 
+            if "," in args.musicend:
+                txt = args.musicend
+                a_minute = 60
+                a_minute = int(a_minute)
+                minute, second = txt.split(",")
+                minute = int(minute)
+                second = int(second)
+                minutes_60 = minute * a_minute
+                time2 = minutes_60 + second           
+            
+        # predict the length of the song
+        length_of_file = librosa.get_duration(path=filename)
+        audio: AudioSegment = AudioSegment.from_file(filename)
+        audio.duration_seconds == (len(audio) / 1000.0)
+        minutes_duartion = int(audio.duration_seconds // 60)
+        minutes_duration = minutes_duartion * 60
+        seconds_duration = round(audio.duration_seconds % 60)
+        duration = minutes_duration + seconds_duration
         
-        if args.musicend:
-            end = time_to_seconds(args.musicend) if "," in args.musicend else int(args.musicend)
+        # times between which to extract the wave from
+        if args.musicstart:
+            if "," in args.musicstart:
+                start = int(time)
+                 
+            elif "," not in args.musicstart:
+                start = int(args.musicstart)
+                
+        else:
+            start = "0" 
+            
+        print('music starts at second', start)
+        
+        if args.musicend:    
+            if "," in args.musicend:
+                end = int(time2)
+            elif "," not in args.musicend:
+                end = int(args.musicend)
+        else:
+            end = int(duration) # seconds
+        print('music ends at second', end)  
 
-        print(f"Music starts at second {start}")
-        print(f"Music ends at second {end}")
-        
-        with wave.open(flnm, "rb") as infile:
+        with wave.open(filename, "rb") as infile:
+            # get file data
             nchannels = infile.getnchannels()
             sampwidth = infile.getsampwidth()
             framerate = infile.getframerate()
+            # set position in wave to start of segment
             infile.setpos(int(start * framerate))
-            data = infile.readframes(int((end - start) * framerate))
+            # extract data
+            data = infile.readframes(int((int(end) - int(start)) * int(framerate)))
 
         with wave.open(flnm, 'w') as outfile:
             outfile.setnchannels(nchannels)
             outfile.setsampwidth(sampwidth)
             outfile.setframerate(framerate)
+            outfile.setnframes(int(len(data) / sampwidth))
             outfile.writeframes(data)
         
-        print(f'Your new cropped file is {end - start} seconds')
-        print(f'The name of your new cropped file is {flnm}, and your original non-cropped file is {args.file}')
+        length = int(int(end) - int(start))
+  
+        print('your new cropped file is' , length, 'seconds')
+
+        print('the name of your new cropped file is', flnm, 'and your original non cropped file is', args.file)
 
     else:
-        print('Audio not cropped') 
+        flnm = args.file
+        filename = flnm
+
+        print('audio not cropped')  
              
 class AudioKeyframeMeta:
     def __init__(self, duration, length_of_file, bpm=None) -> None:
