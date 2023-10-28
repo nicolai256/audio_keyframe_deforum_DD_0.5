@@ -25,8 +25,8 @@ def parse_arguments():
     parser.add_argument('--export-all-formulas', action='store_true', help='Export all formulas to JSON')
     
     args = parser.parse_args()
-
-    args.advanced_params = dict(map(str.strip, param.split("=")) for param in args.advanced_params.split(",")) if args.advanced_params else {}
+    
+    args.advanced_params = {k: float(v) for k, v in (param.split("=") for param in args.advanced_params.split(","))} if args.advanced_params else {}
 
     if not path.exists(args.file) or args.fps <= 0 or args.intensity <= 0:
         logging.error(f"Invalid arguments.")
@@ -86,21 +86,21 @@ def generate_complex_expression(fps, tempo, intensity, function_type="sine", par
     B = params.get('B', 1)
         
     if function_type == "sine":
-        return f'0:({D} + {A}*sin(2*{PI}*t/{x}/{P}))'
+        return f'0:(D+A*sin(23.14*t/P))'.replace('D', str(D)).replace('A', str(A)).replace('P', str(P))
     elif function_type == "cosine":
-        return f'0:({D} + {A}*cos(2*{PI}*t/{x}/{P}))'
+        return f'0:(D+A*cos(23.14*t/P))'.replace('D', str(D)).replace('A', str(A)).replace('P', str(P))
     elif function_type == "abs_sin":
-        return f'0:({A} - (abs(sin(10*t/{P}))*{B}))'
+        return f'0:(A-(abs(sin(10*t/P))*B))'.replace('A', str(A)).replace('P', str(P)).replace('B', str(B))
     elif function_type == "abs_cos":
-        return f'0:({A} - (abs(cos(10*t/{P}))*{B}))'
+        return f'0:(A-(abs(cos(10*t/P))*B))'.replace('A', str(A)).replace('P', str(P)).replace('B', str(B))
     elif function_type == "modulus":
-        return f'0:({A}*(t%{P})+{D})'
+        return f'0:(A*(t%P)+D)'.replace('A', str(A)).replace('P', str(P)).replace('D', str(D))
     elif function_type == "linear":
-        return f'0:({A}*t+{D})'
+        return f'0:(A*t+D)'.replace('A', str(A)).replace('D', str(D))
     elif function_type == "triangle":
-        return f'0:((2 + 2*{A})/3.14*arcsin(sin((2*3.14)/{P}*t)))'
+        return f'0:((2 + 2*A)/3.14*arcsin(sin((2*3.14)/P*t)))'.replace('A', str(A)).replace('P', str(P))
     elif function_type == "fourier":
-        return f'0:({D} + ({A}*(sin*t/{P})+sin({A}*t/{P}) + sin({A}*t/{P})))'
+        return f'0:(D + (A*(sin*t/P)+sin(A*t/P) + sin(A*t/P)))'.replace('D', str(D)).replace('A', str(A)).replace('P', str(P))
     else:
         return None
   
