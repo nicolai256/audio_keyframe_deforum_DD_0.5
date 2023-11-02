@@ -1,29 +1,30 @@
-# dependencies
-#pip install numpy
-#pip install loguru
-#pip install spleeter
-#pip install librosa
-#pip install pydub
-
-#strength schedule and noise schedule linked to zoom
-
-from loguru import logger
 import json, argparse, subprocess, os
-
 from pydub import AudioSegment
 import wave
+import os
 from os import path
+import datetime
 import soundfile
-
-# keyframes
 import numpy as np
 import librosa
 import csv
-
 from pydub import AudioSegment
+from joblib import Memory
+import logging
+from scipy import fftpack
+from pathlib import Path
 
+# Initialize joblib memory cache
+memory = Memory("cache_directory", verbose=0)
+
+@memory.cache
+def fft_analysis(y):
+    N = len(y)
+    T = 1.0 / 800.0
+    yf = fftpack.fft(y)
+    return np.abs(yf[0:N//2])
+    
 def parse_args():
-    #logger.info(f"Parsing arguments...")
     desc = "Blah"
 
     parser = argparse.ArgumentParser()
@@ -39,13 +40,10 @@ def parse_args():
     
     parser.add_argument("-t","--stems",type=str,default="5",help="the amount of exported audio files, 3, 4, 5",)
     
-    #not important in this script, will fix soon
     parser.add_argument("--speed",type=float,default="0.4",help="reactive impact of the audio on the animation",)
     parser.add_argument("-z","--zoomspeed",type=float,default="5",help="reactive zoom impact of the audio on the animation",)
-    
-    
+       
     parser.add_argument("--use_vocals",type=float,help="vocals seem to have a negative effect on the animation so it's disabled by default",)
-    
     
     #advanced keyframes
     parser.add_argument("--drums_drop_speed",type=float,default="0.2",help="reactive impact of the audio on the animation when the audio makes a sound",)
@@ -79,10 +77,7 @@ def parse_args():
     parser.add_argument("--strength_drop_speed",type=float,default="0.50",help="reactive image strength impact of the audio on the animation when the audio makes a sound",)
     parser.add_argument("--strength_begin_speed",type=float,default="0.60",help="reactive image strength impact of the audio on the animation (starting value on keyframe 1)",)
     parser.add_argument("--strength_predrop_speed",type=float,default="0.70",help="reactive image strength impact of the audio on the animation right before the audio makes a sound",)
-    
-    
-    
-    
+        
     #if using --spleeter
     parser.add_argument("--zoom_sound", type=str, default='bass', choices=['drums', 'other', 'piano','bass'])
     parser.add_argument("--strength_sound", type=str, default='bass', choices=['drums', 'other', 'piano','bass'])
@@ -98,23 +93,16 @@ def parse_args():
     parser.add_argument("--strength_audio_path", type=str,help="path to your .wav file")
     parser.add_argument("--noise_audio_path", type=str,help="path to your .wav file")
     parser.add_argument("--contrast_audio_path", type=str,help="path to your .wav file")
-    
-    
-
-    
+   
     args = parser.parse_args()
     return args
 
-#def music_cut():
 args = parse_args()
 if args.spleeter:
     if args.music_cut:
         print('')
         print('')
         import shutil
-        #filename = args.file
-        
-        #backup the file
         
         src = args.file
         if src.endswith('.wav'):
@@ -141,13 +129,8 @@ if args.spleeter:
         
         result = []
         filename = flnm
-        #result.append(flnm)
         file = flnm
-        """if ":" in args.musicstart:
-            txt = args.musicstart
-            minute, second = txt.split(":")
-            minutes_60 = int(minute) * 60
-            time = minutes_60 + second"""
+
         if args.musicstart:
             if "," in args.musicstart:
                 txt = args.musicstart
@@ -159,7 +142,6 @@ if args.spleeter:
                 minutes_60 = minute * a_minute
                 time = minutes_60 + second
                 print('converting minutes to seconds')
-                #print('music starts at ', args.musicstart ,' = second', time)
         if args.musicend: 
             if "," in args.musicend:
                 txt = args.musicend
@@ -169,12 +151,10 @@ if args.spleeter:
                 minute = int(minute)
                 second = int(second)
                 minutes_60 = minute * a_minute
-                time2 = minutes_60 + second
-                #print('music ends at ', args.musicend ,' = second', time2)
-            
+                time2 = minutes_60 + second           
             
         # predict the length of the song
-        length_of_file = librosa.get_duration(filename=filename)
+        length_of_file = librosa.get_duration(path=filename)
         audio: AudioSegment = AudioSegment.from_file(filename)
         audio.duration_seconds == (len(audio) / 1000.0)
         minutes_duartion = int(audio.duration_seconds // 60)
@@ -203,12 +183,7 @@ if args.spleeter:
         else:
             end = int(duration) # seconds
         print('music ends at second', end)  
-        
-        #fix wave.Error: file does not start with RIFF id
-        """data, samplerate = soundfile.read(filename)
-        soundfile.write(filename, data, samplerate)"""
-              
-        # file to extract the snippet from
+
         with wave.open(filename, "rb") as infile:
             # get file data
             nchannels = infile.getnchannels()
@@ -218,8 +193,7 @@ if args.spleeter:
             infile.setpos(int(start * framerate))
             # extract data
             data = infile.readframes(int((int(end) - int(start)) * int(framerate)))
-        
-        # write the extracted data to a new file
+
         with wave.open(flnm, 'w') as outfile:
             outfile.setnchannels(nchannels)
             outfile.setsampwidth(sampwidth)
@@ -228,30 +202,22 @@ if args.spleeter:
             outfile.writeframes(data)
         
         length = int(int(end) - int(start))
-        print('')
-        print('')    
+  
         print('your new cropped file is' , length, 'seconds')
-        print('')
-        print('') 
+
         print('the name of your new cropped file is', flnm, 'and your original non cropped file is', args.file)
-        print('') 
-        print('') 
+
     else:
         flnm = args.file
         filename = flnm
-        print('') 
-        print('')
-        print('audio not cropped')  
-        print('') 
-        print('')        
-        
 
-#music_cut()
+        print('audio not cropped')  
+             
 class AudioKeyframeMeta:
-    def __init__(self, duration, length_of_file) -> None:
+    def __init__(self, duration, length_of_file, bpm=None) -> None:
         self.duration = duration
         self.length_of_file = length_of_file
-
+        self.bpm = bpm
 
 class AudioKeyframeService:
     def __init__(
@@ -259,17 +225,52 @@ class AudioKeyframeService:
     ) -> None:
         self.key_names = key_names
         self.fps = fps
+            
+    def bpmdetection(self, filename):
+        try:
+            y, sr = librosa.load(filename, sr=None)
+            
+            fft_result = fft_analysis(y)
+            
+            onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+            
+            tempo, _ = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr)
+            
+            if tempo <= 0:
+                logging.error("Error: BPM detected as zero or negative.")
+                return None
+            
+            print(f"BPM: {tempo:.2f}")
+            
+            with open("bpm.json", "w") as fp:
+                json.dump(tempo, fp)
+                print("Processing of the BPM succeeded and exported to bpm.json")
+            
+            return float(tempo)
+        
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+            return None
+
+    def detect_bpm(self, filename):
+        tempo = self.bpmdetection(filename)
+        return tempo
 
     def _get_metadata(self, filename):
-        length_of_file = librosa.get_duration(filename=filename)
+        length_of_file = librosa.get_duration(path=filename)
         audio: AudioSegment = AudioSegment.from_file(filename)
-        audio.duration_seconds == (len(audio) / 1000.0)
-        minutes_duartion = int(audio.duration_seconds // 60)
+        
+        duration_seconds = len(audio) / 1000.0
+        
+        minutes_duartion = int(duration_seconds // 60)
         minutes_duration = minutes_duartion * 60
-        seconds_duration = round(audio.duration_seconds % 60)
+        seconds_duration = round(duration_seconds % 60)
         duration = minutes_duration + seconds_duration
+        
+        bpm = self.detect_bpm(filename)
+        
         return AudioKeyframeMeta(
-            **{"duration": duration, "length_of_file": length_of_file}
+            duration=duration, length_of_file=length_of_file, bpm=bpm
         )
 
     def _spleet(self, stems_dir, file, nstem):
@@ -292,107 +293,63 @@ class AudioKeyframeService:
         use_vocals=False,
         zoomspeed=4,
         speed=4,
+        args=None
     ):
-        args = parse_args()
-        if args.spleeter:
-            if stems_dir.endswith("/"):
-                stems_dir = stems_dir[:-1]
-
-            self._spleet(stems_dir, file, n_stems)
-            if not use_vocals:
-                filedircalc, _ = os.path.splitext(file)
-                vocals = f"{stems_dir}/" + filedircalc + "/vocals.wav"
-                if os.path.exists(vocals):
-                    os.remove(vocals)
-            dirs = os.listdir(f"{stems_dir}/" + filedircalc)
-        final_dict = {}
-        #for filepath in dirs:
-        #    final_dict[filepath.split("/")[-1].split(".")[0]] = self._process_file(
-        #         f"{stems_dir}/" + filedircalc+"/"+filepath, speed=speed
-        #    )
+        if args is None:
+            args = parse_args()
+            
+        filedircalc = Path(file).stem
+        stems_dir = Path(stems_dir)
         
-        print('') 
-        print('')
-        print('starting audio keyframe maker')
-        print('') 
-        print('')
         if args.spleeter:
-            final_dict["other"] = self._process_other(
-                f"{stems_dir}/" + filedircalc + "/other.wav", zoomspeed=zoomspeed
-            )
-            final_dict["piano"] = self._process_piano(
-                f"{stems_dir}/" + filedircalc + "/piano.wav", zoomspeed=zoomspeed
-            )    
-            final_dict["drums"] = self._process_drums(
-                f"{stems_dir}/" + filedircalc + "/drums.wav", zoomspeed=zoomspeed
-            )
-            final_dict["bass"] = self._process_bass(
-                f"{stems_dir}/" + filedircalc + "/bass.wav", zoomspeed=zoomspeed
-            )
+            self._spleet(stems_dir, file, n_stems)
+            
+            vocals_path = stems_dir / filedircalc / "vocals.wav"
+            if not use_vocals and vocals_path.exists():
+                vocals_path.unlink()
+        
+        print("\n" * 2)
+        print("Starting audio keyframe maker")
+        print("\n" * 2)
+        
+        final_dict = {}
+        basic_sound_types = ["other", "piano", "drums", "bass"]
+        special_sound_types = ["zoom", "strength", "noise", "contrast"]
+        
+        for sound_type in basic_sound_types:
+            sound_file_path = stems_dir / filedircalc / f"{sound_type}.wav"
+            
+            if sound_file_path.exists():
+                process_function = getattr(self, f"_process_{sound_type}")
+                try:
+                    final_dict[sound_type] = process_function(str(sound_file_path), zoomspeed=zoomspeed)
+                except Exception as e:
+                    logging.error(f"Error processing {sound_type}: {e}")
 
-            final_dict["zoom"] = self._process_zoom(
-                f"{stems_dir}/" + filedircalc + "/" + args.zoom_sound + ".wav", zoomspeed=zoomspeed
-            )
-            final_dict["strength"] = self._process_strength(
-                f"{stems_dir}/" + filedircalc + "/" + args.strength_sound + ".wav", zoomspeed=zoomspeed
-            )
-            final_dict["noise"] = self._process_noise(
-                f"{stems_dir}/" + filedircalc + "/" + args.noise_sound + ".wav", zoomspeed=zoomspeed
-            )
-            final_dict["contrast"] = self._process_contrast(
-                f"{stems_dir}/" + filedircalc + "/" + args.contrast_sound + ".wav", zoomspeed=zoomspeed
-            )
-        else:
-            if args.other_audio_path:
-                final_dict["other"] = self._process_other(
-                    args.other_audio_path, zoomspeed=zoomspeed
-                )
-            if args.piano_audio_path:
-                final_dict["piano"] = self._process_piano(
-                    args.piano_audio_path, zoomspeed=zoomspeed
-                )
-            if args.drums_audio_path:            
-                final_dict["drums"] = self._process_drums(
-                    args.drums_audio_path, zoomspeed=zoomspeed
-                )
-            if args.bass_audio_path:
-                final_dict["bass"] = self._process_bass(
-                    args.bass_audio_path, zoomspeed=zoomspeed
-                )
-            if args.zoom_audio_path:
-                final_dict["zoom"] = self._process_zoom(
-                    args.zoom_audio_path, zoomspeed=zoomspeed
-                )
-            if args.strength_audio_path:
-                final_dict["strength"] = self._process_strength(
-                    args.strength_audio_path, zoomspeed=zoomspeed
-                )
-            if args.noise_audio_path:
-                final_dict["noise"] = self._process_noise(
-                    args.noise_audio_path, zoomspeed=zoomspeed
-                )
-            if args.contrast_audio_path:
-                final_dict["contrast"] = self._process_contrast(
-                    args.contrast_audio_path, zoomspeed=zoomspeed
-                )
-        return final_dict
+        for sound_type in special_sound_types:
+            sound_file_path = getattr(args, f"{sound_type}_sound", None)
+            if sound_file_path:
+                sound_file_path = stems_dir / filedircalc / f"{sound_file_path}.wav"
+                if sound_file_path.exists():
+                    process_function = getattr(self, f"_process_{sound_type}")
+                    try:
+                        final_dict[sound_type] = process_function(str(sound_file_path), zoomspeed=zoomspeed)
+                    except Exception as e:
+                        logging.error(f"Error processing {sound_type}: {e}")
 
-    def _get_prep_values(self, filename, duration)-> np.ndarray:
-        x, sr = librosa.load(filename)
-        onset_frames = librosa.onset.onset_detect(
-            x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1
-        )
-        onset_times = librosa.frames_to_time(onset_frames)
-        total_lin_step = duration * self.fps
-        vals, _ = np.histogram(
-            onset_times, bins=total_lin_step, range=(0, duration)
-        )
-        beat_ind = np.argwhere(vals)
-        return beat_ind
-    
+        # Output the final_dict to a single JSON file
+        current_datetime = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        output_filename = f"audio_splitter_keyframes_{current_datetime}.json"
+        output_filepath = os.path.join("outputs", output_filename)
+        
+        with open(output_filepath, "w") as fp:
+            json.dump(final_dict, fp, indent=2)
+            
+        print(f"Processing of the keyframes succeeded and exported to {output_filepath}")
+
     def _process_piano(self, filename, zoomspeed=4):
         args = parse_args()
-        logger.info(f"Processing file: {filename} for piano animation with speed: {args.piano_drop_speed}")
+        logging.info(f"Processing file: {filename} for piano animation with speed: {args.piano_drop_speed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
@@ -416,7 +373,7 @@ class AudioKeyframeService:
     
     def _process_bass(self, filename, zoomspeed=4):
         args = parse_args()
-        logger.info(f"Processing file: {filename} for bass animation with speed: {args.bass_drop_speed}")
+        logging.info(f"Processing file: {filename} for bass animation with speed: {args.bass_drop_speed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
@@ -440,7 +397,7 @@ class AudioKeyframeService:
     
     def _process_other(self, filename, zoomspeed=4):
         args = parse_args()
-        logger.info(f"Processing file: {filename} for other audio animation with speed: {args.other_drop_speed}")
+        logging.info(f"Processing file: {filename} for other audio animation with speed: {args.other_drop_speed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
@@ -464,7 +421,7 @@ class AudioKeyframeService:
 
     def _process_drums(self, filename, zoomspeed=4):
         args = parse_args()
-        logger.info(f"Processing file: {filename} for drums animation with speed: {args.drums_drop_speed}")
+        logging.info(f"Processing file: {filename} for drums animation with speed: {args.drums_drop_speed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
@@ -488,7 +445,7 @@ class AudioKeyframeService:
         
     def _process_zoom(self, filename, zoomspeed=4):
         args = parse_args()
-        logger.info(f"Processing file: {filename} with zoom schedule: {args.zoom_drop_speed}")
+        logging.info(f"Processing file: {filename} with zoom schedule: {args.zoom_drop_speed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
@@ -511,7 +468,7 @@ class AudioKeyframeService:
         )
     def _process_strength(self, filename, zoomspeed=4):
         args = parse_args()
-        logger.info(f"Processing file: {filename} with strength schedule: {args.strength_drop_speed}")
+        logging.info(f"Processing file: {filename} with strength schedule: {args.strength_drop_speed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
@@ -534,7 +491,7 @@ class AudioKeyframeService:
         )
     def _process_noise(self, filename, zoomspeed=4):
         args = parse_args()
-        logger.info(f"Processing file: {filename} with noise schedule: {args.noise_drop_speed}")
+        logging.info(f"Processing file: {filename} with noise schedule: {args.noise_drop_speed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
@@ -557,7 +514,7 @@ class AudioKeyframeService:
         )
     def _process_contrast(self, filename, zoomspeed=4):
         args = parse_args()
-        logger.info(f"Processing file: {filename} with contrast schedule: {args.contrast_predrop_speed}")
+        logging.info(f"Processing file: {filename} with contrast schedule: {args.contrast_predrop_speed}")
         meta: AudioKeyframeMeta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, duration=meta.duration)
         frames_change_pre_beat = 0
@@ -578,6 +535,20 @@ class AudioKeyframeService:
             frames_change_post_beat,
             frames_change_pre_beat,
         )
+
+    def _get_prep_values(self, filename, duration)-> np.ndarray:
+        x, sr = librosa.load(filename)
+        onset_frames = librosa.onset.onset_detect(
+            y=x, sr=sr, wait=1, pre_avg=1, post_avg=1, pre_max=1, post_max=1
+        )
+        onset_times = librosa.frames_to_time(onset_frames)
+        total_lin_step = duration * self.fps
+        vals, _ = np.histogram(
+            onset_times, bins=total_lin_step, range=(0, duration)
+        )
+        beat_ind = np.argwhere(vals)
+        return beat_ind
+     
     def _build_string(
         self,
         beat_ind,
@@ -589,37 +560,38 @@ class AudioKeyframeService:
         frames_change_post_beat,
         frames_change_pre_beat,
     ):
+        # Ajout de la frame 0 si elle n'est pas déjà présente
+        if len(key_frame_value) == 0 or (len(key_frame_value) > 0 and key_frame_value[0][0] != 0):
+            key_frame_value.insert(0, (0, pre_beat_transition__value))
+
         for i in range(len(beat_ind)):
-            # logger.info()
             if post_beat < beat_ind[i]:
                 post_tup = (post_beat, post_beat_transition__value)
                 key_frame_value.append(post_tup)
-                # logger.info(f"{i}  beat_ind[i]: {beat_ind[i]}, post {post_tup}")
+
             pre = (beat_ind[i] - frames_change_pre_beat - 1)[0]
             if (
                 len(key_frame_value) == 0
                 or len(key_frame_value) != 0
                 and key_frame_value[-1][0] != pre
             ):
-                # logger.info(f"{i}  beat_ind[i]: {beat_ind[i]}, pre {pre, 0}")
                 key_frame_value.append((pre, pre_beat_transition__value))
+
             beat = beat_ind[i][0]
-            # logger.info(f"{i}  beat_ind[i]: {beat_ind[i]}, beat {beat, beat_transition_value}")
             key_frame_value.append((beat, beat_transition_value))
             post_beat = (beat_ind[i] + (frames_change_post_beat))[0]
+
         string_list = []
         for key_frame, val in key_frame_value:
             string = f"{key_frame}:({val}),"
             string_list.append(string)
-            
-        #space = f"/n"
-        #string_list.append(space)
+
         key_frame_string = "".join(string_list)
         key_frame_string = key_frame_string[:-1]
         return key_frame_string
 
     def _process_file(self, filename, speed=5):
-        logger.info(f"Processing file: {filename} with speed: {speed}")
+        logging.info(f"Processing file: {filename} with speed: {speed}")
         meta = self._get_metadata(filename)
         beat_ind = self._get_prep_values(filename, meta.duration)
         frames_change_pre_beat = 0
@@ -639,56 +611,25 @@ class AudioKeyframeService:
             frames_change_post_beat,
             frames_change_pre_beat,
         )
-        
-    def bpmdetection():
-        filename = args.file
-    
-        y, sr = librosa.load(filename)
-    
-        tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
-        
-        print("")
-        print("")
-        print ('bpm: {:.2f}'.format(tempo))
-        data = tempo
-        with open("bpm.json", "w") as fp2:
-            json.dump(tempo, fp2)
-            print("processing of the bpm succeeded and exported to bpm.json")
-
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     args = parse_args()
-    """if args.musicstart and not args.musicend:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart])#, "--musicend",args.musicend])
-    elif args.musicstart and args.musicend:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicstart", args.musicstart, "--musicend",args.musicend])
-    elif args.musicend and not args.musicstart:
-        subprocess.run(["python", "length.py", "--file", args.file, "--musicend",args.musicend])
-    else:
-        print('audio not cropped')"""
-    
     service = AudioKeyframeService(fps=args.fps)
+
+    if not os.path.exists("outputs"):
+        os.mkdir("outputs")
+
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    output_filename = f"audio_splitter_keyframes_{current_datetime}.json"
+
+    output_filepath = os.path.join("outputs", output_filename)
+
     if args.spleeter:
         if args.music_cut:
-            final_dict = service.process(args.stems,flnm, zoomspeed=args.zoomspeed, speed=args.speed)
+            final_dict = service.process(args.stems, args.file, zoomspeed=args.zoomspeed, speed=args.speed)
         else:
-            final_dict = service.process(args.stems,args.file, zoomspeed=args.zoomspeed, speed=args.speed)
+            final_dict = service.process(args.stems, args.file, zoomspeed=args.zoomspeed, speed=args.speed)
     else:
-        #not important, just to dodge an error
-        print("")
-        print("")
-        print('put your original audio in the source folder and always pass --file original_file.wav/mp3 , gives bugs otherwise, will fix later')
-        print("")
-        print("")
-        #important
-        final_dict = service.process(args.stems,file="do_not_delete.wav", zoomspeed=args.zoomspeed, speed=args.speed)
-    with open("audio_splitter_keyframes.json", "w") as fp:
-        json.dump(final_dict, fp, indent=2)
-        print("")
-        print("")
-        print("processing of the keyframes succeeded and exported to audio_splitter_keyframes.json")
-    
 
-    #AudioKeyframeService.bpmdetection()
-    
-    
+        final_dict = service.process(args.stems, file="do_not_delete.wav", zoomspeed=args.zoomspeed, speed=args.speed)

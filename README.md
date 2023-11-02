@@ -1,227 +1,178 @@
-# audio to animation keyframes deforum DD [BETA]
-a script that can convert audio to animation keyframes for Deforum Stable Diffusion and Disco Diffusion
+# ![AKD Logo](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/8752374b-6e74-46cf-b625-fbd58216f525) Audio Keyframes for Deforum (GUI) 🎵
+![Version](https://img.shields.io/badge/version-1.0.5-lightgreen.svg)
+![Last Commit](https://img.shields.io/github/last-commit/FeelTheFonk/AudioKeyframeDeforum_GUI.svg)
+![Open Issues](https://img.shields.io/github/issues-raw/FeelTheFonk/AudioKeyframeDeforum_GUI.svg)
+![Closed Issues](https://img.shields.io/github/issues-closed-raw/FeelTheFonk/AudioKeyframeDeforum_GUI.svg)
+![Python Version](https://img.shields.io/badge/Python-3.10-blue.svg)
+![Star](https://img.shields.io/github/stars/FeelTheFonk/AudioKeyframeDeforum_GUI.svg?style=social)
+![Fork](https://img.shields.io/github/forks/FeelTheFonk/AudioKeyframeDeforum_GUI.svg?style=social)
+![Watch](https://img.shields.io/github/watchers/FeelTheFonk/AudioKeyframeDeforum_GUI.svg?style=social)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-**this is still in BETA phase so give all the feedback you want to improve this**
+## Elevate Your Deforum Projects to Unprecedented Heights
 
-the script splits up the audio into different files and makes keyframes from all those files
+Achieve unparalleled precision in your Deforum projects with Audio Keyframes for Deforum (GUI). This tool enables you to dissect audio files into multiple stems and construct highly intricate keyframes for your animations.
 
-u can import these generated keyframes into [this blender DSD keyframe plugin](https://www.youtube.com/watch?v=rzGINC9m4FM&ab_channel=Purz) if you want for changing the curves or editing the values visually
+Original project forked from [Audio Keyframe Deforum](https://github.com/nicolai256/audio_keyframe_deforum_DD_0.5).
 
-**dependencies**
+![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/d073730c-5761-4ba1-8484-85239ec62b5c)
 
-```
-pip install numpy
-pip install loguru
-pip install spleeter
-pip install librosa
-pip install pydub
-```
 
-# advanced audio splitter keyframes
+## 🚀 Quick Start 🚀
 
-can split, cut or just use files from external splitters
+To initiate your journey toward unparalleled project excellence, execute the following command:
 
-### if using spleeter (built in audio splitter)
-
-basic command example
-
-```python advanced_audio_splitter_keyframes.py -f audio.mp3 --fps 14 --spleeter 1 ```
-
-#
-
-```--spleeter 1``` = use spleeter
-
-```--file audio.mp3/wav``` = the audio file
- 
-```--fps 14``` = the fps has to match the fps of the animation you will make
-
-```--stems 5``` = the amount of splitting to the audio file (--stems 5 = splits your audio file into 5 audio files)
-
-```--music_cut 1``` = enable music cutting
-
-```--musicstart 1,17``` = the start of the audio (use 1,17 for 1 minute 17 seconds)
-
-```--musicend 2,53``` = the end of the audio (use 2,53 for 2 minutes 53 seconds)
-
-```--zoom_sound bass``` = the sound u want to use for your zoom, choices=['drums', 'other', 'piano','bass']
-
-```--strength_sound bass``` = the sound for your strength schedule, recommended to be the same as zoom sound, choices=['drums', 'other', 'piano','bass']
-
-```--noise_sound bass``` = the sound for your noise schedule, recommended to be the same as zoom sound, choices=['drums', 'other', 'piano','bass']
-
-```--contrast_sound bass``` = the sound for your contrast schedule, recommended to be the same as zoom sound, choices=['drums', 'other', 'piano','bass']
-
-#
-
-### if not using spleeter
-
-spleeter is the best available one that i can easily put in the script 
-
-but if you want higher quality split files i reccomend this program (easy install and free)
-[https://github.com/Anjok07/ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)
-
-command example
-
-```python advanced_audio_splitter_keyframes.py --fps 14 --drums_audio_path drums.wav --zoom_audio_path bass.wav```
-
-#
-
-```--drums_audio_path drums.wav``` = path to your drums .wav file 
-
-```--piano_audio_path piano.wav``` = path to your piano .wav file 
-
-```--bass_audio_path bass.wav``` = path to your bass .wav file 
-
-```--other_audio_path other.wav``` = path to your other .wav file 
-
-```--zoom_audio_path bass.wav``` = path to your preferred .wav file 
-
-```--strength_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
-
-```--noise_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
-
-```--contrast_audio_path bass.wav``` = path to your preferred .wav file (recommended to be the same as zoom_audio_path
-#
-
-### keyframe values commands, they work in both spleeter and non spleeter
-
-(these values are default in the script, change them if u want to)
-
-#
-
-```--drums_drop_speed 0.2``` = reactive impact of the drums audio on the animation when the audio makes a sound
-
-```--drums_begin_speed 0.0``` = reactive impact of the drums audio on the animation (starting value on keyframe 1)
-
-```--drums_predrop_speed -0.2``` = reactive impact of the drums audio on the animation right before the audio makes a sound
-#
-
-```--other_drop_speed 0.4``` = reactive impact of the other audio on the animation when the audio makes a sound
-
-```--other_begin_speed 0.0``` = reactive impact of the other audio on the animation (starting value on keyframe 1)
-
-```--other_predrop_speed -0.4``` = reactive impact of the other audio on the animation right before the audio makes a sound
-#
-
-```--piano_drop_speed 0.4``` = reactive impact of the piano audio on the animation when the audio makes a sound
-
-```--piano_begin_speed 0.0``` = reactive impact of the piano audio on the animation (starting value on keyframe 1)
-
-```--piano_predrop_speed -0.4``` = reactive impact of the piano audio on the animation right before the audio makes a sound
-#
-
-```--bass_drop_speed 0.4``` = reactive impact of the bass audio on the animation when the audio makes a sound
-
-```--bass_begin_speed 0.0``` = reactive impact of the bass audio on the animation (starting value on keyframe 1)
-
-```--bass_predrop_speed -0.4``` = reactive impact of the bass audio on the animation right before the audio makes a sound
-#
-
-```--zoom_drop_speed 5``` = reactive zoom impact of the audio on the animation when the audio makes a sound
-
-```--zoom_begin_speed 0``` = reactive zoom impact of the audio on the animation (starting value on keyframe 1)
-
-```--zoom_predrop_speed 0.5``` = reactive zoom impact of the audio on the animation right before the audio makes a sound
-#
-
-```--noise_drop_speed 0.02``` = reactive noise impact of the audio on the animation when the audio makes a sound
-
-```--noise_begin_speed 0.01``` = reactive noise impact of the audio on the animation (starting value on keyframe 1)
-
-```--noise_predrop_speed 0.00``` = reactive noise impact of the audio on the animation right before the audio makes a sound
-#
-
-```--contrast_drop_speed 1.01``` = reactive contrast impact of the audio on the animation when the audio makes a sound
-
-```--contrast_begin_speed 0.95``` = reactive contrast impact of the audio on the animation (starting value on keyframe 1)
-
-```--contrast_predrop_speed 0.95``` = reactive contrast impact of the audio on the animation right before the audio makes a sound
-#
-
-```--strength_drop_speed 0.50``` = reactive strength impact of the audio on the animation when the audio makes a sound
-
-```--strength_begin_speed 0.60``` = reactive strength impact of the audio on the animation (starting value on keyframe 1)
-
-```--strength_predrop_speed 0.70``` = reactive strength impact of the audio on the animation right before the audio makes a sound
-
-###
-#
-
-
-#
-
-# conditional math synced to BPM
-
-```
-python conditional_maths_bpm_keyframes.py --file audiofile.mp3 --fps 14 --intensity 2
+```bash
+launch.bat
 ```
 
-**keyframes will be exported to conditional_maths_bpm_0.json**
+This single command sets up a virtual environment and kickstarts the GUI for a seamless experience.
 
-it will look something like this ```0:(2*sin(2*3.14*t/7.17948717948718))```
+---
 
-```--file``` = the audio file
- 
-```--fps``` = the fps has to match the fps of the animation you will make
-
-```--intensity``` = the amplitude / strength / intensity of your animation
-
-#
-
-# simple audio splitter keyframes
-
-**splits the audio and makes keyframes of the splitted files**
+## 🛠 Dependencies 🛠
 
 ```
-python audio_splitter_keyframes.py --file audiofile.mp3 --fps 15 --stems 5 --speed 0.4 --zoomspeed 5 --music_cut 1 --musicstart 1,10 --musicend 2,50
+- numpy
+- ttkthemes
+- spleeter
+- librosa
+- pydub
+- mpmath
+- joblib
 ```
-**keyframes will be exported to audio_splitter_keyframes.json**
+---
 
-```--file``` = the audio file
- 
-```--fps``` = the fps has to match the fps of the animation you will make
+### ➕ Conditional Maths Synced to BPM ➕
 
-```--stems``` = the amount of splitting to the audio file (--stems 5 = splits your audio file into 5 audio files)
+![image](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/01e4a289-2f01-4c66-8617-fc22d3532aec)
 
-```--speed , --zoomspeed``` = the amplitude / strength / intensity of your animation
+#### 🌐 Overview
 
-```--music_cut 1``` = enable music cutting
+Unearth the zenith of animation synchronization by leveraging our sophisticated mathematical algorithms. These algorithms are precisely tailored to sync with the beat per minute (BPM) of your audio file, offering a seamless and dynamic animation experience.
 
-```--musicstart``` = the start of the audio (use 1,17 for 1 minute 17 seconds)
+#### 🧠 What's Under the Hood?
 
-```--musicend``` = the end of the audio (use 2,53 for 2 minutes 53 seconds)
+The feature uses Fast Fourier Transform (FFT) for frequency analysis and utilizes diverse mathematical functions such as sine, cosine, and Fourier transformations. Thanks to these, your keyframes will not just be in sync with the audio but will embody the rhythm and mood of it.
 
-```--use_vocals``` = only use this if you want to keyframe the vocals too (not recommended)
+#### 📐 **Available Functions for Keyframe Generation**
 
-#
+Here's a comprehensive guide to each mathematical function available for keyframe generation, complete with their respective visual representations and impacts on motion or camera dynamics.
 
-# simple audio keyframes
+- **Sine Function (`sine`)**
+  
+  - **Expression**: `D + A*sin(2*PI*t/x/P)`
+  
+  - **Motion Impact**: Generates smooth, oscillating movements that rise and fall in a sinusoidal pattern. Ideal for creating natural, flowing motions like waves.
+![Sine_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/ffabf053-f03c-417e-8dde-ce800b8ead18)
+---
 
-**makes keyframes of the audio fast, good if have your own splitted sounds and don't want to use the advanced version**
+- **Cosine Function (`cosine`)**
 
-```
-python audio_keyframes.py --file audiofile.mp3 --fps 15 --speed 0.4 --music_cut true --musicstart 1,10 --musicend 2,50
-```
-**keyframes will be exported to audio_keyframes.json**
+  - **Expression**: `D + A*cos(2*PI*t/x/P)`
+  
+  - **Motion Impact**: Similar to the sine function but starts at its peak, providing a phase-shifted oscillation. Useful for motions that need to start at a peak or valley.
+![Cosine_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/3be028e1-f78a-4105-baa8-e53480c9b0ea)
+---
 
-```--file``` = the audio file
- 
-```--fps``` = the fps has to match the fps of the animation you will make
+- **Absolute Sine Function (`abs_sin`)**
 
-```--speed``` = the amplitude / strength / intensity of your animation
+  - **Expression**: `A - (abs(sin(10*t/P))*B)`
 
-```--music_cut``` = enable music cutting
+  - **Motion Impact**: Produces oscillations that are always positive, giving a 'bouncing' effect. Great for motions that should not cross a certain threshold.
+![Absolute_Sine_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/4e731090-51dc-4179-a5d6-3fcef66e9841)
+---
 
-```--musicstart``` = the start of the audio (use 1,17 for 1 minute 17 seconds)
+- **Absolute Cosine Function (`abs_cos`)**
 
-```--musicend``` = the end of the audio (use 2,53 for 2 minutes 53 seconds)
+  - **Expression**: `A - (abs(cos(10*t/P))*B)`
+  
+  - **Motion Impact**: Similar to Absolute Sine but starts at its lowest point. Useful for motions like heartbeats that start slow and then rise quickly.
+![Absolute_Cosine_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/f8a5ffc3-1726-43ed-8052-19875a469ba1)
+---
 
-#
+- **Modulus Function (`modulus`)**
 
-support this and other projects 
+  - **Expression**: `A*(t%P)+D`
+  
+  - **Motion Impact**: Produces a sawtooth wave, ideal for creating abrupt, repetitive motions like a ticking clock.
+![Modulus_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/6dcf8c91-a395-4cbd-8b66-7cf3b700ba4c)
+---
 
-[PayPal](https://paypal.me/nicolaivernieuwe?country.x=BE&locale.x=en_US)<br/>
+- **Linear Function (`linear`)**
 
-#
+  - **Expression**: `A*t+D`
+  
+  - **Motion Impact**: Generates a straight line, which is useful for constant-speed motion in one direction.
+![Linear_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/26930f16-a3cb-494c-b0f4-5478e5c4df38)
+---
 
-special thanks to [Zippy](https://github.com/aredden) for cleaning up this script 
+- **Triangle Function (`triangle`)**
+
+  - **Expression**: `(2 + 2*A)/3.14*arcsin(sin((2*3.14)/P*t))`
+  
+  - **Motion Impact**: Creates a triangular wave for motions that have sharp peaks and valleys, such as a bouncing ball hitting the ground and rising sharply.
+![Triangle_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/8e09e32a-c68f-42b1-aa5d-b2ae6b81a08f)
+---
+
+- **Fourier Function (`fourier`)**
+
+  - **Expression**: `D + (A*(sin*t/P)+sin(A*t/P) + sin(A*t/P))`
+  
+  - **Motion Impact**: Generates complex, layered oscillations by summing multiple sine waves. Ideal for intricate, multi-layered motions like spirals.
+![Fourier_Function](https://github.com/FeelTheFonk/AudioKeyframeDeforum_GUI/assets/134219563/1d8aa29c-28d8-4d0d-9520-2be873ce1384)
+---
+
+
+#### 📊 **Advanced Parameters**
+
+These are parameters for fine-tuning the mathematical functions:
+
+- `A`: Amplitude of the function.
+- `P`: Period of the function.
+- `D`: Vertical shift of the function.
+- `B`: Magnitude for absolute value functions.
+
+#### 📜 **Exported JSON Structure**
+
+The exported JSON will contain the following keys:
+
+- `expression`: The generated mathematical expression for keyframes.
+- `complex_expression`: The complex mathematical expression if any advanced parameters are used.
+- `all_formulas`: A dictionary of all possible formulas if `--export-all-formulas` is used.
+
+---
+
+#### 🎛 Parameters
+
+For those who demand the highest quality Audio Split, consider using [Ultimate Vocal Remover](https://github.com/Anjok07/ultimatevocalremovergui).
+
+- `--spleeter 1`: Activate Spleeter for audio dissection. 
+- `--file audio.mp3/wav`: Choose the audio file to dissect.
+- `--fps 14`: Align the frame rate with your target animation.
+- `--stems 5`: Determine the number of audio stems to generate.
+- `--music_cut 1`: Enable audio trimming.
+- `--musicstart 1,17`: Specify the start time (1 minute 17 seconds).
+- `--musicend 2,53`: Specify the end time (2 minutes 53 seconds).
+- `--zoom_sound bass`: Choose the sound type for zoom effects.
+- `--strength_sound bass`: Choose the sound type for strength effects.
+- `--noise_sound bass`: Choose the sound type for noise effects.
+- `--contrast_sound bass`: Choose the sound type for contrast effects.
+- `--drums_audio_path drums.wav`: Specify the drums audio file.
+- `--piano_audio_path piano.wav`: Specify the piano audio file.
+- `--bass_audio_path bass.wav`: Specify the bass audio file.
+- `--other_audio_path other.wav`: Specify other types of audio files.
+- `--zoom_audio_path bass.wav`: Specify the zoom audio file.
+- `--drums_drop_speed 0.2`: Set the reactive impact of drums.
+- `--drums_begin_speed 0.0`: Set the starting keyframe value for drums.
+- `--drums_predrop_speed -0.2`: Set the pre-impact value for drums.
+- `--other_drop_speed 0.4`: Set the reactive impact of other audio.
+- `--other_begin_speed 0.0`: Set the starting keyframe value for other audio.
+- `--other_predrop_speed -0.4`: Set the pre-impact value for other audio.
+- `--piano_drop_speed 0.4`: Set the reactive impact of piano audio.
+- `--piano_begin_speed 0.0`: Set the starting keyframe value for piano audio.
+- `--piano_predrop_speed -0.4`: Set the pre-impact value for piano audio.
+- `--contrast_drop_speed 0.4`: Set the reactive impact of constrat.
+- `--constrast_begin_speed 0.0`: Set the starting keyframe value for constrast
+- `--constrast_predrop_speed -0.4`: Set the pre-impact value for constrast.
+---

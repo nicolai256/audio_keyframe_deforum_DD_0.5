@@ -1,0 +1,8 @@
+opencv-python
+numpy
+spleeter
+librosa
+pydub
+ttkthemes
+mpmath
+joblib
